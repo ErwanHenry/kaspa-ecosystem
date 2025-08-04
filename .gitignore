@@ -1,0 +1,11 @@
+# Local Netlify folder
+.netlify
+
+# Backend sensitive files
+backend/.env
+backend/service-account.json
+backend/logs/
+node_modules/
+
+# OS files
+.DS_Store

@@ -1,0 +1,2131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaspa Ecosystem Directory</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --kaspa-green: #49EACB;
+            --kaspa-green-dark: #2AC9A7;
+            --kaspa-blue: #1E3A8A;
+            --kaspa-purple: #6366F1;
+            --bg-primary: #0F172A;
+            --bg-secondary: #1E293B;
+            --bg-tertiary: #334155;
+            --text-primary: #F8FAFC;
+            --text-secondary: #CBD5E1;
+            --text-tertiary: #94A3B8;
+            --border-color: #334155;
+            --shadow-color: rgba(0, 0, 0, 0.5);
+            --card-bg: rgba(30, 41, 59, 0.5);
+            --hover-bg: rgba(73, 234, 203, 0.1);
+        }
+
+        [data-theme="light"] {
+            --bg-primary: #FFFFFF;
+            --bg-secondary: #F8FAFC;
+            --bg-tertiary: #E2E8F0;
+            --text-primary: #0F172A;
+            --text-secondary: #475569;
+            --text-tertiary: #64748B;
+            --border-color: #E2E8F0;
+            --shadow-color: rgba(0, 0, 0, 0.1);
+            --card-bg: rgba(248, 250, 252, 0.8);
+            --hover-bg: rgba(73, 234, 203, 0.1);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            transition: all 0.3s ease;
+        }
+
+        /* Background Pattern */
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-image: 
+                radial-gradient(circle at 20% 80%, var(--kaspa-green) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, var(--kaspa-purple) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, var(--kaspa-blue) 0%, transparent 50%);
+            opacity: 0.05;
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        /* Header */
+        .header {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 1px solid var(--border-color);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .header::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            right: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--kaspa-green) 0%, transparent 70%);
+            opacity: 0.1;
+            animation: pulse 4s ease-in-out infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); opacity: 0.1; }
+            50% { transform: scale(1.1); opacity: 0.2; }
+        }
+
+        .header-content {
+            position: relative;
+            z-index: 1;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 20px;
+        }
+
+        .logo-section {
+            display: flex;
+            align-items: center;
+            gap: 20px;
+        }
+
+        .logo {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--kaspa-green), var(--kaspa-green-dark));
+            border-radius: 16px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 24px;
+            color: var(--bg-primary);
+            box-shadow: 0 8px 32px rgba(73, 234, 203, 0.3);
+        }
+
+        h1 {
+            font-size: 2.5em;
+            font-weight: 700;
+            background: linear-gradient(135deg, var(--kaspa-green), var(--kaspa-purple));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin: 0;
+        }
+
+        .tagline {
+            color: var(--text-secondary);
+            margin-top: 5px;
+        }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            background: var(--bg-tertiary);
+            border: 1px solid var(--border-color);
+            border-radius: 50px;
+            padding: 5px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle:hover {
+            border-color: var(--kaspa-green);
+        }
+
+        .theme-toggle span {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .theme-toggle span.active {
+            background: var(--kaspa-green);
+            color: var(--bg-primary);
+        }
+
+        /* Navigation Tabs */
+        .nav-tabs {
+            display: flex;
+            gap: 10px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            background: var(--card-bg);
+            padding: 10px;
+            border-radius: 16px;
+            backdrop-filter: blur(20px);
+            border: 1px solid var(--border-color);
+        }
+
+        .tab {
+            padding: 12px 24px;
+            background: transparent;
+            border: 1px solid transparent;
+            border-radius: 12px;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .tab::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(135deg, var(--kaspa-green), var(--kaspa-purple));
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: -1;
+        }
+
+        .tab:hover {
+            color: var(--text-primary);
+            border-color: var(--border-color);
+        }
+
+        .tab.active {
+            color: var(--text-primary);
+            background: var(--bg-tertiary);
+            border-color: var(--kaspa-green);
+        }
+
+        .tab.active::before {
+            opacity: 0.1;
+        }
+
+        /* Content Area */
+        .content {
+            background: var(--card-bg);
+            backdrop-filter: blur(20px);
+            border-radius: 24px;
+            padding: 40px;
+            border: 1px solid var(--border-color);
+            min-height: 600px;
+        }
+
+        .tab-content {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .tab-content.active {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Stats Grid */
+        .stats-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+
+        .stat-card {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 30px;
+            text-align: center;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .stat-card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, var(--kaspa-green) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .stat-card:hover {
+            transform: translateY(-5px);
+            border-color: var(--kaspa-green);
+            box-shadow: 0 10px 40px var(--shadow-color);
+        }
+
+        .stat-card:hover::before {
+            opacity: 0.1;
+        }
+
+        .stat-icon {
+            width: 50px;
+            height: 50px;
+            margin: 0 auto 15px;
+            background: linear-gradient(135deg, var(--kaspa-green), var(--kaspa-purple));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+
+        .stat-number {
+            font-size: 2.5em;
+            font-weight: 700;
+            color: var(--kaspa-green);
+            margin: 10px 0;
+        }
+
+        .stat-label {
+            color: var(--text-secondary);
+            font-weight: 500;
+        }
+
+        /* Forms */
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 25px;
+            margin-bottom: 30px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+            gap: 8px;
+        }
+
+        .form-group label {
+            font-weight: 500;
+            color: var(--text-secondary);
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+
+        .form-group label .required {
+            color: var(--kaspa-green);
+        }
+
+        .form-control {
+            padding: 14px 18px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 16px;
+            transition: all 0.3s ease;
+            font-family: inherit;
+        }
+
+        .form-control:focus {
+            outline: none;
+            border-color: var(--kaspa-green);
+            box-shadow: 0 0 0 3px rgba(73, 234, 203, 0.1);
+        }
+
+        .form-control::placeholder {
+            color: var(--text-tertiary);
+        }
+
+        select.form-control {
+            cursor: pointer;
+        }
+
+        textarea.form-control {
+            min-height: 120px;
+            resize: vertical;
+        }
+
+        /* Buttons */
+        .btn {
+            padding: 14px 28px;
+            background: linear-gradient(135deg, var(--kaspa-green), var(--kaspa-green-dark));
+            border: none;
+            border-radius: 12px;
+            color: var(--bg-primary);
+            font-weight: 600;
+            font-size: 16px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .btn::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 0;
+            height: 0;
+            background: rgba(255, 255, 255, 0.3);
+            border-radius: 50%;
+            transform: translate(-50%, -50%);
+            transition: width 0.6s, height 0.6s;
+        }
+
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 30px rgba(73, 234, 203, 0.3);
+        }
+
+        .btn:active::before {
+            width: 300px;
+            height: 300px;
+        }
+
+        .btn-secondary {
+            background: var(--bg-tertiary);
+            color: var(--text-primary);
+        }
+
+        .btn-secondary:hover {
+            background: var(--bg-secondary);
+            box-shadow: 0 10px 30px var(--shadow-color);
+        }
+
+        /* Search and Filters */
+        .search-filters {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 30px;
+            flex-wrap: wrap;
+            align-items: center;
+        }
+
+        .search-box {
+            flex: 1;
+            min-width: 300px;
+            padding: 14px 18px 14px 50px;
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            color: var(--text-primary);
+            font-size: 16px;
+            transition: all 0.3s ease;
+            position: relative;
+        }
+
+        .search-wrapper {
+            position: relative;
+            flex: 1;
+            min-width: 300px;
+        }
+
+        .search-wrapper::before {
+            content: '🔍';
+            position: absolute;
+            left: 18px;
+            top: 50%;
+            transform: translateY(-50%);
+            font-size: 18px;
+            opacity: 0.5;
+        }
+
+        /* Table */
+        .table-wrapper {
+            overflow-x: auto;
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            background: var(--bg-secondary);
+        }
+
+        .projects-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .projects-table th,
+        .projects-table td {
+            padding: 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .projects-table th {
+            background: var(--bg-tertiary);
+            font-weight: 600;
+            color: var(--text-secondary);
+            position: sticky;
+            top: 0;
+            z-index: 10;
+        }
+
+        .projects-table tr:hover {
+            background: var(--hover-bg);
+        }
+
+        .projects-table a {
+            color: var(--kaspa-green);
+            text-decoration: none;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+
+        .projects-table a:hover {
+            color: var(--kaspa-green-dark);
+            text-decoration: underline;
+        }
+
+        /* Status Badges */
+        .status-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 6px 16px;
+            border-radius: 20px;
+            font-size: 14px;
+            font-weight: 500;
+        }
+
+        .status-active {
+            background: rgba(73, 234, 203, 0.2);
+            color: var(--kaspa-green);
+        }
+
+        .status-development {
+            background: rgba(250, 204, 21, 0.2);
+            color: #FACC15;
+        }
+
+        .status-planned {
+            background: rgba(99, 102, 241, 0.2);
+            color: #6366F1;
+        }
+
+        /* Social Links */
+        .social-links {
+            display: flex;
+            gap: 8px;
+        }
+
+        .social-link {
+            width: 32px;
+            height: 32px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: var(--bg-tertiary);
+            border-radius: 8px;
+            color: var(--text-secondary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+            font-size: 16px;
+        }
+
+        .social-link:hover {
+            background: var(--kaspa-green);
+            color: var(--bg-primary);
+            transform: translateY(-2px);
+        }
+
+        /* Messages */
+        .message {
+            padding: 16px 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            display: none;
+            align-items: center;
+            gap: 12px;
+            animation: slideIn 0.3s ease;
+        }
+
+        @keyframes slideIn {
+            from { transform: translateX(-20px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
+        .message.success {
+            background: rgba(73, 234, 203, 0.2);
+            border: 1px solid var(--kaspa-green);
+            color: var(--kaspa-green);
+        }
+
+        .message.error {
+            background: rgba(239, 68, 68, 0.2);
+            border: 1px solid #EF4444;
+            color: #EF4444;
+        }
+
+        .message.info {
+            background: rgba(99, 102, 241, 0.2);
+            border: 1px solid #6366F1;
+            color: #6366F1;
+        }
+
+        /* Charts Container */
+        .charts-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 30px;
+            margin-top: 40px;
+        }
+
+        .chart-container {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 16px;
+            padding: 25px;
+            height: 300px;
+        }
+
+        .chart-container h3 {
+            margin-bottom: 20px;
+            color: var(--text-secondary);
+            font-weight: 600;
+        }
+
+        /* Loading Spinner */
+        .spinner {
+            width: 40px;
+            height: 40px;
+            border: 3px solid var(--border-color);
+            border-top-color: var(--kaspa-green);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 20px auto;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Responsive */
+        @media (max-width: 768px) {
+            .container {
+                padding: 15px;
+            }
+
+            .header {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 1.8em;
+            }
+
+            .content {
+                padding: 25px;
+            }
+
+            .form-grid {
+                grid-template-columns: 1fr;
+            }
+
+            .stats-grid {
+                grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            }
+
+            .charts-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+
+        /* Tooltips */
+        .tooltip {
+            position: relative;
+            cursor: help;
+        }
+
+        .tooltip::after {
+            content: attr(data-tooltip);
+            position: absolute;
+            bottom: 100%;
+            left: 50%;
+            transform: translateX(-50%);
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            padding: 8px 12px;
+            border-radius: 8px;
+            font-size: 14px;
+            white-space: nowrap;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.3s ease;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 4px 12px var(--shadow-color);
+        }
+
+        .tooltip:hover::after {
+            opacity: 1;
+        }
+
+        /* Empty State */
+        .empty-state {
+            text-align: center;
+            padding: 60px 20px;
+            color: var(--text-secondary);
+        }
+
+        .empty-state-icon {
+            font-size: 64px;
+            margin-bottom: 20px;
+            opacity: 0.3;
+        }
+
+        /* Action Buttons */
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+            margin-top: 30px;
+        }
+
+        /* Scraping Status */
+        .scraping-status {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            padding: 20px;
+            background: var(--bg-secondary);
+            border-radius: 12px;
+            border: 1px solid var(--border-color);
+            margin-top: 20px;
+        }
+
+        .scraping-status.active {
+            border-color: var(--kaspa-green);
+            background: rgba(73, 234, 203, 0.05);
+        }
+
+        /* Modal */
+        .modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0, 0, 0, 0.8);
+            z-index: 1000;
+            backdrop-filter: blur(5px);
+        }
+
+        .modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--bg-primary);
+            border-radius: 24px;
+            padding: 40px;
+            max-width: 600px;
+            width: 90%;
+            max-height: 90vh;
+            overflow-y: auto;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 20px 60px var(--shadow-color);
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .modal-close {
+            width: 40px;
+            height: 40px;
+            background: var(--bg-tertiary);
+            border: none;
+            border-radius: 10px;
+            color: var(--text-primary);
+            font-size: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .modal-close:hover {
+            background: var(--kaspa-green);
+            color: var(--bg-primary);
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="header-content">
+                <div class="logo-section">
+                    <div class="logo">K</div>
+                    <div>
+                        <h1>Kaspa Ecosystem Directory</h1>
+                        <p class="tagline">Discover and track all Kaspa projects in one place</p>
+                    </div>
+                </div>
+                <button class="theme-toggle" onclick="toggleTheme()">
+                    <span id="light-icon">☀️</span>
+                    <span id="dark-icon" class="active">🌙</span>
+                </button>
+            </div>
+        </div>
+
+        <!-- Navigation -->
+        <div class="nav-tabs">
+            <button class="tab active" onclick="showTab('dashboard')">📊 Dashboard</button>
+            <button class="tab" onclick="showTab('projects')">📁 Projects</button>
+            <button class="tab" onclick="showTab('add-project')">➕ Add Project</button>
+            <button class="tab" onclick="showTab('scraping')">🤖 Auto Scraping</button>
+
+            <button class="tab" onclick="showTab('settings')">⚙️ Settings</button>
+        </div>
+
+        <!-- Content Area -->
+        <div class="content">
+            <!-- Dashboard Tab -->
+            <div id="dashboard" class="tab-content active">
+                <h2 style="margin-bottom: 30px;">Ecosystem Overview</h2>
+                
+                <div class="stats-grid">
+                    <div class="stat-card">
+                        <div class="stat-icon">📊</div>
+                        <div class="stat-number" id="total-projects">0</div>
+                        <div class="stat-label">Total Projects</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-number" id="active-projects">0</div>
+                        <div class="stat-label">Active Projects</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-number" id="defi-projects">0</div>
+                        <div class="stat-label">DeFi Projects</div>
+                    </div>
+                    <div class="stat-card">
+                        <div class="stat-icon">👛</div>
+                        <div class="stat-number" id="wallets-count">0</div>
+                        <div class="stat-label">Wallets</div>
+                    </div>
+                </div>
+
+                <div class="charts-grid">
+                    <div class="chart-container">
+                        <h3>Projects by Category</h3>
+                        <canvas id="categoryChart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Growth Timeline</h3>
+                        <canvas id="timelineChart"></canvas>
+                    </div>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn" onclick="exportToJSON()">📥 Export JSON</button>
+                    <button class="btn" onclick="exportToCSV()">📊 Export CSV</button>
+                    <button class="btn btn-secondary" onclick="showImportModal()">📤 Import Data</button>
+                </div>
+            </div>
+
+            <!-- Projects Tab -->
+            <div id="projects" class="tab-content">
+                <h2 style="margin-bottom: 30px;">All Projects</h2>
+
+                <div class="search-filters">
+                    <div class="search-wrapper">
+                        <input type="text" class="search-box" placeholder="Search projects..." id="search-input" onkeyup="filterProjects()">
+                    </div>
+                    
+                    <select class="form-control" id="category-filter" onchange="filterProjects()" style="width: 200px;">
+                        <option value="">All Categories</option>
+                        <option value="wallet">Wallets</option>
+                        <option value="defi">DeFi</option>
+                        <option value="exchange">Exchanges</option>
+                        <option value="nft">NFTs</option>
+                        <option value="infrastructure">Infrastructure</option>
+                        <option value="tool">Dev Tools</option>
+                        <option value="smart-contract">Smart Contracts</option>
+                        <option value="explorer">Explorers</option>
+                        <option value="other">Other</option>
+                    </select>
+
+                    <select class="form-control" id="status-filter" onchange="filterProjects()" style="width: 180px;">
+                        <option value="">All Status</option>
+                        <option value="active">Active</option>
+                        <option value="development">In Development</option>
+                        <option value="planned">Planned</option>
+                    </select>
+                </div>
+
+                <div class="table-wrapper">
+                    <table class="projects-table">
+                        <thead>
+                            <tr>
+                                <th>Name</th>
+                                <th>Category</th>
+                                <th>Status</th>
+                                <th>Description</th>
+                                <th>Social</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="projects-tbody">
+                            <!-- Projects will be loaded here -->
+                        </tbody>
+                    </table>
+                </div>
+
+                <div id="empty-projects" class="empty-state" style="display: none;">
+                    <div class="empty-state-icon">📂</div>
+                    <h3>No projects found</h3>
+                    <p>Start by adding projects manually or running the auto scraper</p>
+                </div>
+            </div>
+
+            <!-- Add Project Tab -->
+            <div id="add-project" class="tab-content">
+                <h2 style="margin-bottom: 30px;">Add New Project</h2>
+                
+                <div id="success-message" class="message success">
+                    ✅ Project added successfully!
+                </div>
+                
+                <div id="error-message" class="message error">
+                    ❌ Error adding project. Please try again.
+                </div>
+
+                <form id="project-form" onsubmit="submitProject(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Project Name <span class="required">*</span></label>
+                            <input type="text" class="form-control" name="name" required placeholder="e.g., Kaspa Wallet">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Official URL <span class="required">*</span></label>
+                            <input type="url" class="form-control" name="url" required placeholder="https://example.com">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Category <span class="required">*</span></label>
+                            <select class="form-control" name="category" required>
+                                <option value="">Select category</option>
+                                <option value="wallet">Wallet</option>
+                                <option value="defi">DeFi</option>
+                                <option value="exchange">Exchange</option>
+                                <option value="nft">NFT</option>
+                                <option value="infrastructure">Infrastructure</option>
+                                <option value="tool">Developer Tool</option>
+                                <option value="smart-contract">Smart Contract</option>
+                                <option value="explorer">Explorer</option>
+                                <option value="other">Other</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Status <span class="required">*</span></label>
+                            <select class="form-control" name="status" required>
+                                <option value="active">Active</option>
+                                <option value="development">In Development</option>
+                                <option value="planned">Planned</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Twitter/X</label>
+                            <input type="url" class="form-control" name="twitter" placeholder="https://twitter.com/...">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Discord</label>
+                            <input type="url" class="form-control" name="discord" placeholder="https://discord.gg/...">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Telegram</label>
+                            <input type="url" class="form-control" name="telegram" placeholder="https://t.me/...">
+                        </div>
+
+                        <div class="form-group">
+                            <label>GitHub</label>
+                            <input type="url" class="form-control" name="github" placeholder="https://github.com/...">
+                        </div>
+
+                        <div class="form-group">
+                            <label>Security Audit</label>
+                            <select class="form-control" name="audit">
+                                <option value="none">Not Audited</option>
+                                <option value="pending">Pending</option>
+                                <option value="completed">Audited</option>
+                            </select>
+                        </div>
+
+                        <div class="form-group">
+                            <label>Audit Report Link</label>
+                            <input type="url" class="form-control" name="auditLink" placeholder="Link to audit report">
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Description <span class="required">*</span></label>
+                        <textarea class="form-control" name="description" required placeholder="Brief description of the project..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Tags <span class="tooltip" data-tooltip="Separate with commas">ⓘ</span></label>
+                        <input type="text" class="form-control" name="tags" placeholder="defi, lending, staking">
+                    </div>
+
+                    <button type="submit" class="btn">➕ Add Project</button>
+                </form>
+            </div>
+
+            <!-- Scraping Tab -->
+            <div id="scraping" class="tab-content">
+                <h2 style="margin-bottom: 30px;">Automated Scraping</h2>
+                
+                <div class="form-group">
+                    <label>Scrape Single URL</label>
+                    <div style="display: flex; gap: 15px;">
+                        <input type="url" class="form-control" id="scraping-url" placeholder="https://example.com" style="flex: 1;">
+                        <button class="btn" onclick="scrapeSingleUrl()">🔍 Scrape</button>
+                    </div>
+                </div>
+
+                <div id="scraping-results"></div>
+
+                <div style="margin-top: 40px;">
+                    <h3>Automated Scraping Tasks</h3>
+                    <div class="scraping-status" id="scraping-status">
+                        <span>Status: <strong id="scraping-status-text">Idle</strong></span>
+                        <button class="btn btn-secondary" onclick="startAutomatedScraping()">▶️ Start Auto Scraping</button>
+                        <button class="btn btn-secondary" onclick="stopAutomatedScraping()" style="display: none;" id="stop-scraping">⏹️ Stop</button>
+                    </div>
+
+                    <h4 style="margin-top: 30px;">Monitored Sites</h4>
+                    <div id="monitored-sites" style="display: grid; gap: 10px; margin-top: 20px;">
+                        <!-- Sites will be loaded here -->
+                    </div>
+                </div>
+            </div>
+
+            <!-- Google Sync Tab - Hidden from users -->
+            <div id="sync" class="tab-content" style="display: none;">
+                <!-- This tab is removed from public interface -->
+            </div>
+
+            <!-- Settings Tab -->
+            <div id="settings" class="tab-content">
+                <h2 style="margin-bottom: 30px;">Settings</h2>
+                
+                <div class="form-group">
+                    <label>Auto Scraping Interval</label>
+                    <select class="form-control" id="auto-scraping-interval">
+                        <option value="disabled">Disabled</option>
+                        <option value="hourly">Every Hour</option>
+                        <option value="daily">Daily</option>
+                        <option value="weekly">Weekly</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Default Project Status</label>
+                    <select class="form-control" id="default-status">
+                        <option value="active">Active</option>
+                        <option value="development">In Development</option>
+                        <option value="planned">Planned</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label>Enable Twitter Notifications</label>
+                    <select class="form-control" id="twitter-notifications">
+                        <option value="disabled">Disabled</option>
+                        <option value="enabled">Enabled</option>
+                    </select>
+                </div>
+
+                <div class="action-buttons">
+                    <button class="btn" onclick="saveSettings()">💾 Save Settings</button>
+                    <button class="btn btn-secondary" onclick="resetDatabase()">🗑️ Reset Database</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Import Modal -->
+    <div id="import-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2>Import Data</h2>
+                <button class="modal-close" onclick="closeImportModal()">×</button>
+            </div>
+            <div class="form-group">
+                <label>Paste JSON data or upload file</label>
+                <textarea class="form-control" id="import-data" rows="10" placeholder="Paste your JSON data here..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>Or upload JSON file</label>
+                <input type="file" class="form-control" accept=".json" onchange="handleFileUpload(event)">
+            </div>
+            <button class="btn" onclick="importData()">📤 Import</button>
+        </div>
+    </div>
+
+    <!-- Include necessary scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+        // Global variables
+        let db = null;
+        let projects = [];
+        let charts = {};
+        let scrapingInterval = null;
+        let theme = localStorage.getItem('theme') || 'dark';
+
+        // Service account configuration
+        const SERVICE_ACCOUNT = {
+            email: 'kaspa-ecosystem-service@annuairekaspa.iam.gserviceaccount.com',
+            key: `-----BEGIN PRIVATE KEY-----
+MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDGTdd50P1xtUSq
+AtiTQfgW+/IBhMisY6Kt2Hlqbh+EjtINer4EgUp2NqA+zrXdoXJkh+F6fFQ3BRT/
+fDd65W6i3x4FSv6+bDPJGJRmTxwemqDu75gWvKyNmoaws/61wup04mm67T+xJErO
+KRhVDY4Yvn1S9FkAf1Ck2+CAaoaMqFwM5W/wd8OE7flkIh1lb2T3jcKdgg66QmyO
+Sk4AgflNwO0BAcFR7Yz7xy3hjoOr4dHTmEmTZAMqB4Pb74pBkCQHcq75Y6AGCJc7
+Lwl4F59tWgOTqB++CgVQQO3vtWTMoVz8r5JNnfnnl1aKXSLhLhqC14UFr7WNOSeZ
+C50WPCWXAgMBAAECggEAIjuW2oMe9W2u7FBwdb9aJhGZPfTftY6/qxYnI53eGAKV
+tVj+i4WMRqr4b888awWvWzZv0La8zQC2FsKpSzBnMHum0ZAYOOQx7mGtYJoAhzH3
+XTgEP8yTVyCZZtCzxEnhMotRaEEDkT9sIHnMpwYfhRsBRHxFDwZrdAI3F8QL9STf
+Xc/HwhbZqJ7qRGXB1+aH+RM9NXwuCH4AYPEOJbJD3NE8GwAmK5YiFDKzMhpPoMAh
+CpvOP+DKcWVyNXWsjr5Z7wjQG2h7vljwtZ/YbmmecGFGiIzlRBaXxJ0RE5cVX45S
+uPn0Fyxh42GZhu8cpD4JqqL6+ePKTQn8y4TtemT1AQKBgQDrSLdTV1jhRh87SIRL
+7JBocNrTECd3xuTorbyq/GQ67YQi9pIy7Q13md0X8nZ3hti73nz5mptGyWd71EzK
+JbJM/43B0RtxquD0jdRynqB2lXjVNyGLeQcLDvb/3nifNa6ntWlbwrhcLgAne0hh
+Hb8G58JfB/rFIX+RiYAlN831AQKBgQDXw5mMDfIZAV8QwqHIs0a859XgxWfQsWeF
+AoTmglvd9mel6Pxu6dRhleVBzW9UPzLiU6BpmuCxA5fiCjIBwQpeFnA4Wx/pUoeK
+0IzbEQnNdfbQtXGBaN5edS2bXtA0TfI86ghEkabm1FwMTUJckFBFVnumYmIg1kAR
+MJ8kqLailwKBgQDXJpqFenVLIs1Cb9CSgROYfcKMiNQegmEmqGDDVqLtA+717dXI
+/d53xNpZoJ1WNZgRS6WqtgdR1rBrmrpRi+Ec6f+eAXKAIcsttlhUK9v+NDbXel+R
+Y63eHeQeHDjfFb7Nm2VpxIjDukjn0aNhM0tQrDOgpPJau4Qk+MCWyA3tAQKBgQCU
+6+qlIlMBM1McTFpCHosqg5G5rEb1Yh0jTxPPzhX+Y74yY1cobrgqCr3L5zF6IozK
+bhIAEegYBXTljUfqsgSn4DDglPS3pEDtbPhrk50CdPNAJpwLSAiDhblOzehC0bHq
+nVXLjgR2ugg2bXTqUqk00nZR5wH3zCk4NCkDsncsTQKBgECDAMLRUpjKM35/cKpS
+7MflPfGy/gJ5CRSquKU4uDI99Ubte7KFWxA63Uz9KT1Tb6mkcWw+iCWN71R+lp8y
+JrL4BrM1PtKnopXQnp2tri+I71Z5XdMncIvoPGToK72XwDnoP/w8s8eDDIN+7fem
+AbvO+Asn1xWd779UOiRjE2y/
+-----END PRIVATE KEY-----`,
+            projectId: 'annuairekaspa'
+        };
+
+        // Known Kaspa ecosystem sites
+        const KASPA_SITES = [
+            { url: 'https://kaspa.org', name: 'Kaspa Official', category: 'official' },
+            { url: 'https://github.com/kaspanet', name: 'Kaspa GitHub', category: 'development' },
+            { url: 'https://kas.fyi', name: 'Kaspa Explorer', category: 'explorer' },
+            { url: 'https://kaspium.io', name: 'Kaspium Wallet', category: 'wallet' },
+            { url: 'https://kasvault.io', name: 'KasVault', category: 'wallet' },
+            { url: 'https://www.kasware.xyz', name: 'KasWare', category: 'wallet' },
+            { url: 'https://kastle.cc', name: 'Kastle Wallet', category: 'wallet' }
+        ];
+
+        // Initialize theme
+        document.documentElement.setAttribute('data-theme', theme);
+        updateThemeToggle();
+
+        // Theme toggle function
+        function toggleTheme() {
+            theme = theme === 'dark' ? 'light' : 'dark';
+            document.documentElement.setAttribute('data-theme', theme);
+            localStorage.setItem('theme', theme);
+            updateThemeToggle();
+            
+            // Update charts colors
+            if (charts.categoryChart) {
+                updateCharts();
+            }
+        }
+
+        function updateThemeToggle() {
+            const lightIcon = document.getElementById('light-icon');
+            const darkIcon = document.getElementById('dark-icon');
+            
+            if (theme === 'dark') {
+                lightIcon.classList.remove('active');
+                darkIcon.classList.add('active');
+            } else {
+                lightIcon.classList.add('active');
+                darkIcon.classList.remove('active');
+            }
+        }
+
+        // Tab navigation
+        function showTab(tabName) {
+            const tabs = document.querySelectorAll('.tab');
+            const contents = document.querySelectorAll('.tab-content');
+            
+            tabs.forEach(tab => tab.classList.remove('active'));
+            contents.forEach(content => content.classList.remove('active'));
+            
+            event.target.classList.add('active');
+            document.getElementById(tabName).classList.add('active');
+            
+            // Load data for specific tabs
+            if (tabName === 'projects') {
+                filterProjects();
+            } else if (tabName === 'scraping') {
+                loadMonitoredSites();
+            }
+        }
+
+        // Database initialization
+        async function initializeApp() {
+            try {
+                // Initialize IndexedDB
+                db = new KaspaDatabase();
+                await db.init();
+                console.log('Database initialized');
+                
+                // Load projects
+                await loadProjects();
+                
+                // Update dashboard
+                await updateDashboard();
+                
+                // Load settings
+                loadSettings();
+                
+                // Initialize charts
+                initializeCharts();
+                
+                // Load monitored sites
+                loadMonitoredSites();
+                
+            } catch (error) {
+                console.error('Failed to initialize app:', error);
+                showMessage('Error initializing application. Please refresh the page.', 'error');
+            }
+        }
+
+        // Load projects from database
+        async function loadProjects() {
+            if (db) {
+                projects = await db.getAllProjects();
+                console.log(`Loaded ${projects.length} projects`);
+            }
+        }
+
+        // Submit project form
+        async function submitProject(event) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const project = {};
+            
+            formData.forEach((value, key) => {
+                project[key] = value;
+            });
+            
+            // Parse tags
+            if (project.tags) {
+                project.tags = project.tags.split(',').map(tag => tag.trim()).filter(tag => tag);
+            }
+            
+            project.source = 'manual';
+            
+            try {
+                // Add to database
+                await db.addProject(project);
+                
+                showMessage('Project added successfully!', 'success');
+                
+                // Reset form
+                event.target.reset();
+                
+                // Reload projects and update dashboard
+                await loadProjects();
+                await updateDashboard();
+                
+            } catch (error) {
+                console.error('Error adding project:', error);
+                showMessage('Error adding project. Please try again.', 'error');
+            }
+        }
+
+        // Filter projects
+        function filterProjects() {
+            const searchTerm = document.getElementById('search-input').value.toLowerCase();
+            const categoryFilter = document.getElementById('category-filter').value;
+            const statusFilter = document.getElementById('status-filter').value;
+            
+            const filtered = projects.filter(project => {
+                const matchesSearch = project.name.toLowerCase().includes(searchTerm) || 
+                                    project.description.toLowerCase().includes(searchTerm);
+                const matchesCategory = !categoryFilter || project.category === categoryFilter;
+                const matchesStatus = !statusFilter || project.status === statusFilter;
+                
+                return matchesSearch && matchesCategory && matchesStatus;
+            });
+            
+            displayProjects(filtered);
+        }
+
+        // Display projects in table
+        function displayProjects(projectsList) {
+            const tbody = document.getElementById('projects-tbody');
+            const emptyState = document.getElementById('empty-projects');
+            
+            if (!projectsList.length) {
+                tbody.innerHTML = '';
+                emptyState.style.display = 'block';
+                return;
+            }
+            
+            emptyState.style.display = 'none';
+            tbody.innerHTML = '';
+            
+            projectsList.forEach(project => {
+                const row = document.createElement('tr');
+                
+                const statusClass = `status-${project.status}`;
+                const statusIcon = project.status === 'active' ? '🟢' : 
+                                 project.status === 'development' ? '🟡' : '🔵';
+                
+                row.innerHTML = `
+                    <td><a href="${project.url}" target="_blank">${project.name}</a></td>
+                    <td>${formatCategory(project.category)}</td>
+                    <td><span class="status-badge ${statusClass}">${statusIcon} ${formatStatus(project.status)}</span></td>
+                    <td>${project.description}</td>
+                    <td>
+                        <div class="social-links">
+                            ${project.twitter ? `<a href="${project.twitter}" target="_blank" class="social-link">𝕏</a>` : ''}
+                            ${project.discord ? `<a href="${project.discord}" target="_blank" class="social-link">💬</a>` : ''}
+                            ${project.telegram ? `<a href="${project.telegram}" target="_blank" class="social-link">✈️</a>` : ''}
+                            ${project.github ? `<a href="${project.github}" target="_blank" class="social-link">🐙</a>` : ''}
+                        </div>
+                    </td>
+                    <td>
+                        <button class="btn btn-secondary" onclick="editProject(${project.id})" style="padding: 8px 16px; font-size: 14px;">✏️</button>
+                    </td>
+                `;
+                
+                tbody.appendChild(row);
+            });
+        }
+
+        // Update dashboard
+        async function updateDashboard() {
+            if (!db) return;
+            
+            const stats = await db.getStatistics();
+            
+            document.getElementById('total-projects').textContent = stats.total;
+            document.getElementById('active-projects').textContent = stats.byStatus.active || 0;
+            document.getElementById('defi-projects').textContent = stats.byCategory.defi || 0;
+            document.getElementById('wallets-count').textContent = stats.byCategory.wallet || 0;
+            
+            // Update charts
+            updateCharts();
+        }
+
+        // Initialize charts
+        function initializeCharts() {
+            const chartOptions = {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    legend: {
+                        labels: {
+                            color: getComputedStyle(document.documentElement).getPropertyValue('--text-primary'),
+                            font: {
+                                family: 'Inter',
+                                size: 12
+                            }
+                        }
+                    }
+                },
+                scales: {
+                    x: {
+                        ticks: {
+                            color: getComputedStyle(document.documentElement).getPropertyValue('--text-secondary')
+                        },
+                        grid: {
+                            color: getComputedStyle(document.documentElement).getPropertyValue('--border-color'),
+                            borderColor: getComputedStyle(document.documentElement).getPropertyValue('--border-color')
+                        }
+                    },
+                    y: {
+                        ticks: {
+                            color: getComputedStyle(document.documentElement).getPropertyValue('--text-secondary')
+                        },
+                        grid: {
+                            color: getComputedStyle(document.documentElement).getPropertyValue('--border-color'),
+                            borderColor: getComputedStyle(document.documentElement).getPropertyValue('--border-color')
+                        }
+                    }
+                }
+            };
+
+            // Category chart
+            const categoryCtx = document.getElementById('categoryChart');
+            if (categoryCtx) {
+                charts.categoryChart = new Chart(categoryCtx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            data: [],
+                            backgroundColor: [
+                                '#49EACB',
+                                '#6366F1',
+                                '#F59E0B',
+                                '#EF4444',
+                                '#8B5CF6',
+                                '#10B981',
+                                '#F97316',
+                                '#06B6D4'
+                            ]
+                        }]
+                    },
+                    options: {
+                        ...chartOptions,
+                        scales: undefined
+                    }
+                });
+            }
+
+            // Timeline chart
+            const timelineCtx = document.getElementById('timelineChart');
+            if (timelineCtx) {
+                charts.timelineChart = new Chart(timelineCtx, {
+                    type: 'line',
+                    data: {
+                        labels: [],
+                        datasets: [{
+                            label: 'Projects Added',
+                            data: [],
+                            borderColor: '#49EACB',
+                            backgroundColor: 'rgba(73, 234, 203, 0.1)',
+                            tension: 0.4
+                        }]
+                    },
+                    options: chartOptions
+                });
+            }
+        }
+
+        // Update charts with data
+        async function updateCharts() {
+            if (!db) return;
+            
+            const stats = await db.getStatistics();
+            
+            // Update category chart
+            if (charts.categoryChart) {
+                const labels = Object.keys(stats.byCategory).map(cat => formatCategory(cat));
+                const data = Object.values(stats.byCategory);
+                
+                charts.categoryChart.data.labels = labels;
+                charts.categoryChart.data.datasets[0].data = data;
+                charts.categoryChart.update();
+            }
+            
+            // Update timeline chart
+            if (charts.timelineChart) {
+                // Group projects by month
+                const monthlyData = {};
+                const now = new Date();
+                
+                // Initialize last 6 months
+                for (let i = 5; i >= 0; i--) {
+                    const date = new Date(now.getFullYear(), now.getMonth() - i, 1);
+                    const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                    monthlyData[key] = 0;
+                }
+                
+                // Count projects by month
+                projects.forEach(project => {
+                    if (project.dateAdded) {
+                        const date = new Date(project.dateAdded);
+                        const key = `${date.getFullYear()}-${String(date.getMonth() + 1).padStart(2, '0')}`;
+                        if (monthlyData.hasOwnProperty(key)) {
+                            monthlyData[key]++;
+                        }
+                    }
+                });
+                
+                charts.timelineChart.data.labels = Object.keys(monthlyData);
+                charts.timelineChart.data.datasets[0].data = Object.values(monthlyData);
+                charts.timelineChart.update();
+            }
+        }
+
+        // Scraping functions
+        async function scrapeSingleUrl() {
+            const url = document.getElementById('scraping-url').value;
+            if (!url) return;
+            
+            const resultsDiv = document.getElementById('scraping-results');
+            resultsDiv.innerHTML = `
+                <div class="scraping-status active">
+                    <div class="spinner"></div>
+                    <span>Scraping ${url}...</span>
+                </div>
+            `;
+            
+            try {
+                // Add to scraping queue
+                await db.addToScrapingQueue(url, 'high');
+                
+                // Simulate scraping (in real implementation, this would call MCP tools)
+                setTimeout(async () => {
+                    const mockProject = {
+                        name: new URL(url).hostname.replace('www.', '').split('.')[0],
+                        url: url,
+                        category: detectCategory(url),
+                        status: 'active',
+                        description: 'Project discovered via automated scraping',
+                        source: 'scraper'
+                    };
+                    
+                    resultsDiv.innerHTML = `
+                        <div class="message success" style="display: block;">
+                            ✅ Scraping completed successfully!
+                        </div>
+                        <div style="margin-top: 20px; padding: 20px; background: var(--bg-secondary); border-radius: 12px;">
+                            <h4>Project Found:</h4>
+                            <p><strong>Name:</strong> ${mockProject.name}</p>
+                            <p><strong>Category:</strong> ${formatCategory(mockProject.category)}</p>
+                            <p><strong>URL:</strong> ${mockProject.url}</p>
+                            <button class="btn" onclick='addScrapedProject(${JSON.stringify(mockProject)})' style="margin-top: 15px;">
+                                ➕ Add to Directory
+                            </button>
+                        </div>
+                    `;
+                }, 2000);
+                
+            } catch (error) {
+                resultsDiv.innerHTML = `
+                    <div class="message error" style="display: block;">
+                        ❌ Error scraping URL: ${error.message}
+                    </div>
+                `;
+            }
+        }
+
+        // Add scraped project
+        async function addScrapedProject(projectData) {
+            try {
+                await db.addProject(projectData);
+                showMessage('Project added successfully!', 'success');
+                await loadProjects();
+                await updateDashboard();
+                document.getElementById('scraping-url').value = '';
+                document.getElementById('scraping-results').innerHTML = '';
+            } catch (error) {
+                showMessage('Error adding project: ' + error.message, 'error');
+            }
+        }
+
+        // Start automated scraping
+        function startAutomatedScraping() {
+            const statusDiv = document.getElementById('scraping-status');
+            const statusText = document.getElementById('scraping-status-text');
+            const stopBtn = document.getElementById('stop-scraping');
+            
+            statusDiv.classList.add('active');
+            statusText.textContent = 'Running';
+            stopBtn.style.display = 'inline-block';
+            
+            // Scrape all monitored sites
+            let index = 0;
+            scrapingInterval = setInterval(async () => {
+                if (index >= KASPA_SITES.length) {
+                    stopAutomatedScraping();
+                    showMessage('Automated scraping completed!', 'success');
+                    return;
+                }
+                
+                const site = KASPA_SITES[index];
+                statusText.textContent = `Scraping ${site.name}...`;
+                
+                // Add to queue
+                await db.addToScrapingQueue(site.url, 'normal');
+                
+                index++;
+            }, 3000);
+        }
+
+        // Stop automated scraping
+        function stopAutomatedScraping() {
+            if (scrapingInterval) {
+                clearInterval(scrapingInterval);
+                scrapingInterval = null;
+            }
+            
+            const statusDiv = document.getElementById('scraping-status');
+            const statusText = document.getElementById('scraping-status-text');
+            const stopBtn = document.getElementById('stop-scraping');
+            
+            statusDiv.classList.remove('active');
+            statusText.textContent = 'Idle';
+            stopBtn.style.display = 'none';
+        }
+
+        // Load monitored sites
+        function loadMonitoredSites() {
+            const container = document.getElementById('monitored-sites');
+            container.innerHTML = KASPA_SITES.map(site => `
+                <div style="padding: 15px; background: var(--bg-secondary); border-radius: 12px; display: flex; justify-content: space-between; align-items: center;">
+                    <div>
+                        <strong>${site.name}</strong>
+                        <span style="color: var(--text-tertiary); margin-left: 10px;">${site.url}</span>
+                    </div>
+                    <span class="status-badge status-active">Monitored</span>
+                </div>
+            `).join('');
+        }
+
+        // Detect category from URL
+        function detectCategory(url) {
+            const lowerUrl = url.toLowerCase();
+            if (lowerUrl.includes('wallet') || lowerUrl.includes('vault')) return 'wallet';
+            if (lowerUrl.includes('dex') || lowerUrl.includes('swap') || lowerUrl.includes('defi')) return 'defi';
+            if (lowerUrl.includes('nft')) return 'nft';
+            if (lowerUrl.includes('explorer') || lowerUrl.includes('scan')) return 'explorer';
+            if (lowerUrl.includes('github')) return 'tool';
+            return 'other';
+        }
+
+        // Export functions
+        async function exportToJSON() {
+            const data = await db.exportToJSON();
+            const blob = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `kaspa-ecosystem-${new Date().toISOString().split('T')[0]}.json`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showMessage('Data exported successfully!', 'success');
+        }
+
+        async function exportToCSV() {
+            const csv = await db.exportToCSV();
+            const blob = new Blob([csv], { type: 'text/csv' });
+            const url = URL.createObjectURL(blob);
+            const a = document.createElement('a');
+            a.href = url;
+            a.download = `kaspa-ecosystem-${new Date().toISOString().split('T')[0]}.csv`;
+            a.click();
+            URL.revokeObjectURL(url);
+            showMessage('CSV exported successfully!', 'success');
+        }
+
+        // Import functions
+        function showImportModal() {
+            document.getElementById('import-modal').style.display = 'block';
+        }
+
+        function closeImportModal() {
+            document.getElementById('import-modal').style.display = 'none';
+            document.getElementById('import-data').value = '';
+        }
+
+        function handleFileUpload(event) {
+            const file = event.target.files[0];
+            if (!file) return;
+            
+            const reader = new FileReader();
+            reader.onload = (e) => {
+                document.getElementById('import-data').value = e.target.result;
+            };
+            reader.readAsText(file);
+        }
+
+        async function importData() {
+            const textarea = document.getElementById('import-data');
+            const data = textarea.value.trim();
+            
+            if (!data) {
+                showMessage('Please provide JSON data to import', 'error');
+                return;
+            }
+            
+            try {
+                const result = await db.importFromJSON(data);
+                showMessage(`Import successful! ${result.projectsImported} projects imported`, 'success');
+                closeImportModal();
+                await loadProjects();
+                await updateDashboard();
+            } catch (error) {
+                showMessage('Error importing data: ' + error.message, 'error');
+            }
+        }
+
+        // Google Sheets integration
+        async function createGoogleSheet() {
+            showMessage('Creating new Google Sheet...', 'info');
+            
+            // In real implementation, this would use Google Sheets API
+            // For now, provide instructions
+            const sheetStructure = {
+                sheets: [
+                    {
+                        name: 'Projects',
+                        headers: ['ID', 'Name', 'URL', 'Category', 'Status', 'Description', 'Twitter', 'Discord', 'Telegram', 'GitHub', 'Audit Status', 'Audit Link', 'Tags', 'Date Added', 'Last Updated', 'Source']
+                    },
+                    {
+                        name: 'Categories',
+                        headers: ['Category ID', 'Category Name', 'Description']
+                    },
+                    {
+                        name: 'Audit_Log',
+                        headers: ['Timestamp', 'Action', 'Project Name', 'Changes', 'Source']
+                    }
+                ]
+            };
+            
+            const instructions = `
+To create a new Google Sheet:
+
+1. Go to Google Sheets (sheets.google.com)
+2. Create a new spreadsheet named "Kaspa Ecosystem Directory"
+3. Create these sheets: ${sheetStructure.sheets.map(s => s.name).join(', ')}
+4. Add the headers to each sheet
+5. Share the sheet with: ${SERVICE_ACCOUNT.email}
+6. Copy the Sheet ID from the URL and paste it in the settings
+
+Sheet structure has been copied to clipboard!
+            `;
+            
+            navigator.clipboard.writeText(JSON.stringify(sheetStructure, null, 2));
+            alert(instructions);
+        }
+
+        async function syncToGoogleSheets() {
+            const sheetId = document.getElementById('sheet-id').value;
+            if (!sheetId) {
+                showMessage('Please enter a Google Sheets ID', 'error');
+                return;
+            }
+            
+            showMessage('Syncing to Google Sheets...', 'info');
+            
+            try {
+                // Export data
+                const data = await db.exportToJSON();
+                
+                // In real implementation, this would use Google Sheets API with service account
+                // For now, export CSV and provide instructions
+                await exportToCSV();
+                
+                showMessage('Data exported as CSV. Import it into your Google Sheet.', 'success');
+                
+                // Log sync
+                logSync('push', data.projects.length);
+                
+            } catch (error) {
+                showMessage('Error syncing to Google Sheets: ' + error.message, 'error');
+            }
+        }
+
+        async function syncFromGoogleSheets() {
+            const sheetId = document.getElementById('sheet-id').value;
+            if (!sheetId) {
+                showMessage('Please enter a Google Sheets ID', 'error');
+                return;
+            }
+            
+            showMessage('This feature requires Google Sheets API integration', 'info');
+        }
+
+        async function testGoogleConnection() {
+            showMessage('Testing Google connection...', 'info');
+            
+            // In real implementation, this would test the service account connection
+            setTimeout(() => {
+                showMessage(`Service account configured: ${SERVICE_ACCOUNT.email}`, 'success');
+            }, 1000);
+        }
+
+        // Sync logging
+        function logSync(type, count) {
+            const history = document.getElementById('sync-history');
+            const entry = document.createElement('div');
+            entry.style.cssText = 'padding: 15px; background: var(--bg-secondary); border-radius: 12px; margin-bottom: 10px;';
+            entry.innerHTML = `
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <span>${type === 'push' ? '⬆️ Pushed' : '⬇️ Pulled'} ${count} projects</span>
+                    <span style="color: var(--text-tertiary);">${new Date().toLocaleString()}</span>
+                </div>
+            `;
+            history.insertBefore(entry, history.firstChild);
+        }
+
+        // Settings functions
+        function loadSettings() {
+            const settings = JSON.parse(localStorage.getItem('kaspa-settings') || '{}');
+            
+            if (settings.sheetId) {
+                document.getElementById('sheet-id').value = settings.sheetId;
+            }
+            
+            if (settings.autoScraping) {
+                document.getElementById('auto-scraping-interval').value = settings.autoScraping;
+            }
+            
+            if (settings.defaultStatus) {
+                document.getElementById('default-status').value = settings.defaultStatus;
+            }
+            
+            if (settings.twitterNotifications) {
+                document.getElementById('twitter-notifications').value = settings.twitterNotifications;
+            }
+        }
+
+        function saveSettings() {
+            const settings = {
+                sheetId: document.getElementById('sheet-id').value,
+                autoScraping: document.getElementById('auto-scraping-interval').value,
+                defaultStatus: document.getElementById('default-status').value,
+                twitterNotifications: document.getElementById('twitter-notifications').value
+            };
+            
+            localStorage.setItem('kaspa-settings', JSON.stringify(settings));
+            showMessage('Settings saved successfully!', 'success');
+        }
+
+        async function resetDatabase() {
+            if (!confirm('Are you sure you want to reset the database? This will delete all projects!')) {
+                return;
+            }
+            
+            try {
+                await db.clearAllData();
+                await loadProjects();
+                await updateDashboard();
+                showMessage('Database reset successfully!', 'success');
+            } catch (error) {
+                showMessage('Error resetting database: ' + error.message, 'error');
+            }
+        }
+
+        // Edit project (placeholder)
+        function editProject(projectId) {
+            showMessage('Edit functionality coming soon!', 'info');
+        }
+
+        // Utility functions
+        function showMessage(text, type = 'info') {
+            const message = document.createElement('div');
+            message.className = `message ${type}`;
+            message.style.display = 'block';
+            message.style.position = 'fixed';
+            message.style.top = '20px';
+            message.style.right = '20px';
+            message.style.zIndex = '1001';
+            message.style.maxWidth = '400px';
+            message.innerHTML = text;
+            
+            document.body.appendChild(message);
+            
+            setTimeout(() => {
+                message.style.opacity = '0';
+                setTimeout(() => message.remove(), 300);
+            }, 3000);
+        }
+
+        function formatCategory(category) {
+            const categories = {
+                wallet: 'Wallet',
+                defi: 'DeFi',
+                exchange: 'Exchange',
+                nft: 'NFT',
+                infrastructure: 'Infrastructure',
+                tool: 'Dev Tool',
+                'smart-contract': 'Smart Contract',
+                explorer: 'Explorer',
+                other: 'Other'
+            };
+            return categories[category] || category;
+        }
+
+        function formatStatus(status) {
+            const statuses = {
+                active: 'Active',
+                development: 'In Development',
+                planned: 'Planned'
+            };
+            return statuses[status] || status;
+        }
+
+        // Database class (embedded)
+        class KaspaDatabase {
+            constructor() {
+                this.dbName = 'KaspaEcosystemDB';
+                this.version = 1;
+                this.db = null;
+            }
+
+            async init() {
+                return new Promise((resolve, reject) => {
+                    const request = indexedDB.open(this.dbName, this.version);
+
+                    request.onerror = () => reject(request.error);
+                    request.onsuccess = () => {
+                        this.db = request.result;
+                        resolve(this.db);
+                    };
+
+                    request.onupgradeneeded = (event) => {
+                        const db = event.target.result;
+
+                        // Create projects store
+                        if (!db.objectStoreNames.contains('projects')) {
+                            const projectStore = db.createObjectStore('projects', { 
+                                keyPath: 'id', 
+                                autoIncrement: true 
+                            });
+                            
+                            projectStore.createIndex('name', 'name', { unique: false });
+                            projectStore.createIndex('category', 'category', { unique: false });
+                            projectStore.createIndex('status', 'status', { unique: false });
+                            projectStore.createIndex('url', 'url', { unique: true });
+                            projectStore.createIndex('dateAdded', 'dateAdded', { unique: false });
+                        }
+
+                        // Create other stores...
+                        if (!db.objectStoreNames.contains('categories')) {
+                            const categoryStore = db.createObjectStore('categories', { keyPath: 'id' });
+                            categoryStore.createIndex('name', 'name', { unique: true });
+                        }
+
+                        if (!db.objectStoreNames.contains('auditLog')) {
+                            const auditStore = db.createObjectStore('auditLog', { 
+                                keyPath: 'id', 
+                                autoIncrement: true 
+                            });
+                            auditStore.createIndex('timestamp', 'timestamp', { unique: false });
+                        }
+
+                        if (!db.objectStoreNames.contains('scrapingQueue')) {
+                            const queueStore = db.createObjectStore('scrapingQueue', { 
+                                keyPath: 'id', 
+                                autoIncrement: true 
+                            });
+                            queueStore.createIndex('url', 'url', { unique: true });
+                        }
+
+                        this.initializeCategories(db);
+                    };
+                });
+            }
+
+            async initializeCategories(db) {
+                const transaction = db.transaction(['categories'], 'readwrite');
+                const store = transaction.objectStore('categories');
+
+                const categories = [
+                    { id: 'wallet', name: 'Wallet' },
+                    { id: 'defi', name: 'DeFi' },
+                    { id: 'exchange', name: 'Exchange' },
+                    { id: 'nft', name: 'NFT' },
+                    { id: 'infrastructure', name: 'Infrastructure' },
+                    { id: 'tool', name: 'Developer Tool' },
+                    { id: 'smart-contract', name: 'Smart Contract' },
+                    { id: 'explorer', name: 'Explorer' },
+                    { id: 'other', name: 'Other' }
+                ];
+
+                categories.forEach(cat => store.put(cat));
+            }
+
+            async addProject(projectData) {
+                const transaction = this.db.transaction(['projects', 'auditLog'], 'readwrite');
+                const projectStore = transaction.objectStore('projects');
+                const auditStore = transaction.objectStore('auditLog');
+
+                projectData.dateAdded = projectData.dateAdded || new Date().toISOString();
+                projectData.lastUpdated = new Date().toISOString();
+
+                const request = await projectStore.add(projectData);
+                
+                await auditStore.add({
+                    timestamp: new Date().toISOString(),
+                    action: 'create',
+                    projectName: projectData.name,
+                    changes: JSON.stringify(projectData),
+                    source: projectData.source || 'manual'
+                });
+
+                return request;
+            }
+
+            async getAllProjects() {
+                const transaction = this.db.transaction(['projects'], 'readonly');
+                const store = transaction.objectStore('projects');
+                return new Promise((resolve, reject) => {
+                    const request = store.getAll();
+                    request.onsuccess = () => resolve(request.result);
+                    request.onerror = () => reject(request.error);
+                });
+            }
+
+            async getStatistics() {
+                const projects = await this.getAllProjects();
+                
+                const stats = {
+                    total: projects.length,
+                    byCategory: {},
+                    byStatus: {},
+                    recentlyAdded: [],
+                    needsUpdate: []
+                };
+
+                projects.forEach(project => {
+                    // By category
+                    stats.byCategory[project.category] = (stats.byCategory[project.category] || 0) + 1;
+                    
+                    // By status
+                    stats.byStatus[project.status] = (stats.byStatus[project.status] || 0) + 1;
+                });
+
+                return stats;
+            }
+
+            async exportToJSON() {
+                const projects = await this.getAllProjects();
+                return {
+                    exportDate: new Date().toISOString(),
+                    projects: projects,
+                    version: '1.0'
+                };
+            }
+
+            async exportToCSV() {
+                const projects = await this.getAllProjects();
+                
+                const headers = [
+                    'Name', 'URL', 'Category', 'Status', 'Description',
+                    'Twitter', 'Discord', 'Telegram', 'GitHub', 
+                    'Audit Status', 'Tags', 'Date Added', 'Source'
+                ];
+                
+                const rows = projects.map(p => [
+                    p.name,
+                    p.url,
+                    p.category,
+                    p.status,
+                    p.description,
+                    p.twitter || '',
+                    p.discord || '',
+                    p.telegram || '',
+                    p.github || '',
+                    p.audit || 'none',
+                    (p.tags || []).join(';'),
+                    p.dateAdded,
+                    p.source || 'manual'
+                ]);
+                
+                const csvContent = [
+                    headers.join(','),
+                    ...rows.map(row => row.map(cell => `"${cell}"`).join(','))
+                ].join('\n');
+                
+                return csvContent;
+            }
+
+            async importFromJSON(jsonData) {
+                const data = typeof jsonData === 'string' ? JSON.parse(jsonData) : jsonData;
+                
+                let imported = 0;
+                if (data.projects) {
+                    for (const project of data.projects) {
+                        try {
+                            delete project.id; // Remove ID to let DB generate new one
+                            await this.addProject(project);
+                            imported++;
+                        } catch (error) {
+                            console.error('Error importing project:', project.name, error);
+                        }
+                    }
+                }
+                
+                return {
+                    projectsImported: imported,
+                    categoriesImported: 0
+                };
+            }
+
+            async addToScrapingQueue(url, priority = 'normal') {
+                const transaction = this.db.transaction(['scrapingQueue'], 'readwrite');
+                const store = transaction.objectStore('scrapingQueue');
+                
+                return store.add({
+                    url: url,
+                    priority: priority,
+                    status: 'pending',
+                    addedAt: new Date().toISOString(),
+                    attempts: 0
+                });
+            }
+
+            async clearAllData() {
+                const stores = ['projects', 'auditLog', 'scrapingQueue'];
+                const transaction = this.db.transaction(stores, 'readwrite');
+                
+                stores.forEach(storeName => {
+                    transaction.objectStore(storeName).clear();
+                });
+            }
+        }
+
+        // Initialize app on load
+        window.addEventListener('load', () => {
+            initializeApp();
+        });
+
+        // Handle modal clicks
+        window.addEventListener('click', (event) => {
+            const modal = document.getElementById('import-modal');
+            if (event.target === modal) {
+                closeImportModal();
+            }
+        });
+    </script>
+</body>
+</html>

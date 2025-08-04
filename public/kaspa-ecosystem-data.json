@@ -1,0 +1,18 @@
+{
+  "projects": [
+    {
+      "id": "1",
+      "name": "Kaspa Official",
+      "category": "Core",
+      "description": "Official Kaspa blockchain project",
+      "url": "https://kaspa.org",
+      "twitter": "@KaspaCurrency",
+      "github": "kaspanet",
+      "tags": ["blockchain", "core", "official"],
+      "added": "2024-01-01",
+      "lastUpdated": "2024-08-04"
+    }
+  ],
+  "lastUpdate": "2024-08-04",
+  "version": "1.0"
+}

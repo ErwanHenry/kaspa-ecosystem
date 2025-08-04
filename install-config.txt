@@ -1,0 +1,6 @@
+Installation Date: Dim  3 aoû 2025 18:35:29 CEST
+Directory: /Users/erwanhenry/kaspa-project/kaspa-ecosystem
+Node Version: v23.3.0
+Google Sheets ID: [Sera affiché dans les logs]
+Frontend Path: /Users/erwanhenry/kaspa-project/kaspa-ecosystem/frontend/index.html
+Backend Path: /Users/erwanhenry/kaspa-project/kaspa-ecosystem/backend/
