@@ -1,11 +1,53 @@
-# Local Netlify folder
+# Netlify
 .netlify
 
 # Backend sensitive files
 backend/.env
+backend/.env.*
 backend/service-account.json
+backend/*.json
 backend/logs/
+
+# Node modules
 node_modules/
+*/node_modules/
 
 # OS files
 .DS_Store
+Thumbs.db
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Temp files
+*.tmp
+*.temp
+*.log
+
+# Backup files
+*.backup
+*.bak
+.git.backup/
+
+# Private keys and credentials
+*.pem
+*.key
+*.p12
+*.pfx
+*.jks
+private/
+secrets/
+credentials/
+
+# Environment files
+.env
+.env.*
+!.env.example
+
+# Google Service Account files
+*-service-account.json
+*serviceaccount*.json
+*credentials*.json
