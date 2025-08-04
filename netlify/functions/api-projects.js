@@ -106,12 +106,48 @@ exports.handler = async (event, context) => {
     // Get the sheet ID and ensure it's a string
     const sheetId = String(process.env.GOOGLE_SHEET_ID).trim();
     console.log('Fetching data from sheet:', sheetId);
-    console.log('Sheet ID length:', sheetId.length);
     
-    // Fetch data
+    // First, try to get the spreadsheet metadata to find the correct sheet name
+    let sheetName = 'Sheet1'; // Default
+    try {
+      console.log('Getting spreadsheet metadata...');
+      const metadata = await sheets.spreadsheets.get({
+        spreadsheetId: sheetId,
+      });
+      
+      // Get the first sheet name
+      if (metadata.data.sheets && metadata.data.sheets.length > 0) {
+        sheetName = metadata.data.sheets[0].properties.title;
+        console.log('Found sheet name:', sheetName);
+      }
+    } catch (metaError) {
+      console.log('Could not get metadata, using default sheet name');
+      // Try common sheet names
+      const commonNames = ['Sheet1', 'Feuille 1', 'Feuille1', 'Hoja1', 'Foglio1'];
+      
+      for (const name of commonNames) {
+        try {
+          const testRange = `${name}!A1:A1`;
+          await sheets.spreadsheets.values.get({
+            spreadsheetId: sheetId,
+            range: testRange,
+          });
+          sheetName = name;
+          console.log('Found working sheet name:', sheetName);
+          break;
+        } catch (e) {
+          // Continue to next name
+        }
+      }
+    }
+    
+    // Fetch data with the correct sheet name
+    const range = `${sheetName}!A:L`;
+    console.log('Using range:', range);
+    
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId: sheetId,
-      range: 'Sheet1!A:L',
+      range: range,
     });
 
     console.log('Data fetched successfully');
@@ -174,7 +210,7 @@ exports.handler = async (event, context) => {
     
     // More specific error messages
     if (error.code === 403) {
-      errorMessage = 'Access denied. Please share the Google Sheet with the service account email.';
+      errorMessage = 'Access denied. Please share the Google Sheet with the service account email: ' + process.env.SERVICE_ACCOUNT_EMAIL;
       statusCode = 403;
     } else if (error.code === 404) {
       errorMessage = 'Google Sheet not found. Please check the Sheet ID in environment variables.';
@@ -184,16 +220,10 @@ exports.handler = async (event, context) => {
     } else if (error.message?.includes('invalid_grant')) {
       errorMessage = 'Authentication failed. Please check your service account credentials.';
       statusCode = 401;
+    } else if (error.message?.includes('Unable to parse range')) {
+      errorMessage = 'Sheet name not found. The spreadsheet might be using a different sheet name.';
+      statusCode = 400;
     }
-    
-    // Log the actual sheet ID being used (for debugging)
-    const debugInfo = {
-      sheetIdUsed: process.env.GOOGLE_SHEET_ID,
-      sheetIdLength: process.env.GOOGLE_SHEET_ID?.length,
-      hasAuth: !!process.env.SERVICE_ACCOUNT_KEY
-    };
-    
-    console.error('Debug info:', debugInfo);
     
     return {
       statusCode,
@@ -201,7 +231,7 @@ exports.handler = async (event, context) => {
       body: JSON.stringify({ 
         error: errorMessage,
         message: error.message,
-        debug: process.env.NODE_ENV === 'development' ? debugInfo : undefined
+        sheetId: process.env.GOOGLE_SHEET_ID
       })
     };
   }
