@@ -8,32 +8,20 @@ const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 // Initialize Google Sheets API
 const initGoogleSheets = () => {
   try {
-    // Debug: Log environment variables (sans données sensibles)
-    console.log('Environment check:');
-    console.log('GOOGLE_PROJECT_ID:', process.env.GOOGLE_PROJECT_ID ? 'Set' : 'Missing');
-    console.log('SERVICE_ACCOUNT_EMAIL:', process.env.SERVICE_ACCOUNT_EMAIL ? 'Set' : 'Missing');
-    console.log('SERVICE_ACCOUNT_KEY:', process.env.SERVICE_ACCOUNT_KEY ? 'Set' : 'Missing');
-    console.log('GOOGLE_SHEET_ID:', process.env.GOOGLE_SHEET_ID ? 'Set' : 'Missing');
-
-    if (!process.env.GOOGLE_PROJECT_ID || !process.env.SERVICE_ACCOUNT_EMAIL || 
-        !process.env.SERVICE_ACCOUNT_KEY || !process.env.GOOGLE_SHEET_ID) {
-      throw new Error('Missing required environment variables');
-    }
-
     const auth = new google.auth.GoogleAuth({
       credentials: {
         type: 'service_account',
         project_id: process.env.GOOGLE_PROJECT_ID,
         client_email: process.env.SERVICE_ACCOUNT_EMAIL,
-        private_key: process.env.SERVICE_ACCOUNT_KEY.replace(/\\n/g, '\n'),
+        private_key: process.env.SERVICE_ACCOUNT_KEY?.replace(/\\n/g, '\n'),
       },
       scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
     });
 
     return google.sheets({ version: 'v4', auth });
   } catch (error) {
-    console.error('Failed to initialize Google Sheets API:', error.message);
-    throw error;
+    console.error('Failed to initialize Google Sheets API:', error);
+    return null;
   }
 };
 
@@ -100,17 +88,17 @@ exports.handler = async (event, context) => {
     }
 
     // Initialize Google Sheets
-    console.log('Initializing Google Sheets API...');
     const sheets = initGoogleSheets();
-    
+    if (!sheets) {
+      throw new Error('Google Sheets API not initialized');
+    }
+
     // Fetch data
-    console.log('Fetching data from sheet:', process.env.GOOGLE_SHEET_ID);
     const response = await sheets.spreadsheets.values.get({
       spreadsheetId: process.env.GOOGLE_SHEET_ID,
       range: 'Sheet1!A:L',
     });
 
-    console.log('Data fetched successfully');
     const rows = response.data.values;
     const projects = parseSheetData(rows);
 
@@ -161,28 +149,14 @@ exports.handler = async (event, context) => {
     };
 
   } catch (error) {
-    console.error('Detailed error:', error);
-    console.error('Error stack:', error.stack);
-    
-    // Return more detailed error in development
-    const errorResponse = {
-      error: 'Failed to fetch projects',
-      message: error.message,
-      details: process.env.NODE_ENV === 'development' ? {
-        stack: error.stack,
-        env: {
-          hasProjectId: !!process.env.GOOGLE_PROJECT_ID,
-          hasEmail: !!process.env.SERVICE_ACCOUNT_EMAIL,
-          hasKey: !!process.env.SERVICE_ACCOUNT_KEY,
-          hasSheetId: !!process.env.GOOGLE_SHEET_ID
-        }
-      } : undefined
-    };
-    
+    console.error('Error:', error);
     return {
       statusCode: 500,
       headers,
-      body: JSON.stringify(errorResponse)
+      body: JSON.stringify({ 
+        error: 'Failed to fetch projects',
+        message: process.env.NODE_ENV === 'development' ? error.message : 'Internal server error'
+      })
     };
   }
 };
