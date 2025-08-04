@@ -1,0 +1,7 @@
+{
+	"actorSpecification": 1,
+	"name": "kaspa-scrapper",
+	"version": "0.0",
+	"buildTag": "latest",
+	"environmentVariables": {}
+}

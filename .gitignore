@@ -51,3 +51,8 @@ credentials/
 *-service-account.json
 *serviceaccount*.json
 *credentials*.json
+
+# Added by Apify CLI
+storage
+node_modules
+.venv
