@@ -13,7 +13,15 @@
     "type": "git",
     "url": "git+https://github.com/ErwanHenry/kaspa-ecosystem.git"
   },
-  "keywords": ["kaspa", "blockchain", "ecosystem", "directory"],
+  "keywords": [
+    "kaspa",
+    "blockchain",
+    "ecosystem",
+    "directory"
+  ],
   "author": "Erwan Henry",
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "@supabase/supabase-js": "^2.53.0"
+  }
 }
