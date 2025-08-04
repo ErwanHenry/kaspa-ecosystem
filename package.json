@@ -1,0 +1,19 @@
+{
+  "name": "kaspa-ecosystem",
+  "version": "2.0.0",
+  "description": "Kaspa Ecosystem Directory V2",
+  "scripts": {
+    "install:all": "npm install && cd backend && npm install && cd ../netlify/functions && npm install",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:frontend": "cd frontend && npm run dev",
+    "build": "cd netlify/functions && npm install",
+    "test": "cd backend && npm test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/ErwanHenry/kaspa-ecosystem.git"
+  },
+  "keywords": ["kaspa", "blockchain", "ecosystem", "directory"],
+  "author": "Erwan Henry",
+  "license": "MIT"
+}

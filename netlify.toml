@@ -1,6 +1,10 @@
 [build]
-  command = "# No build command needed for static site"
+  command = "npm install && cd netlify/functions && npm install"
   publish = "public"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "18"
 
 # Headers for better security and performance
 [[headers]]
@@ -10,6 +14,14 @@
     X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "no-referrer-when-downgrade"
+
+# API headers
+[[headers]]
+  for = "/.netlify/functions/*"
+  [headers.values]
+    Access-Control-Allow-Origin = "*"
+    Access-Control-Allow-Headers = "Content-Type, Authorization"
+    Access-Control-Allow-Methods = "GET, POST, OPTIONS"
 
 # Cache static assets
 [[headers]]
@@ -22,13 +34,19 @@
   [headers.values]
     Cache-Control = "public, max-age=604800"
 
-[[headers]]
-  for = "/*.json"
-  [headers.values]
-    Cache-Control = "public, max-age=3600"
+# Redirects for API
+[[redirects]]
+  from = "/api/projects"
+  to = "/.netlify/functions/api-projects"
+  status = 200
 
-[[headers]]
-  for = "/kaspa-ecosystem-data.json"
-  [headers.values]
-    Cache-Control = "public, max-age=300"
-    Access-Control-Allow-Origin = "*"
+[[redirects]]
+  from = "/api/projects/*"
+  to = "/.netlify/functions/api-projects/:splat"
+  status = 200
+
+# SPA redirect
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
