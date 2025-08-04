@@ -1118,10 +1118,6 @@
         let theme = localStorage.getItem('theme') || 'dark';
 
         // Service account configuration
-        const SERVICE_ACCOUNT = {
-            email: 'kaspa-ecosystem-service@annuairekaspa.iam.gserviceaccount.com',
-            key: process.env.SERVICE_ACCOUNT_KEY || "NOT_CONFIGURED"            projectId: 'annuairekaspa'
-        };
 
         // Known Kaspa ecosystem sites
         const KASPA_SITES = [
@@ -1668,11 +1664,11 @@
             }
         }
 
-        // Google Sheets integration
-        async function createGoogleSheet() {
+        // Local Storage integration
+        async function createLocalProject() {
             showMessage('Creating new Google Sheet...', 'info');
             
-            // In real implementation, this would use Google Sheets API
+            // In real implementation, this would use Local Storage API
             // For now, provide instructions
             const sheetStructure = {
                 sheets: [
@@ -1694,108 +1690,10 @@
             const instructions = `
 To create a new Google Sheet:
 
-1. Go to Google Sheets (sheets.google.com)
+1. Go to Local Storage (sheets.google.com)
 2. Create a new spreadsheet named "Kaspa Ecosystem Directory"
 3. Create these sheets: ${sheetStructure.sheets.map(s => s.name).join(', ')}
 4. Add the headers to each sheet
-5. Share the sheet with: ${SERVICE_ACCOUNT.email}
-6. Copy the Sheet ID from the URL and paste it in the settings
-
-Sheet structure has been copied to clipboard!
-            `;
-            
-            navigator.clipboard.writeText(JSON.stringify(sheetStructure, null, 2));
-            alert(instructions);
-        }
-
-        async function syncToGoogleSheets() {
-            const sheetId = document.getElementById('sheet-id').value;
-            if (!sheetId) {
-                showMessage('Please enter a Google Sheets ID', 'error');
-                return;
-            }
-            
-            showMessage('Syncing to Google Sheets...', 'info');
-            
-            try {
-                // Export data
-                const data = await db.exportToJSON();
-                
-                // In real implementation, this would use Google Sheets API with service account
-                // For now, export CSV and provide instructions
-                await exportToCSV();
-                
-                showMessage('Data exported as CSV. Import it into your Google Sheet.', 'success');
-                
-                // Log sync
-                logSync('push', data.projects.length);
-                
-            } catch (error) {
-                showMessage('Error syncing to Google Sheets: ' + error.message, 'error');
-            }
-        }
-
-        async function syncFromGoogleSheets() {
-            const sheetId = document.getElementById('sheet-id').value;
-            if (!sheetId) {
-                showMessage('Please enter a Google Sheets ID', 'error');
-                return;
-            }
-            
-            showMessage('This feature requires Google Sheets API integration', 'info');
-        }
-
-        async function testGoogleConnection() {
-            showMessage('Testing Google connection...', 'info');
-            
-            // In real implementation, this would test the service account connection
-            setTimeout(() => {
-                showMessage(`Service account configured: ${SERVICE_ACCOUNT.email}`, 'success');
-            }, 1000);
-        }
-
-        // Sync logging
-        function logSync(type, count) {
-            const history = document.getElementById('sync-history');
-            const entry = document.createElement('div');
-            entry.style.cssText = 'padding: 15px; background: var(--bg-secondary); border-radius: 12px; margin-bottom: 10px;';
-            entry.innerHTML = `
-                <div style="display: flex; justify-content: space-between; align-items: center;">
-                    <span>${type === 'push' ? '⬆️ Pushed' : '⬇️ Pulled'} ${count} projects</span>
-                    <span style="color: var(--text-tertiary);">${new Date().toLocaleString()}</span>
-                </div>
-            `;
-            history.insertBefore(entry, history.firstChild);
-        }
-
-        // Settings functions
-        function loadSettings() {
-            const settings = JSON.parse(localStorage.getItem('kaspa-settings') || '{}');
-            
-            if (settings.sheetId) {
-                document.getElementById('sheet-id').value = settings.sheetId;
-            }
-            
-            if (settings.autoScraping) {
-                document.getElementById('auto-scraping-interval').value = settings.autoScraping;
-            }
-            
-            if (settings.defaultStatus) {
-                document.getElementById('default-status').value = settings.defaultStatus;
-            }
-            
-            if (settings.twitterNotifications) {
-                document.getElementById('twitter-notifications').value = settings.twitterNotifications;
-            }
-        }
-
-        function saveSettings() {
-            const settings = {
-                sheetId: document.getElementById('sheet-id').value,
-                autoScraping: document.getElementById('auto-scraping-interval').value,
-                defaultStatus: document.getElementById('default-status').value,
-                twitterNotifications: document.getElementById('twitter-notifications').value
-            };
             
             localStorage.setItem('kaspa-settings', JSON.stringify(settings));
             showMessage('Settings saved successfully!', 'success');
