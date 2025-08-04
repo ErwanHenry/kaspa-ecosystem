@@ -1120,35 +1120,7 @@
         // Service account configuration
         const SERVICE_ACCOUNT = {
             email: 'kaspa-ecosystem-service@annuairekaspa.iam.gserviceaccount.com',
-            key: `-----BEGIN PRIVATE KEY-----
-MIIEvgIBADANBgkqhkiG9w0BAQEFAASCBKgwggSkAgEAAoIBAQDGTdd50P1xtUSq
-AtiTQfgW+/IBhMisY6Kt2Hlqbh+EjtINer4EgUp2NqA+zrXdoXJkh+F6fFQ3BRT/
-fDd65W6i3x4FSv6+bDPJGJRmTxwemqDu75gWvKyNmoaws/61wup04mm67T+xJErO
-KRhVDY4Yvn1S9FkAf1Ck2+CAaoaMqFwM5W/wd8OE7flkIh1lb2T3jcKdgg66QmyO
-Sk4AgflNwO0BAcFR7Yz7xy3hjoOr4dHTmEmTZAMqB4Pb74pBkCQHcq75Y6AGCJc7
-Lwl4F59tWgOTqB++CgVQQO3vtWTMoVz8r5JNnfnnl1aKXSLhLhqC14UFr7WNOSeZ
-C50WPCWXAgMBAAECggEAIjuW2oMe9W2u7FBwdb9aJhGZPfTftY6/qxYnI53eGAKV
-tVj+i4WMRqr4b888awWvWzZv0La8zQC2FsKpSzBnMHum0ZAYOOQx7mGtYJoAhzH3
-XTgEP8yTVyCZZtCzxEnhMotRaEEDkT9sIHnMpwYfhRsBRHxFDwZrdAI3F8QL9STf
-Xc/HwhbZqJ7qRGXB1+aH+RM9NXwuCH4AYPEOJbJD3NE8GwAmK5YiFDKzMhpPoMAh
-CpvOP+DKcWVyNXWsjr5Z7wjQG2h7vljwtZ/YbmmecGFGiIzlRBaXxJ0RE5cVX45S
-uPn0Fyxh42GZhu8cpD4JqqL6+ePKTQn8y4TtemT1AQKBgQDrSLdTV1jhRh87SIRL
-7JBocNrTECd3xuTorbyq/GQ67YQi9pIy7Q13md0X8nZ3hti73nz5mptGyWd71EzK
-JbJM/43B0RtxquD0jdRynqB2lXjVNyGLeQcLDvb/3nifNa6ntWlbwrhcLgAne0hh
-Hb8G58JfB/rFIX+RiYAlN831AQKBgQDXw5mMDfIZAV8QwqHIs0a859XgxWfQsWeF
-AoTmglvd9mel6Pxu6dRhleVBzW9UPzLiU6BpmuCxA5fiCjIBwQpeFnA4Wx/pUoeK
-0IzbEQnNdfbQtXGBaN5edS2bXtA0TfI86ghEkabm1FwMTUJckFBFVnumYmIg1kAR
-MJ8kqLailwKBgQDXJpqFenVLIs1Cb9CSgROYfcKMiNQegmEmqGDDVqLtA+717dXI
-/d53xNpZoJ1WNZgRS6WqtgdR1rBrmrpRi+Ec6f+eAXKAIcsttlhUK9v+NDbXel+R
-Y63eHeQeHDjfFb7Nm2VpxIjDukjn0aNhM0tQrDOgpPJau4Qk+MCWyA3tAQKBgQCU
-6+qlIlMBM1McTFpCHosqg5G5rEb1Yh0jTxPPzhX+Y74yY1cobrgqCr3L5zF6IozK
-bhIAEegYBXTljUfqsgSn4DDglPS3pEDtbPhrk50CdPNAJpwLSAiDhblOzehC0bHq
-nVXLjgR2ugg2bXTqUqk00nZR5wH3zCk4NCkDsncsTQKBgECDAMLRUpjKM35/cKpS
-7MflPfGy/gJ5CRSquKU4uDI99Ubte7KFWxA63Uz9KT1Tb6mkcWw+iCWN71R+lp8y
-JrL4BrM1PtKnopXQnp2tri+I71Z5XdMncIvoPGToK72XwDnoP/w8s8eDDIN+7fem
-AbvO+Asn1xWd779UOiRjE2y/
------END PRIVATE KEY-----`,
-            projectId: 'annuairekaspa'
+            key: process.env.SERVICE_ACCOUNT_KEY || "NOT_CONFIGURED"            projectId: 'annuairekaspa'
         };
 
         // Known Kaspa ecosystem sites
