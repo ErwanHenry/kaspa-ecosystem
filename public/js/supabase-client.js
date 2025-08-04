@@ -1,12 +1,7 @@
-// Configuration Supabase pour Kaspa Ecosystem
-// IMPORTANT: Utilisez uniquement la clé 'anon' ici (jamais la service_role)
-
-// Remplacez ces valeurs par les vôtres depuis Supabase > Settings > API
-const SUPABASE_URL = 'https://xyzxyzxyz.supabase.co'; // Votre Project URL
-const SUPABASE_ANON_KEY = 'eyJhbGc...'; // Votre clé 'anon (public)'
+// Configuration Supabase
+const SUPABASE_URL = 'https://kaspa-ecosystem.supabase.co';
+const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4ZG5nY3R4bHhyYmpoZHR6dHV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzNDU3MzYsImV4cCI6MjA2OTkyMTczNn0.N_jgf3Q2R98-FqsYpz7sns9CwOnViuQBXFoA0TcmWSM';
 
 // Initialiser le client Supabase
 const { createClient } = supabase;
 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
-
-console.log('Supabase client initialized');
