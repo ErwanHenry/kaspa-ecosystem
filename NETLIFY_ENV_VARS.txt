@@ -1,0 +1,17 @@
+# Variables d'environnement à copier dans Netlify
+# Site settings > Environment variables
+
+GOOGLE_SHEET_ID=1qZS7aQXCYoQcSODJbkbrr-hi5BFOXnjbGOypT8en2vQ
+GOOGLE_PROJECT_ID=annuairekaspa
+SERVICE_ACCOUNT_EMAIL=kaspa-ecosystem-service@annuairekaspa.iam.gserviceaccount.com
+
+# Pour SERVICE_ACCOUNT_KEY, vous devez :
+# 1. Aller sur Google Cloud Console
+# 2. IAM & Admin > Service Accounts
+# 3. Créer une nouvelle clé pour kaspa-ecosystem-service@annuairekaspa.iam.gserviceaccount.com
+# 4. Télécharger le JSON
+# 5. Copier la valeur de "private_key" (tout entre les guillemets)
+# 6. La coller dans Netlify
+
+# IMPORTANT : Dans Netlify, remplacer les \n par de vrais retours à la ligne
+# ou garder les \n selon ce qui fonctionne
