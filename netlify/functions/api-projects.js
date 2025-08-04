@@ -5,21 +5,27 @@ let cachedData = null;
 let cacheTimestamp = null;
 const CACHE_DURATION = 5 * 60 * 1000; // 5 minutes
 
-// FIXED: Hardcode the correct sheet ID to avoid environment variable issues
-const GOOGLE_SHEET_ID = '1qZS7aQXCYoQcSODJbkbrr-hi5BFOXnjbGOypT8en2vQ';
-
 // Initialize Google Sheets API
 const initGoogleSheets = () => {
   try {
-    console.log('Initializing Google Sheets API...');
-    console.log('Using Sheet ID:', GOOGLE_SHEET_ID);
-    
+    // Debug: Log environment variables (sans données sensibles)
+    console.log('Environment check:');
+    console.log('GOOGLE_PROJECT_ID:', process.env.GOOGLE_PROJECT_ID ? 'Set' : 'Missing');
+    console.log('SERVICE_ACCOUNT_EMAIL:', process.env.SERVICE_ACCOUNT_EMAIL ? 'Set' : 'Missing');
+    console.log('SERVICE_ACCOUNT_KEY:', process.env.SERVICE_ACCOUNT_KEY ? `Set (${process.env.SERVICE_ACCOUNT_KEY.length} chars)` : 'Missing');
+    console.log('GOOGLE_SHEET_ID:', process.env.GOOGLE_SHEET_ID ? `Set: ${process.env.GOOGLE_SHEET_ID}` : 'Missing');
+
+    if (!process.env.GOOGLE_PROJECT_ID || !process.env.SERVICE_ACCOUNT_EMAIL || 
+        !process.env.SERVICE_ACCOUNT_KEY || !process.env.GOOGLE_SHEET_ID) {
+      throw new Error('Missing required environment variables');
+    }
+
     const auth = new google.auth.GoogleAuth({
       credentials: {
         type: 'service_account',
         project_id: process.env.GOOGLE_PROJECT_ID,
         client_email: process.env.SERVICE_ACCOUNT_EMAIL,
-        private_key: process.env.SERVICE_ACCOUNT_KEY?.replace(/\\n/g, '\n'),
+        private_key: process.env.SERVICE_ACCOUNT_KEY.replace(/\\n/g, '\n'),
       },
       scopes: ['https://www.googleapis.com/auth/spreadsheets.readonly'],
     });
@@ -94,12 +100,17 @@ exports.handler = async (event, context) => {
     }
 
     // Initialize Google Sheets
+    console.log('Initializing Google Sheets API...');
     const sheets = initGoogleSheets();
     
+    // Get the sheet ID and ensure it's a string
+    const sheetId = String(process.env.GOOGLE_SHEET_ID).trim();
+    console.log('Fetching data from sheet:', sheetId);
+    console.log('Sheet ID length:', sheetId.length);
+    
     // Fetch data
-    console.log('Fetching data from Google Sheets...');
     const response = await sheets.spreadsheets.values.get({
-      spreadsheetId: GOOGLE_SHEET_ID,
+      spreadsheetId: sheetId,
       range: 'Sheet1!A:L',
     });
 
@@ -155,19 +166,34 @@ exports.handler = async (event, context) => {
     };
 
   } catch (error) {
-    console.error('Detailed error:', error.message);
-    console.error('Error type:', error.code);
+    console.error('Detailed error:', error);
+    console.error('Error stack:', error.stack);
     
     let errorMessage = 'Failed to fetch projects';
     let statusCode = 500;
     
+    // More specific error messages
     if (error.code === 403) {
       errorMessage = 'Access denied. Please share the Google Sheet with the service account email.';
       statusCode = 403;
     } else if (error.code === 404) {
-      errorMessage = 'Google Sheet not found. Please check the Sheet ID.';
+      errorMessage = 'Google Sheet not found. Please check the Sheet ID in environment variables.';
       statusCode = 404;
+    } else if (error.message?.includes('ENOTFOUND')) {
+      errorMessage = 'Cannot connect to Google Sheets API. Please check your internet connection.';
+    } else if (error.message?.includes('invalid_grant')) {
+      errorMessage = 'Authentication failed. Please check your service account credentials.';
+      statusCode = 401;
     }
+    
+    // Log the actual sheet ID being used (for debugging)
+    const debugInfo = {
+      sheetIdUsed: process.env.GOOGLE_SHEET_ID,
+      sheetIdLength: process.env.GOOGLE_SHEET_ID?.length,
+      hasAuth: !!process.env.SERVICE_ACCOUNT_KEY
+    };
+    
+    console.error('Debug info:', debugInfo);
     
     return {
       statusCode,
@@ -175,7 +201,7 @@ exports.handler = async (event, context) => {
       body: JSON.stringify({ 
         error: errorMessage,
         message: error.message,
-        sheetId: GOOGLE_SHEET_ID
+        debug: process.env.NODE_ENV === 'development' ? debugInfo : undefined
       })
     };
   }
