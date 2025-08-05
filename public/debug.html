@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Debug Supabase</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+</head>
+<body>
+    <h1>Debug Supabase Connection</h1>
+    <div id="status">Testing...</div>
+    <pre id="result"></pre>
+    
+    <script src="js/supabase-client.js"></script>
+    <script>
+        async function testConnection() {
+            const statusEl = document.getElementById('status');
+            const resultEl = document.getElementById('result');
+            
+            try {
+                console.log('Supabase URL:', SUPABASE_URL);
+                console.log('Supabase client:', supabaseClient);
+                
+                // Test 1: Check if tables exist
+                statusEl.textContent = 'Testing connection...';
+                
+                const { data: projects, error: projectsError } = await supabaseClient
+                    .from('projects')
+                    .select('*')
+                    .limit(5);
+                    
+                if (projectsError) {
+                    console.error('Projects error:', projectsError);
+                    resultEl.textContent = 'Projects error: ' + JSON.stringify(projectsError, null, 2);
+                    return;
+                }
+                
+                console.log('Projects:', projects);
+                resultEl.textContent = 'Success! Found ' + projects.length + ' projects:\n' + JSON.stringify(projects, null, 2);
+                
+                // Test 2: Check RLS
+                const { data: rls, error: rlsError } = await supabaseClient
+                    .from('projects')
+                    .select('name, category')
+                    .limit(1);
+                    
+                console.log('RLS test:', rls, rlsError);
+                
+            } catch (error) {
+                console.error('Test error:', error);
+                resultEl.textContent = 'Error: ' + error.message;
+            }
+        }
+        
+        testConnection();
+    </script>
+</body>
+</html>
