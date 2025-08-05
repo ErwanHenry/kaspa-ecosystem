@@ -411,4 +411,82 @@ async function submitRating(projectId) {
     }
     
     try {
+        const { error } = await supabaseClient            .from('ratings')
+            .upsert({
+                project_id: projectId,
+                user_email: email,
+                rating: currentRating
+            });
+
+        if (error) throw error;
+
+        alert('Rating submitted successfully!');
+        closeModal();
+        loadProjects(); // Recharger pour mettre à jour la moyenne
+    } catch (error) {
+        console.error('Error submitting rating:', error);
+        alert('Error submitting rating. You may have already rated this project.');
+    }
+}
+
+// Soumettre un commentaire
+async function submitComment(projectId) {
+    const name = document.getElementById('commentName').value;
+    const email = document.getElementById('commentEmail').value;
+    const comment = document.getElementById('commentText').value;
+    
+    if (!name || !comment || comment.length < 10) {
+        alert('Please provide your name and a comment (minimum 10 characters)');
+        return;
+    }
+    
+    try {
         const { error } = await supabaseClient
+            .from('comments')
+            .insert({
+                project_id: projectId,
+                user_name: name,
+                user_email: email,
+                comment: comment
+            });
+
+        if (error) throw error;
+
+        alert('Comment submitted! It will appear after moderation.');
+        document.getElementById('commentName').value = '';
+        document.getElementById('commentEmail').value = '';
+        document.getElementById('commentText').value = '';
+    } catch (error) {
+        console.error('Error submitting comment:', error);
+        alert('Error submitting comment.');
+    }
+}
+
+// Fermer la modal
+function closeModal() {
+    document.getElementById('modals').innerHTML = '';
+    currentRating = 0;
+}
+
+// Fonction utilitaire pour échapper le HTML
+function escapeHtml(text) {
+    const map = {
+        '&': '&amp;',
+        '<': '&lt;',
+        '>': '&gt;',
+        '"': '&quot;',
+        "'": '&#039;'
+    };
+    return text ? text.toString().replace(/[&<>"']/g, m => map[m]) : '';
+}
+
+// Afficher les erreurs
+function showError(message) {
+    console.error(message);
+    document.getElementById('projectsGrid').innerHTML = `
+        <div class="col-span-full text-center py-12 text-red-400">
+            <i class="fas fa-exclamation-triangle text-4xl mb-4"></i>
+            <p>${message}</p>
+        </div>
+    `;
+}
