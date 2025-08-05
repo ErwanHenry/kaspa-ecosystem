@@ -1,35 +1,6 @@
-<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kaspa Ecosystem - Discover Projects Building on Kaspa</title>
-    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link rel="stylesheet" href="css/kaspa-ecosystem.css">
-    <style>
-        /* Styles de base */
-        * { margin: 0; padding: 0; box-sizing: border-box; }
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
-            background: #0F172A;
-            color: #CBD5E1;
-            line-height: 1.6;
-        }
-        /* Ajoutez ici tous les styles de votre index.html actuel */
-    </style>
-</head>
-<body>
-    <header>
-        <div class="container">
-            <h1>⚡ Kaspa Ecosystem</h1>
-            <div class="wallet-section">
-                <button class="submit-project-btn" onclick="showSubmitModal()" title="Submit a new project">+</button>
-                <button class="wallet-connect-btn" onclick="showWalletModal()">
-                    <span id="wallet-status">🔗 Connect Wallet</span>
-                </button>
-            </div>
-        </div>
-    </header>
+=== INSTRUCTIONS POUR METTRE À JOUR INDEX.HTML ===
+
+1. AJOUTER LE CAROUSEL (après la section wallet, ligne ~490) :
 
     <!-- Featured Projects Carousel -->
     <section id="featured-carousel" class="featured-section">
@@ -39,8 +10,8 @@
                 <div class="carousel-track" id="carousel-track">
                     <!-- Projects will be loaded here dynamically -->
                 </div>
-                <button class="carousel-btn prev" onclick="app.moveCarousel(-1)">‹</button>
-                <button class="carousel-btn next" onclick="app.moveCarousel(1)">›</button>
+                <button class="carousel-btn prev" onclick="app.moveCarousel(-1)" aria-label="Previous">‹</button>
+                <button class="carousel-btn next" onclick="app.moveCarousel(1)" aria-label="Next">›</button>
             </div>
             <div id="no-featured" class="no-featured" style="display: none;">
                 <p>No featured projects yet. Be the first to sponsor a project!</p>
@@ -49,12 +20,7 @@
         </div>
     </section>
 
-    <main class="container">
-        <!-- Categories, Projects, etc. -->
-        <div id="app-content">
-            <!-- Votre contenu existant ici -->
-        </div>
-    </main>
+2. REMPLACER LE MODAL EXISTANT (chercher "submit-modal") PAR :
 
     <!-- Submit Project Modal -->
     <div id="submit-modal" class="modal">
@@ -130,25 +96,10 @@
         </div>
     </div>
 
-    <!-- Scripts -->
-    <script src="js/supabase-client.js"></script>
-    <script src="js/kaspa-wallet-integration.js"></script>
-    <script src="js/kaspa-sponsorship-system.js"></script>
-    <script src="js/kaspa-ecosystem-app.js"></script>
+3. AJOUTER LES SCRIPTS (avant </body>) :
+
     <script src="js/submit-project.js"></script>
     <script src="js/submit-project-update.js"></script>
-    <script>
-        // Initialisation
-        let app;
-        window.addEventListener('DOMContentLoaded', async () => {
-            app = new KaspaEcosystemApp();
-            window.app = app; // Rendre app global
-            
-            // Initialiser les fonctions du carousel
-            if (app.initFeaturedCarousel) {
-                await app.initFeaturedCarousel();
-            }
-        });
-    </script>
-</body>
-</html>
+
+4. DANS LA FONCTION init() de kaspa-ecosystem-app.js, AJOUTER :
+    await this.initFeaturedCarousel();
