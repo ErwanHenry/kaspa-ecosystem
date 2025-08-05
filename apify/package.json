@@ -1,0 +1,20 @@
+{
+    "name": "kaspa-ecosystem-scraper",
+    "version": "1.0.0",
+    "description": "Scraper for Kaspa ecosystem projects",
+    "main": "main.js",
+    "type": "module",
+    "scripts": {
+        "start": "node main.js",
+        "test": "echo \"Error: no test specified\" && exit 1"
+    },
+    "dependencies": {
+        "apify": "^3.1.0",
+        "crawlee": "^3.5.0",
+        "puppeteer": "^21.0.0",
+        "@supabase/supabase-js": "^2.38.0"
+    },
+    "devDependencies": {},
+    "author": "Kaspa Ecosystem",
+    "license": "MIT"
+}
