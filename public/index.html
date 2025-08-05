@@ -7,7 +7,7 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
-</head>
+    <link rel="stylesheet" href="css/supabase-styles.css"></head>
 <body class="bg-gray-950 text-gray-100">
     <!-- Header -->
     <header class="bg-gray-900 border-b border-gray-800">
@@ -17,7 +17,7 @@
                     <h1 class="text-3xl font-bold text-purple-400">Kaspa Ecosystem</h1>
                     <p class="text-gray-400 mt-1">Discover and rate projects building on Kaspa</p>
                 </div>
-                <button onclick="showSubmitForm()" class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
+                <div id="auth-section" class="auth-section"></div>                <button onclick="showSubmitForm()" class="bg-purple-600 hover:bg-purple-700 px-4 py-2 rounded-lg flex items-center gap-2 transition-colors">
                     <i class="fas fa-plus"></i>
                     Submit Project
                 </button>
@@ -31,11 +31,11 @@
             <div class="flex-1">
                 <div class="relative">
                     <i class="fas fa-search absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400"></i>
-                    <input type="text" id="searchInput" placeholder="Search projects..." 
+                    <input type="text" id="search-input" placeholder="Search projects..." 
                            class="w-full pl-10 pr-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-purple-500">
                 </div>
             </div>
-            <select id="categoryFilter" class="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-purple-500">
+            <select id="categories-nav" class="px-4 py-2 bg-gray-800 border border-gray-700 rounded-lg focus:outline-none focus:border-purple-500">
                 <option value="all">All Categories</option>
             </select>
         </div>
@@ -46,7 +46,7 @@
 
     <!-- Projects Grid -->
     <div class="max-w-7xl mx-auto px-4 pb-12">
-        <div id="projectsGrid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
+        <div id="projects-grid" class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
             <!-- Projects will be loaded here -->
         </div>
     </div>
