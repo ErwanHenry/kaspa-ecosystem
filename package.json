@@ -1,27 +1,33 @@
 {
   "name": "kaspa-ecosystem",
   "version": "2.0.0",
-  "description": "Kaspa Ecosystem Directory V2",
+  "description": "Community platform for Kaspa blockchain ecosystem projects",
+  "main": "netlify/functions/api-projects.js",
   "scripts": {
-    "install:all": "npm install && cd backend && npm install && cd ../netlify/functions && npm install",
-    "dev:backend": "cd backend && npm run dev",
-    "dev:frontend": "cd frontend && npm run dev",
-    "build": "cd netlify/functions && npm install",
-    "test": "cd backend && npm test"
+    "start": "netlify dev",
+    "build": "echo 'No build required'",
+    "deploy": "netlify deploy --prod",
+    "test": "echo 'No tests yet'"
   },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/ErwanHenry/kaspa-ecosystem.git"
+  "dependencies": {
+    "@supabase/supabase-js": "^2.38.0",
+    "@sendgrid/mail": "^7.7.0",
+    "node-fetch": "^3.3.0"
+  },
+  "devDependencies": {
+    "netlify-cli": "^17.0.0"
   },
   "keywords": [
     "kaspa",
     "blockchain",
     "ecosystem",
-    "directory"
+    "directory",
+    "web3"
   ],
-  "author": "Erwan Henry",
+  "author": "Kaspa Ecosystem Team",
   "license": "MIT",
-  "dependencies": {
-    "@supabase/supabase-js": "^2.53.0"
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/ErwanHenry/kaspa-ecosystem.git"
   }
 }
