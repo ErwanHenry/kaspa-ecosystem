@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaspa Ecosystem Directory</title>
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/kaspa-modern.css">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <nav class="nav-container">
+            <a href="#" class="logo">
+                <span>⚡</span> Kaspa Ecosystem
+            </a>
+            <div class="nav-links">
+                <a href="#projects" class="nav-link">Projects</a>
+                <a href="#stats" class="nav-link">Statistics</a>
+                <a href="#about" class="nav-link">About</a>
+            </div>
+            <div class="wallet-section">
+                <!-- Auth state will be managed by app -->
+            </div>
+        </nav>
+    </header>
+
+    <!-- Featured Projects Carousel -->
+    <section class="featured-section">
+        <div class="featured-container">
+            <h2 class="featured-title">Featured Projects</h2>
+            <div class="carousel">
+                <div class="carousel-track" id="carouselTrack">
+                    <!-- Featured projects will be dynamically inserted here -->
+                </div>
+                <div class="carousel-controls">
+                    <button class="carousel-btn" onclick="moveCarousel(-1)">‹</button>
+                    <button class="carousel-btn" onclick="moveCarousel(1)">›</button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Main Content -->
+    <main class="container">
+        <!-- Dashboard Stats -->
+        <section id="stats" class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-value" id="totalProjects">0</div>
+                <div class="stat-label">Total Projects</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="activeProjects">0</div>
+                <div class="stat-label">Active Projects</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="totalRatings">0</div>
+                <div class="stat-label">Community Ratings</div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-value" id="verifiedProjects">0</div>
+                <div class="stat-label">Verified Projects</div>
+            </div>
+        </section>
+
+        <!-- Filters -->
+        <div class="filters">
+            <input type="text" class="search-input" placeholder="Search projects..." id="searchInput">
+            <select class="filter-select" id="categoryFilter">
+                <option value="">All Categories</option>
+            </select>
+            <select class="filter-select" id="ratingFilter">
+                <option value="">All Ratings</option>
+                <option value="5">5 Stars</option>
+                <option value="4">4+ Stars</option>
+                <option value="3">3+ Stars</option>
+                <option value="warn">⚠️ Warning</option>
+            </select>
+        </div>
+
+        <!-- Projects Grid -->
+        <section id="projects" class="projects-grid">
+            <!-- Projects will be dynamically inserted here -->
+        </section>
+    </main>
+
+    <!-- Add Project FAB -->
+    <button class="fab" onclick="showAddProjectModal()">+</button>
+
+    <!-- Admin Link -->
+    <a href="#" class="admin-link" onclick="showAdminLogin()">Admin</a>
+
+    <!-- Modals will be here -->
+    <!-- Add Project Modal -->
+    <div class="modal" id="addProjectModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Add New Project</h2>
+                <button class="close-btn" onclick="closeModal('addProjectModal')">&times;</button>
+            </div>
+            <form onsubmit="submitProject(event)">
+                <div class="form-group">
+                    <label>Project Name <span class="required">*</span></label>
+                    <input type="text" class="form-control" name="name" required>
+                </div>
+                <div class="form-group">
+                    <label>Category <span class="required">*</span></label>
+                    <select class="form-control" name="category" required>
+                        <option value="">Select Category</option>
+                        <option value="defi">DeFi</option>
+                        <option value="wallet">Wallet</option>
+                        <option value="exchange">Exchange</option>
+                        <option value="nft">NFT</option>
+                        <option value="mining">Mining</option>
+                        <option value="tool">Tool</option>
+                        <option value="game">Gaming</option>
+                        <option value="other">Other</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Description <span class="required">*</span></label>
+                    <textarea class="form-control" name="description" rows="3" required></textarea>
+                </div>
+                <div class="form-group">
+                    <label>Logo</label>
+                    <input type="file" class="file-input" id="logoInput" accept="image/*" onchange="previewLogo(event)">
+                    <label for="logoInput" class="file-label">Choose Logo</label>
+                    <img class="logo-preview" id="logoPreview" style="display: none;">
+                </div>
+                <div class="form-group">
+                    <label>Website URL</label>
+                    <input type="url" class="form-control" name="url" placeholder="https://example.com">
+                </div>
+                <div class="form-group">
+                    <label>Twitter</label>
+                    <input type="text" class="form-control" name="twitter" placeholder="@username">
+                </div>
+                <div class="form-group">
+                    <label>GitHub</label>
+                    <input type="text" class="form-control" name="github" placeholder="username/repo">
+                </div>
+                <div class="form-group">
+                    <label>Discord</label>
+                    <input type="text" class="form-control" name="discord" placeholder="Discord invite link">
+                </div>
+                <button type="submit" class="wallet-btn" style="width: 100%;">Submit Project</button>
+            </form>
+        </div>
+    </div>
+
+    <!-- Rating Modal -->
+    <div class="modal" id="ratingModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Rate Project</h2>
+                <button class="close-btn" onclick="closeModal('ratingModal')">&times;</button>
+            </div>
+            <div id="ratingProjectName" style="font-size: 1.2rem; margin-bottom: 1rem;"></div>
+            <div class="rating-input">
+                <span class="rating-star" data-rating="1" onclick="setRating(1)">★</span>
+                <span class="rating-star" data-rating="2" onclick="setRating(2)">★</span>
+                <span class="rating-star" data-rating="3" onclick="setRating(3)">★</span>
+                <span class="rating-star" data-rating="4" onclick="setRating(4)">★</span>
+                <span class="rating-star" data-rating="5" onclick="setRating(5)">★</span>
+            </div>
+            <div class="form-group">
+                <label>Comment (Optional)</label>
+                <textarea class="form-control" id="ratingComment" rows="3" placeholder="Share your experience..."></textarea>
+            </div>
+            <div class="form-group">
+                <label>
+                    <input type="checkbox" id="scamWarning"> Flag as potential scam
+                </label>
+            </div>
+            <button class="wallet-btn" style="width: 100%;" onclick="submitRating()">Submit Rating</button>
+        </div>
+    </div>
+
+    <!-- Wallet Selection Modal -->
+    <div class="modal" id="walletModal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Connect to Kaspa Ecosystem</h2>
+                <button class="close-btn" onclick="closeModal('walletModal')">&times;</button>
+            </div>
+            <div style="display: flex; flex-direction: column; gap: 1rem;">
+                <button class="wallet-btn" style="width: 100%;" onclick="connectSpecificWallet('google')">
+                    🌐 Continue with Google
+                </button>
+                <button class="wallet-btn" style="width: 100%;" onclick="connectSpecificWallet('github')">
+                    💻 Continue with GitHub
+                </button>
+                <hr style="margin: 1rem 0; border-color: var(--border-color);">
+                <button class="wallet-btn" style="width: 100%;" onclick="connectSpecificWallet('kasware')">
+                    🟢 Kasware Wallet (Coming Soon)
+                </button>
+                <button class="wallet-btn" style="width: 100%;" onclick="connectSpecificWallet('kastle')">
+                    🏰 Kastle Wallet (Coming Soon)
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div class="toast" id="toast"></div>
+
+    <!-- Scripts -->
+    <script src="js/supabase-client.js"></script>
+    <script src="js/kaspa-modern-app.js"></script>
+</body>
+</html>
