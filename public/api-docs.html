@@ -1,0 +1,288 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaspa Ecosystem API Documentation</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/kaspa-modern.css">
+    <style>
+        .api-container {
+            max-width: 1000px;
+            margin: 2rem auto;
+            padding: 2rem;
+        }
+        
+        .endpoint {
+            background: var(--card-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .method {
+            display: inline-block;
+            padding: 0.25rem 0.75rem;
+            border-radius: 4px;
+            font-weight: 600;
+            font-size: 0.9rem;
+            margin-right: 1rem;
+        }
+        
+        .method.get { background: #10B981; color: white; }
+        .method.post { background: #3B82F6; color: white; }
+        .method.put { background: #F59E0B; color: white; }
+        .method.delete { background: #EF4444; color: white; }
+        
+        .endpoint-path {
+            font-family: monospace;
+            font-size: 1.1rem;
+            color: var(--kaspa-green);
+        }
+        
+        pre {
+            background: var(--bg-secondary);
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            padding: 1rem;
+            overflow-x: auto;
+        }
+        
+        code {
+            font-family: monospace;
+            background: var(--bg-tertiary);
+            padding: 0.2rem 0.4rem;
+            border-radius: 4px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <nav class="nav-container">
+            <a href="index.html" class="logo">
+                <span>⚡</span> Kaspa Ecosystem
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">← Back to App</a>
+            </div>
+        </nav>
+    </header>
+
+    <div class="api-container">
+        <h1 style="color: var(--kaspa-green); text-align: center; margin-bottom: 3rem;">API Documentation</h1>
+        
+        <section class="endpoint">
+            <h2>Authentication</h2>
+            <p>The Kaspa Ecosystem API uses Supabase authentication. You can obtain an API key from your account settings.</p>
+            <pre><code>Authorization: Bearer YOUR_API_KEY</code></pre>
+        </section>
+
+        <section class="endpoint">
+            <h2>JavaScript Client</h2>
+            <p>Use the global <code>KaspaEcosystemAPI</code> object in your browser:</p>
+            <pre><code>// Get all projects
+const { data, error } = await KaspaEcosystemAPI.getProjects();
+
+// Get specific project
+const { data, error } = await KaspaEcosystemAPI.getProject('project-id');
+
+// Subscribe to real-time updates
+const subscription = KaspaEcosystemAPI.subscribeToProjects((payload) => {
+    console.log('Project update:', payload);
+});</code></pre>
+        </section>
+
+        <section class="endpoint">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/api/projects</span>
+            <h3>List all projects</h3>
+            <p>Returns a list of all active projects in the ecosystem.</p>
+            
+            <h4>Query Parameters</h4>
+            <ul>
+                <li><code>category</code> - Filter by category slug</li>
+                <li><code>featured</code> - Filter featured projects (true/false)</li>
+                <li><code>sort</code> - Sort by: rating, recent, active</li>
+                <li><code>limit</code> - Number of results (default: 50)</li>
+                <li><code>offset</code> - Pagination offset</li>
+            </ul>
+            
+            <h4>Example Response</h4>
+            <pre><code>{
+  "data": [
+    {
+      "id": "123e4567-e89b-12d3-a456-426614174000",
+      "title": "Kaspa Wallet",
+      "description": "Official Kaspa wallet",
+      "category": {
+        "name": "Wallets",
+        "slug": "wallets"
+      },
+      "website": "https://wallet.kaspanet.org",
+      "github_stars": 1234,
+      "average_rating": 4.5,
+      "rating_count": 42
+    }
+  ],
+  "count": 150
+}</code></pre>
+        </section>
+
+        <section class="endpoint">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/api/projects/:id</span>
+            <h3>Get project details</h3>
+            <p>Returns detailed information about a specific project.</p>
+            
+            <h4>Example Response</h4>
+            <pre><code>{
+  "data": {
+    "id": "123e4567-e89b-12d3-a456-426614174000",
+    "title": "Kaspa Wallet",
+    "description": "Official Kaspa wallet for secure storage",
+    "category": {
+      "id": "cat-123",
+      "name": "Wallets",
+      "slug": "wallets"
+    },
+    "website": "https://wallet.kaspanet.org",
+    "github": "https://github.com/kaspanet/kaspad",
+    "twitter": "@KaspaCurrency",
+    "discord": "https://discord.gg/kaspa",
+    "github_stars": 1234,
+    "github_forks": 567,
+    "discord_members": 5000,
+    "ratings": [
+      {
+        "user_id": "user-123",
+        "rating": 5,
+        "created_at": "2024-01-15T10:30:00Z"
+      }
+    ],
+    "comments": [
+      {
+        "id": "comment-123",
+        "user": {
+          "username": "kaspa_fan",
+          "avatar_url": "..."
+        },
+        "content": "Great wallet!",
+        "created_at": "2024-01-15T10:30:00Z"
+      }
+    ]
+  }
+}</code></pre>
+        </section>
+
+        <section class="endpoint">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/projects</span>
+            <h3>Submit new project</h3>
+            <p>Submit a new project for review. Requires authentication.</p>
+            
+            <h4>Request Body</h4>
+            <pre><code>{
+  "title": "My Kaspa Project",
+  "description": "A new tool for the Kaspa ecosystem",
+  "category_id": "cat-123",
+  "website": "https://myproject.com",
+  "github": "https://github.com/user/project",
+  "twitter": "@myproject",
+  "discord": "https://discord.gg/myproject",
+  "logo_url": "https://myproject.com/logo.png"
+}</code></pre>
+        </section>
+
+        <section class="endpoint">
+            <span class="method post">POST</span>
+            <span class="endpoint-path">/api/projects/:id/rate</span>
+            <h3>Rate a project</h3>
+            <p>Submit or update your rating for a project. Requires authentication.</p>
+            
+            <h4>Request Body</h4>
+            <pre><code>{
+  "rating": 5,
+  "comment": "Excellent project!" // optional
+}</code></pre>
+        </section>
+
+        <section class="endpoint">
+            <span class="method get">GET</span>
+            <span class="endpoint-path">/api/analytics/growth</span>
+            <h3>Get growth statistics</h3>
+            <p>Returns project growth data over time.</p>
+            
+            <h4>Query Parameters</h4>
+            <ul>
+                <li><code>period</code> - Time period: day, week, month (default: month)</li>
+                <li><code>category</code> - Filter by category</li>
+            </ul>
+        </section>
+
+        <section class="endpoint">
+            <h2>WebSocket Events</h2>
+            <p>Subscribe to real-time updates using the Supabase client:</p>
+            
+            <h4>Available Channels</h4>
+            <ul>
+                <li><code>projects:*</code> - All project updates</li>
+                <li><code>projects:new</code> - New projects only</li>
+                <li><code>ratings:*</code> - All rating updates</li>
+                <li><code>comments:*</code> - All comment updates</li>
+            </ul>
+            
+            <h4>Example</h4>
+            <pre><code>const channel = supabaseClient
+  .channel('projects:new')
+  .on('postgres_changes', 
+    { event: 'INSERT', schema: 'public', table: 'projects' },
+    (payload) => {
+      console.log('New project:', payload.new);
+    }
+  )
+  .subscribe();</code></pre>
+        </section>
+
+        <section class="endpoint">
+            <h2>Rate Limits</h2>
+            <p>API rate limits to ensure fair usage:</p>
+            <ul>
+                <li>Anonymous: 100 requests per hour</li>
+                <li>Authenticated: 1000 requests per hour</li>
+                <li>Webhooks: 10 requests per minute</li>
+            </ul>
+        </section>
+
+        <section class="endpoint">
+            <h2>Error Codes</h2>
+            <table style="width: 100%;">
+                <tr>
+                    <th>Code</th>
+                    <th>Description</th>
+                </tr>
+                <tr>
+                    <td><code>400</code></td>
+                    <td>Bad Request - Invalid parameters</td>
+                </tr>
+                <tr>
+                    <td><code>401</code></td>
+                    <td>Unauthorized - Invalid or missing API key</td>
+                </tr>
+                <tr>
+                    <td><code>404</code></td>
+                    <td>Not Found - Resource doesn't exist</td>
+                </tr>
+                <tr>
+                    <td><code>429</code></td>
+                    <td>Too Many Requests - Rate limit exceeded</td>
+                </tr>
+                <tr>
+                    <td><code>500</code></td>
+                    <td>Internal Server Error</td>
+                </tr>
+            </table>
+        </section>
+    </div>
+</body>
+</html>

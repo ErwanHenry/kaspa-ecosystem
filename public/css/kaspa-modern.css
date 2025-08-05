@@ -670,3 +670,280 @@ body {
 .required {
     color: var(--warning-bg);
 }
+ var(--bg-secondary);
+    box-shadow: -5px 0 15px var(--shadow-color);
+    transition: right 0.3s ease;
+    z-index: 1500;
+    overflow-y: auto;
+}
+
+.notification-center.show {
+    right: 0;
+}
+
+.notification-header {
+    padding: 1.5rem;
+    border-bottom: 1px solid var(--border-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.notification-header h3 {
+    color: var(--kaspa-green);
+    margin: 0;
+}
+
+.close-notifications {
+    background: none;
+    border: none;
+    color: var(--text-secondary);
+    font-size: 1.5rem;
+    cursor: pointer;
+}
+
+.notification-list {
+    padding: 1rem;
+}
+
+.notification-item {
+    background: var(--card-bg);
+    border: 1px solid var(--border-color);
+    border-radius: 8px;
+    padding: 1rem;
+    margin-bottom: 1rem;
+    cursor: pointer;
+    transition: all 0.3s;
+    display: flex;
+    gap: 1rem;
+}
+
+.notification-item:hover {
+    border-color: var(--kaspa-green);
+    transform: translateX(-5px);
+}
+
+.notification-item.unread {
+    border-left: 3px solid var(--kaspa-green);
+}
+
+.notification-icon {
+    font-size: 1.5rem;
+}
+
+.notification-content h4 {
+    color: var(--text-primary);
+    margin: 0 0 0.5rem 0;
+    font-size: 0.95rem;
+}
+
+.notification-content p {
+    color: var(--text-secondary);
+    margin: 0 0 0.5rem 0;
+    font-size: 0.85rem;
+}
+
+.notification-time {
+    color: var(--text-tertiary);
+    font-size: 0.75rem;
+}
+
+.no-notifications {
+    text-align: center;
+    color: var(--text-tertiary);
+    padding: 2rem;
+}
+
+/* Project Metrics */
+.project-metrics {
+    display: flex;
+    gap: 1rem;
+    margin: 1rem 0;
+    flex-wrap: wrap;
+}
+
+.metric {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.25rem;
+    background: var(--bg-tertiary);
+    padding: 0.25rem 0.75rem;
+    border-radius: 16px;
+    font-size: 0.85rem;
+    color: var(--text-secondary);
+}
+
+/* Project Actions */
+.project-actions {
+    display: flex;
+    gap: 0.5rem;
+    margin-top: 0.5rem;
+}
+
+.follow-btn {
+    background: var(--bg-tertiary);
+    border: 1px solid var(--border-color);
+    color: var(--kaspa-green);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    transition: all 0.3s;
+    font-size: 0.9rem;
+}
+
+.follow-btn:hover {
+    background: var(--kaspa-green);
+    color: var(--bg-primary);
+    border-color: var(--kaspa-green);
+}
+
+.follow-btn.following {
+    background: var(--kaspa-green);
+    color: var(--bg-primary);
+}
+
+/* Featured Badge */
+.featured-badge {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: linear-gradient(135deg, #FFD700, #FFA500);
+    color: var(--bg-primary);
+    padding: 0.25rem 0.75rem;
+    border-radius: 16px;
+    font-size: 0.8rem;
+    font-weight: 600;
+}
+
+/* Highlight Animation */
+@keyframes highlight {
+    0% { box-shadow: 0 0 0 0 var(--kaspa-green); }
+    50% { box-shadow: 0 0 20px 5px var(--kaspa-green); }
+    100% { box-shadow: 0 0 0 0 var(--kaspa-green); }
+}
+
+.project-card.highlight {
+    animation: highlight 2s ease-out;
+}
+
+/* Sort Filter */
+.filter-select {
+    background: var(--bg-secondary);
+    border: 1px solid var(--border-color);
+    color: var(--text-primary);
+    padding: 0.75rem 1rem;
+    border-radius: 8px;
+    cursor: pointer;
+    font-size: 1rem;
+}
+
+.filter-select:focus {
+    outline: none;
+    border-color: var(--kaspa-green);
+}
+
+/* Wallet Types */
+.wallet-btn {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+}
+
+/* Comment Count */
+.comment-count {
+    margin-left: 1rem;
+    color: var(--text-tertiary);
+}
+
+/* API Documentation Link */
+.api-docs-link {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    background: var(--bg-tertiary);
+    color: var(--kaspa-green);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+    text-decoration: none;
+    font-size: 0.9rem;
+    opacity: 0.7;
+    transition: opacity 0.3s;
+}
+
+.api-docs-link:hover {
+    opacity: 1;
+}
+
+/* Responsive Updates */
+@media (max-width: 768px) {
+    .analytics-grid {
+        grid-template-columns: 1fr;
+    }
+    
+    .notification-center {
+        width: 100%;
+        right: -100%;
+    }
+    
+    .notification-center.show {
+        right: 0;
+    }
+    
+    .project-metrics {
+        font-size: 0.8rem;
+    }
+    
+    .metric {
+        padding: 0.2rem 0.5rem;
+        font-size: 0.75rem;
+    }
+}
+
+/* Loading States */
+.chart-loading {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 200px;
+}
+
+/* Wallet Connect Improvements */
+.wallet-connected {
+    background: rgba(73, 234, 203, 0.1);
+    border: 1px solid var(--kaspa-green);
+    padding: 0.5rem 1rem;
+    border-radius: 8px;
+}
+
+.wallet-address {
+    font-weight: 600;
+}
+
+/* OAuth Provider Buttons */
+.provider-section {
+    margin-top: 1rem;
+    padding-top: 1rem;
+    border-top: 1px solid var(--border-color);
+}
+
+/* Enhanced Project Card */
+.project-card {
+    position: relative;
+    overflow: hidden;
+}
+
+.project-card::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: -100%;
+    width: 100%;
+    height: 100%;
+    background: linear-gradient(90deg, transparent, rgba(73, 234, 203, 0.2), transparent);
+    transition: left 0.5s;
+}
+
+.project-card:hover::before {
+    left: 100%;
+}
