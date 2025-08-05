@@ -437,7 +437,7 @@ class KaspaEcosystem {
             
             // Submit to Supabase
             const { error } = await this.supabase
-                .from('project_ratings')
+                .from('wallet_ratings')
                 .insert({
                     project_id: projectId,
                     wallet_address: this.walletManager.getAddress(),

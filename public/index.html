@@ -3,255 +3,567 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Kaspa Ecosystem Directory</title>
+    <title>Kaspa Ecosystem - Live</title>
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
-    <link rel="stylesheet" href="css/kaspa-modern.css">
-    <link rel="stylesheet" href="css/supabase-styles.css">
-    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        :root {
+            --kaspa-green: #49EACB;
+            --kaspa-dark: #0F172A;
+            --kaspa-card: #1E293B;
+            --kaspa-border: #334155;
+        }
+        
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            background: var(--kaspa-dark);
+            color: #F8FAFC;
+            line-height: 1.6;
+        }
+        
+        .header {
+            background: var(--kaspa-card);
+            border-bottom: 1px solid var(--kaspa-border);
+            padding: 1rem 2rem;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        
+        .nav {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: bold;
+            color: var(--kaspa-green);
+        }
+        
+        .wallet-section {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+        
+        .wallet-connect-btn {
+            background: var(--kaspa-green);
+            color: var(--kaspa-dark);
+            border: none;
+            padding: 0.75rem 1.5rem;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .wallet-connect-btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(73, 234, 203, 0.3);
+        }
+        
+        .wallet-info {
+            display: none;
+            align-items: center;
+            gap: 1rem;
+            background: rgba(73, 234, 203, 0.1);
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--kaspa-green);
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        .stats {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 1rem;
+            margin-bottom: 2rem;
+        }
+        
+        .stat-card {
+            background: var(--kaspa-card);
+            padding: 1.5rem;
+            border-radius: 12px;
+            border: 1px solid var(--kaspa-border);
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2rem;
+            font-weight: bold;
+            color: var(--kaspa-green);
+        }
+        
+        .stat-label {
+            color: #94A3B8;
+            font-size: 0.9rem;
+        }
+        
+        .filters {
+            margin-bottom: 2rem;
+        }
+        
+        .search-bar {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--kaspa-card);
+            border: 1px solid var(--kaspa-border);
+            border-radius: 8px;
+            color: white;
+            font-size: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .category-filters {
+            display: flex;
+            gap: 0.5rem;
+            flex-wrap: wrap;
+        }
+        
+        .category-filter {
+            background: var(--kaspa-card);
+            border: 1px solid var(--kaspa-border);
+            color: #CBD5E1;
+            padding: 0.5rem 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .category-filter:hover,
+        .category-filter.active {
+            background: var(--kaspa-green);
+            color: var(--kaspa-dark);
+            border-color: var(--kaspa-green);
+        }
+        
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .project-card {
+            background: var(--kaspa-card);
+            border: 1px solid var(--kaspa-border);
+            border-radius: 12px;
+            padding: 1.5rem;
+            transition: all 0.3s;
+            position: relative;
+        }
+        
+        .project-card:hover {
+            transform: translateY(-4px);
+            border-color: var(--kaspa-green);
+            box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+        }
+        
+        .featured-badge {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: linear-gradient(135deg, #FFD700, #FFA500);
+            color: var(--kaspa-dark);
+            padding: 0.25rem 0.75rem;
+            border-radius: 16px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .project-header {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin-bottom: 1rem;
+        }
+        
+        .project-logo {
+            width: 50px;
+            height: 50px;
+            border-radius: 8px;
+            object-fit: cover;
+        }
+        
+        .project-header h3 {
+            color: var(--kaspa-green);
+            font-size: 1.2rem;
+        }
+        
+        .category-badge {
+            display: inline-block;
+            background: var(--kaspa-dark);
+            padding: 0.25rem 0.75rem;
+            border-radius: 16px;
+            font-size: 0.8rem;
+            color: #CBD5E1;
+        }
+        
+        .project-description {
+            color: #CBD5E1;
+            margin-bottom: 1rem;
+            font-size: 0.95rem;
+        }
+        
+        .project-stats {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 1rem;
+            font-size: 0.9rem;
+            color: #94A3B8;
+        }
+        
+        .project-links {
+            display: flex;
+            gap: 0.75rem;
+            margin-bottom: 1rem;
+        }
+        
+        .project-links a {
+            color: var(--kaspa-green);
+            text-decoration: none;
+            font-size: 0.9rem;
+        }
+        
+        .project-links a:hover {
+            text-decoration: underline;
+        }
+        
+        .project-actions {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .rate-btn {
+            flex: 1;
+            background: var(--kaspa-dark);
+            border: 1px solid var(--kaspa-border);
+            color: white;
+            padding: 0.5rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .rate-btn:hover:not(:disabled) {
+            background: var(--kaspa-green);
+            color: var(--kaspa-dark);
+            border-color: var(--kaspa-green);
+        }
+        
+        .rate-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .submit-project-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            background: var(--kaspa-green);
+            color: var(--kaspa-dark);
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s;
+        }
+        
+        .submit-project-btn:hover:not(:disabled) {
+            transform: scale(1.1);
+        }
+        
+        .submit-project-btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        
+        .modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 1000;
+        }
+        
+        .modal-content {
+            background: var(--kaspa-card);
+            padding: 2rem;
+            border-radius: 12px;
+            max-width: 500px;
+            width: 90%;
+        }
+        
+        .modal-content h2 {
+            color: var(--kaspa-green);
+            margin-bottom: 1.5rem;
+        }
+        
+        .wallet-options {
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .wallet-option {
+            background: var(--kaspa-dark);
+            border: 1px solid var(--kaspa-border);
+            padding: 1rem;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s;
+            text-align: center;
+            color: white;
+        }
+        
+        .wallet-option:hover {
+            border-color: var(--kaspa-green);
+            transform: translateY(-2px);
+        }
+        
+        .rating-stars {
+            display: flex;
+            justify-content: center;
+            gap: 0.5rem;
+            font-size: 2rem;
+            margin: 1rem 0;
+        }
+        
+        .star {
+            cursor: pointer;
+            color: #6B7280;
+            transition: color 0.3s;
+        }
+        
+        .star:hover {
+            color: #FFD700;
+        }
+        
+        #rating-comment {
+            width: 100%;
+            padding: 0.75rem;
+            background: var(--kaspa-dark);
+            border: 1px solid var(--kaspa-border);
+            border-radius: 8px;
+            color: white;
+            resize: vertical;
+            min-height: 100px;
+            margin-bottom: 1rem;
+        }
+        
+        .modal-actions {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .modal-actions button {
+            flex: 1;
+            padding: 0.75rem;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        
+        .modal-actions button:first-child {
+            background: var(--kaspa-green);
+            color: var(--kaspa-dark);
+        }
+        
+        .modal-actions button:last-child {
+            background: var(--kaspa-dark);
+            color: white;
+            border: 1px solid var(--kaspa-border);
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 2rem;
+            left: 50%;
+            transform: translateX(-50%) translateY(100px);
+            background: var(--kaspa-card);
+            padding: 1rem 2rem;
+            border-radius: 8px;
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+            transition: transform 0.3s;
+            z-index: 1100;
+        }
+        
+        .toast.show {
+            transform: translateX(-50%) translateY(0);
+        }
+        
+        .toast-success {
+            border-left: 4px solid #10B981;
+        }
+        
+        .toast-error {
+            border-left: 4px solid #EF4444;
+        }
+        
+        .toast-warning {
+            border-left: 4px solid #F59E0B;
+        }
+        
+        .toast-info {
+            border-left: 4px solid #3B82F6;
+        }
+        
+        #user-menu {
+            display: none;
+            background: var(--kaspa-card);
+            padding: 1rem;
+            border-radius: 8px;
+            border: 1px solid var(--kaspa-border);
+        }
+        
+        .user-info {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+            margin-bottom: 0.5rem;
+        }
+        
+        .user-avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+        }
+        
+        .username {
+            font-weight: 600;
+            color: var(--kaspa-green);
+        }
+        
+        .user-stats {
+            font-size: 0.9rem;
+            color: #94A3B8;
+        }
+        
+        .no-projects {
+            text-align: center;
+            color: #6B7280;
+            padding: 3rem;
+            font-size: 1.1rem;
+        }
+    </style>
 </head>
 <body>
-    <!-- Header -->
     <header class="header">
-        <nav class="nav-container">
-            <a href="#" class="logo">
-                <span>⚡</span> Kaspa Ecosystem
-            </a>
-            <div class="nav-links">
-                <a href="#projects" class="nav-link">Projects</a>
-                <a href="#stats" class="nav-link">Statistics</a>
-                <a href="#analytics" class="nav-link">Analytics</a>
-                <a href="#about" class="nav-link">About</a>
-            </div>
-            <div class="wallet-section" id="wallet-section">
-                <button class="wallet-btn" onclick="connectWallet()">Connect Wallet</button>
-                <div class="wallet-connected" style="display: none;">
+        <nav class="nav">
+            <div class="logo">⚡ Kaspa Ecosystem</div>
+            <div class="wallet-section">
+                <div id="user-menu"></div>
+                <button class="wallet-connect-btn" onclick="showWalletModal()">
+                    Connect Wallet
+                </button>
+                <div class="wallet-info">
                     <span class="wallet-address"></span>
-                    <button class="wallet-btn" onclick="disconnectWallet()">Disconnect</button>
+                    <span class="wallet-balance"></span>
+                    <button onclick="app.disconnectWallet()" style="background: none; border: none; color: var(--kaspa-green); cursor: pointer;">
+                        Disconnect
+                    </button>
                 </div>
             </div>
         </nav>
     </header>
 
-    <!-- Featured Projects Carousel -->
-    <section class="featured-section">
-        <div class="featured-container">
-            <h2 class="featured-title">Featured Projects</h2>
-            <div class="carousel">
-                <div class="carousel-track" id="carouselTrack">
-                    <!-- Featured projects will be dynamically inserted here -->
-                </div>
-                <div class="carousel-controls">
-                    <button class="carousel-btn" onclick="moveCarousel(-1)">‹</button>
-                    <button class="carousel-btn" onclick="moveCarousel(1)">›</button>
-                </div>
-            </div>
-        </div>
-    </section>
-
-    <!-- Main Content -->
     <main class="container">
-        <!-- Dashboard Stats -->
-        <section id="stats" class="stats-grid">
+        <div class="stats">
             <div class="stat-card">
-                <div class="stat-value" id="totalProjects">0</div>
+                <div class="stat-value" id="total-projects">0</div>
                 <div class="stat-label">Total Projects</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value" id="activeProjects">0</div>
+                <div class="stat-value" id="active-projects">0</div>
                 <div class="stat-label">Active Projects</div>
             </div>
             <div class="stat-card">
-                <div class="stat-value" id="totalRatings">0</div>
-                <div class="stat-label">Community Ratings</div>
+                <div class="stat-value" id="total-users">0</div>
+                <div class="stat-label">Community Members</div>
             </div>
-            <div class="stat-card">
-                <div class="stat-value" id="verifiedProjects">0</div>
-                <div class="stat-label">Verified Projects</div>
-            </div>
-        </section>
-
-        <!-- Analytics Dashboard -->
-        <section id="analytics" class="analytics-section" style="display: none;">
-            <h2 class="section-title">Ecosystem Analytics</h2>
-            <div class="analytics-grid">
-                <div class="chart-container">
-                    <h3>Projects Growth</h3>
-                    <canvas id="growthChart"></canvas>
-                </div>
-                <div class="chart-container">
-                    <h3>Category Distribution</h3>
-                    <canvas id="categoryChart"></canvas>
-                </div>
-                <div class="chart-container">
-                    <h3>GitHub Activity Heatmap</h3>
-                    <canvas id="activityChart"></canvas>
-                </div>
-                <div class="chart-container">
-                    <h3>Rating Trends</h3>
-                    <canvas id="ratingChart"></canvas>
-                </div>
-            </div>
-        </section>
-
-        <!-- Filters -->
-        <div class="filters">
-            <input type="text" class="search-input" placeholder="Search projects..." id="searchInput">
-            <select class="filter-select" id="categoryFilter">
-                <option value="">All Categories</option>
-            </select>
-            <select class="filter-select" id="ratingFilter">
-                <option value="">All Ratings</option>
-                <option value="5">5 Stars</option>
-                <option value="4">4+ Stars</option>
-                <option value="3">3+ Stars</option>
-                <option value="warn">⚠️ Warning</option>
-            </select>
-            <select class="filter-select" id="sortFilter">
-                <option value="featured">Featured First</option>
-                <option value="rating">Highest Rated</option>
-                <option value="recent">Most Recent</option>
-                <option value="active">Most Active</option>
-            </select>
         </div>
 
-        <!-- Projects Grid -->
-        <section id="projects" class="projects-grid">
-            <!-- Projects will be dynamically inserted here -->
-        </section>
+        <div class="filters">
+            <input type="text" id="search-input" class="search-bar" placeholder="Search projects...">
+            <div id="category-filters" class="category-filters"></div>
+        </div>
+
+        <div id="projects-grid" class="projects-grid">
+            <!-- Projects will be loaded here -->
+        </div>
     </main>
 
-    <!-- Notification System -->
-    <div class="notification-center" id="notificationCenter">
-        <div class="notification-header">
-            <h3>Notifications</h3>
-            <button class="close-notifications" onclick="toggleNotifications()">×</button>
-        </div>
-        <div class="notification-list" id="notificationList">
-            <!-- Notifications will be added here -->
-        </div>
-    </div>
-    <button class="notification-bell" id="notificationBell" onclick="toggleNotifications()">
-        🔔 <span class="notification-badge" id="notificationBadge">0</span>
+    <button class="submit-project-btn" onclick="showSubmitModal()" title="Submit a new project" disabled>
+        +
     </button>
 
-    <!-- Add Project FAB -->
-    <button class="fab" onclick="showAddProjectModal()">+</button>
-
-    <!-- Admin Link -->
-    <a href="#" class="admin-link" onclick="showAdminLogin()">Admin</a>
-
-    <!-- Add Project Modal -->
-    <div class="modal" id="addProjectModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Add New Project</h2>
-                <button class="close-btn" onclick="closeModal('addProjectModal')">&times;</button>
-            </div>
-            <form onsubmit="submitProject(event)">
-                <div class="form-group">
-                    <label>Project Name <span class="required">*</span></label>
-                    <input type="text" class="form-control" name="name" required>
-                </div>
-                <div class="form-group">
-                    <label>Category <span class="required">*</span></label>
-                    <select class="form-control" name="category" required>
-                        <option value="">Select Category</option>
-                    </select>
-                </div>
-                <div class="form-group">
-                    <label>Description <span class="required">*</span></label>
-                    <textarea class="form-control" name="description" rows="3" required></textarea>
-                </div>
-                <div class="form-group">
-                    <label>Logo</label>
-                    <input type="file" class="file-input" id="logoInput" accept="image/*" onchange="previewLogo(event)">
-                    <label for="logoInput" class="file-label">Choose Logo</label>
-                    <img class="logo-preview" id="logoPreview" style="display: none;">
-                </div>
-                <div class="form-group">
-                    <label>Website URL</label>
-                    <input type="url" class="form-control" name="url" placeholder="https://example.com">
-                </div>
-                <div class="form-group">
-                    <label>Twitter</label>
-                    <input type="text" class="form-control" name="twitter" placeholder="@username">
-                </div>
-                <div class="form-group">
-                    <label>GitHub</label>
-                    <input type="text" class="form-control" name="github" placeholder="username/repo">
-                </div>
-                <div class="form-group">
-                    <label>Discord</label>
-                    <input type="text" class="form-control" name="discord" placeholder="Discord invite link">
-                </div>
-                <button type="submit" class="wallet-btn" style="width: 100%;">Submit Project</button>
-            </form>
-        </div>
-    </div>
-
-    <!-- Rating Modal -->
-    <div class="modal" id="ratingModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Rate Project</h2>
-                <button class="close-btn" onclick="closeModal('ratingModal')">&times;</button>
-            </div>
-            <div id="ratingProjectName" style="font-size: 1.2rem; margin-bottom: 1rem;"></div>
-            <div class="rating-input">
-                <span class="rating-star" data-rating="1" onclick="setRating(1)">★</span>
-                <span class="rating-star" data-rating="2" onclick="setRating(2)">★</span>
-                <span class="rating-star" data-rating="3" onclick="setRating(3)">★</span>
-                <span class="rating-star" data-rating="4" onclick="setRating(4)">★</span>
-                <span class="rating-star" data-rating="5" onclick="setRating(5)">★</span>
-            </div>
-            <div class="form-group">
-                <label>Comment (Optional)</label>
-                <textarea class="form-control" id="ratingComment" rows="3" placeholder="Share your experience..."></textarea>
-            </div>
-            <div class="form-group">
-                <label>
-                    <input type="checkbox" id="scamWarning"> Flag as potential scam
-                </label>
-            </div>
-            <button class="wallet-btn" style="width: 100%;" onclick="submitRating()">Submit Rating</button>
-        </div>
-    </div>
-
-    <!-- Wallet Selection Modal -->
-    <div class="modal" id="walletModal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 class="modal-title">Select Wallet</h2>
-                <button class="close-btn" onclick="closeModal('walletModal')">&times;</button>
-            </div>
-            <div style="display: flex; flex-direction: column; gap: 1rem;">
-                <button class="wallet-btn" style="width: 100%;" onclick="connectSpecificWallet('kasware')">
-                    🟢 Kasware Wallet
-                </button>
-                <button class="wallet-btn" style="width: 100%;" onclick="connectSpecificWallet('kastle')">
-                    🏰 Kastle Wallet
-                </button>
-                <button class="wallet-btn" style="width: 100%;" onclick="connectSpecificWallet('kspr')">
-                    💎 KSPR Wallet
-                </button>
-                <hr style="margin: 1rem 0; border-color: var(--border-color);">
-                <p style="text-align: center; color: var(--text-secondary); font-size: 0.9rem;">Or continue with:</p>
-                <button class="wallet-btn" style="width: 100%; background: #4285f4;" onclick="connectWithSupabase('google')">
-                    🌐 Google Account
-                </button>
-                <button class="wallet-btn" style="width: 100%; background: #333;" onclick="connectWithSupabase('github')">
-                    💻 GitHub Account
-                </button>
-            </div>
-        </div>
-    </div>
-
-    <!-- Toast Notification -->
-    <div class="toast" id="toast"></div>
-
-    <!-- Scripts -->
     <script src="js/supabase-client.js"></script>
-    <script src="js/kaspa-ecosystem-app.js"></script>
+    <script src="js/kaspa-wallet-integration.js"></script>
+    <script src="js/kaspa-ecosystem-functional.js"></script>
+    <script>
+        function showWalletModal() {
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <h2>Connect Wallet</h2>
+                    <div class="wallet-options">
+                        <div class="wallet-option" onclick="app.connectWallet('kasware'); this.closest('.modal').remove()">
+                            🟢 Kasware Wallet
+                        </div>
+                        <div class="wallet-option" onclick="app.connectWallet('kastle'); this.closest('.modal').remove()">
+                            🏰 Kastle Wallet (Coming Soon)
+                        </div>
+                        <div class="wallet-option" onclick="app.connectWallet('kspr'); this.closest('.modal').remove()">
+                            💎 KSPR Wallet (Coming Soon)
+                        </div>
+                    </div>
+                    <button onclick="this.closest('.modal').remove()" style="width: 100%; margin-top: 1rem; padding: 0.75rem; background: var(--kaspa-dark); color: white; border: 1px solid var(--kaspa-border); border-radius: 8px; cursor: pointer;">
+                        Cancel
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+        
+        function showSubmitModal() {
+            if (!app.walletManager.isConnected()) {
+                app.showToast('Please connect your wallet first', 'warning');
+                return;
+            }
+            
+            const modal = document.createElement('div');
+            modal.className = 'modal';
+            modal.innerHTML = `
+                <div class="modal-content">
+                    <h2>Submit New Project</h2>
+                    <p>Project submission coming soon!</p>
+                    <button onclick="this.closest('.modal').remove()" style="width: 100%; margin-top: 1rem; padding: 0.75rem; background: var(--kaspa-green); color: var(--kaspa-dark); border: none; border-radius: 8px; cursor: pointer; font-weight: 600;">
+                        Close
+                    </button>
+                </div>
+            `;
+            document.body.appendChild(modal);
+        }
+    </script>
 </body>
 </html>
