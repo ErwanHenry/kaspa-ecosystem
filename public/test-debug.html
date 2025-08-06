@@ -1,0 +1,133 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kaspa Ecosystem - Debug</title>
+    <meta charset="UTF-8">
+    <style>
+        body { 
+            background: #0F172A; 
+            color: #CBD5E1; 
+            font-family: monospace; 
+            padding: 20px;
+        }
+        .status { 
+            padding: 10px; 
+            margin: 10px 0; 
+            border: 1px solid #334155;
+            border-radius: 5px;
+        }
+        .success { background: #10B981; color: white; }
+        .error { background: #EF4444; color: white; }
+        pre { 
+            background: #1E293B; 
+            padding: 10px; 
+            border-radius: 5px;
+            overflow: auto;
+        }
+    </style>
+</head>
+<body>
+    <h1>Kaspa Ecosystem - Debug Page</h1>
+    
+    <div id="debug-output">
+        <h2>Checking Components...</h2>
+    </div>
+
+    <!-- Load Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <script>
+        const debug = document.getElementById('debug-output');
+        
+        function log(message, type = 'info') {
+            const div = document.createElement('div');
+            div.className = `status ${type}`;
+            div.textContent = message;
+            debug.appendChild(div);
+        }
+        
+        function logPre(obj) {
+            const pre = document.createElement('pre');
+            pre.textContent = JSON.stringify(obj, null, 2);
+            debug.appendChild(pre);
+        }
+        
+        // Test 1: Check if Supabase is loaded
+        if (typeof supabase !== 'undefined') {
+            log('✅ Supabase library loaded', 'success');
+        } else {
+            log('❌ Supabase library NOT loaded', 'error');
+        }
+        
+        // Test 2: Load and check supabase-client.js
+        const script1 = document.createElement('script');
+        script1.src = 'js/supabase-client.js';
+        script1.onload = () => {
+            log('✅ supabase-client.js loaded', 'success');
+            
+            if (typeof supabaseClient !== 'undefined') {
+                log('✅ supabaseClient initialized', 'success');
+                
+                // Test 3: Try a simple query
+                supabaseClient
+                    .from('projects')
+                    .select('count')
+                    .single()
+                    .then(({ data, error }) => {
+                        if (error) {
+                            log('❌ Database connection error:', 'error');
+                            logPre(error);
+                        } else {
+                            log('✅ Database connection successful!', 'success');
+                            logPre(data);
+                        }
+                    });
+            } else {
+                log('❌ supabaseClient NOT initialized', 'error');
+            }
+        };
+        script1.onerror = () => log('❌ Failed to load supabase-client.js', 'error');
+        document.head.appendChild(script1);
+        
+        // Test 4: Check other scripts
+        setTimeout(() => {
+            const scripts = [
+                'js/kaspa-wallet-integration.js',
+                'js/kaspa-sponsorship-system.js',
+                'js/kaspa-ecosystem-app.js'
+            ];
+            
+            scripts.forEach(src => {
+                const script = document.createElement('script');
+                script.src = src;
+                script.onload = () => log(`✅ ${src} loaded`, 'success');
+                script.onerror = () => log(`❌ Failed to load ${src}`, 'error');
+                document.head.appendChild(script);
+            });
+            
+            // Test 5: Try to initialize app after all scripts load
+            setTimeout(() => {
+                try {
+                    if (typeof KaspaEcosystemApp !== 'undefined') {
+                        log('✅ KaspaEcosystemApp class found', 'success');
+                        const app = new KaspaEcosystemApp();
+                        log('✅ App initialized successfully!', 'success');
+                        window.app = app;
+                    } else {
+                        log('❌ KaspaEcosystemApp class NOT found', 'error');
+                    }
+                } catch (e) {
+                    log('❌ Error initializing app:', 'error');
+                    logPre({ error: e.message, stack: e.stack });
+                }
+            }, 1000);
+        }, 500);
+        
+        // Log browser console errors
+        window.onerror = (msg, url, line, col, error) => {
+            log(`❌ JavaScript Error: ${msg}`, 'error');
+            logPre({ url, line, col, error: error?.stack });
+        };
+    </script>
+</body>
+</html>

@@ -1,0 +1,560 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaspa Ecosystem - Discover Projects Building on Kaspa</title>
+    <meta name="description" content="Explore the growing ecosystem of projects building on Kaspa blockchain. Wallets, mining tools, DeFi, NFTs and more.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="/favicon.png">
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Supabase -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    
+    <!-- Icons -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/kaspa-design-system.css">
+    <link rel="stylesheet" href="css/kaspa-components.css">
+    <link rel="stylesheet" href="css/kaspa-animations.css">
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loader">
+            <div class="kaspa-logo-loader">
+                <svg viewBox="0 0 100 100" class="kaspa-pulse">
+                    <circle cx="50" cy="50" r="45" fill="none" stroke="#49EACB" stroke-width="2"/>
+                    <path d="M50 20 L70 40 L70 60 L50 80 L30 60 L30 40 Z" fill="#49EACB" opacity="0.2">
+                        <animate attributeName="opacity" values="0.2;0.8;0.2" dur="2s" repeatCount="indefinite"/>
+                    </path>
+                </svg>
+            </div>
+            <p class="loading-text">Loading Kaspa Ecosystem...</p>
+        </div>
+    </div>
+
+    <!-- Navigation -->
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="/" class="brand-link">
+                    <span class="brand-icon">⚡</span>
+                    <span class="brand-text">Kaspa Ecosystem</span>
+                </a>
+            </div>
+            
+            <div class="nav-menu" id="navMenu">
+                <a href="#featured" class="nav-link">Featured</a>
+                <a href="#categories" class="nav-link">Categories</a>
+                <a href="#projects" class="nav-link">All Projects</a>
+                <a href="#about" class="nav-link">About</a>
+            </div>
+            
+            <div class="nav-actions">
+                <button class="btn-submit-project" onclick="showSubmitModal()" aria-label="Submit Project">
+                    <i class="fas fa-plus"></i>
+                    <span class="btn-text">Submit</span>
+                </button>
+                <button class="btn-wallet" id="walletBtn" onclick="showWalletModal()">
+                    <i class="fas fa-wallet"></i>
+                    <span id="wallet-status">Connect</span>
+                </button>
+                <button class="nav-toggle" id="navToggle" aria-label="Toggle menu">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-background">
+            <div class="grid-pattern"></div>
+            <div class="gradient-overlay"></div>
+        </div>
+        <div class="hero-content">
+            <h1 class="hero-title">
+                Discover the <span class="highlight">Kaspa Ecosystem</span>
+            </h1>
+            <p class="hero-subtitle">
+                Explore wallets, mining tools, DeFi protocols, and innovative projects building on the fastest proof-of-work blockchain
+            </p>
+            <div class="hero-stats">
+                <div class="stat-item">
+                    <span class="stat-number" id="total-projects">0</span>
+                    <span class="stat-label">Projects</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="total-categories">0</span>
+                    <span class="stat-label">Categories</span>
+                </div>
+                <div class="stat-item">
+                    <span class="stat-number" id="active-users">0</span>
+                    <span class="stat-label">Active Users</span>
+                </div>
+            </div>
+            <div class="hero-cta">
+                <button class="btn btn-primary btn-lg" onclick="scrollToProjects()">
+                    <i class="fas fa-compass"></i> Explore Projects
+                </button>
+                <button class="btn btn-secondary btn-lg" onclick="showSubmitModal()">
+                    <i class="fas fa-rocket"></i> Submit Your Project
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Featured Carousel -->
+    <section id="featured" class="featured-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-star"></i> Featured Projects
+                </h2>
+                <p class="section-subtitle">Community-sponsored projects showcasing the best of Kaspa</p>
+            </div>
+            
+            <div class="carousel-wrapper">
+                <div class="carousel-container" id="featuredCarousel">
+                    <div class="carousel-track" id="carouselTrack">
+                        <!-- Featured projects will be loaded here -->
+                    </div>
+                </div>
+                <button class="carousel-control prev" onclick="app.moveCarousel(-1)" aria-label="Previous">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="carousel-control next" onclick="app.moveCarousel(1)" aria-label="Next">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+                <div class="carousel-dots" id="carouselDots">
+                    <!-- Dots will be generated dynamically -->
+                </div>
+            </div>
+            
+            <div id="no-featured" class="empty-state" style="display: none;">
+                <i class="fas fa-trophy empty-icon"></i>
+                <h3>No Featured Projects Yet</h3>
+                <p>Be the first to sponsor a project and showcase it here!</p>
+                <button class="btn btn-primary" onclick="scrollToProjects()">
+                    Browse Projects to Sponsor
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Grid -->
+    <section id="categories" class="categories-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-th-large"></i> Browse by Category
+                </h2>
+                <p class="section-subtitle">Find projects that match your interests</p>
+            </div>
+            
+            <div class="categories-grid" id="categoriesGrid">
+                <!-- Categories will be loaded dynamically -->
+            </div>
+        </div>
+    </section>
+
+    <!-- Projects Section -->
+    <section id="projects" class="projects-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-cube"></i> All Projects
+                </h2>
+                <div class="section-controls">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Search projects..." onkeyup="app.searchProjects(this.value)">
+                    </div>
+                    <div class="sort-dropdown">
+                        <select id="sortSelect" onchange="app.sortProjects(this.value)">
+                            <option value="recent">Most Recent</option>
+                            <option value="rating">Highest Rated</option>
+                            <option value="sponsored">Most Sponsored</option>
+                            <option value="name">Alphabetical</option>
+                        </select>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="projects-grid" id="projectsGrid">
+                <!-- Projects will be loaded dynamically -->
+            </div>
+            
+            <div class="load-more-container" id="loadMoreContainer" style="display: none;">
+                <button class="btn btn-secondary" onclick="app.loadMoreProjects()">
+                    <i class="fas fa-plus-circle"></i> Load More Projects
+                </button>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-brand">
+                    <h3>⚡ Kaspa Ecosystem</h3>
+                    <p>Discover and support projects building on Kaspa</p>
+                    <div class="social-links">
+                        <a href="https://twitter.com/KaspaCurrency" target="_blank" aria-label="Twitter">
+                            <i class="fab fa-twitter"></i>
+                        </a>
+                        <a href="https://discord.gg/kaspa" target="_blank" aria-label="Discord">
+                            <i class="fab fa-discord"></i>
+                        </a>
+                        <a href="https://github.com/kaspanet" target="_blank" aria-label="GitHub">
+                            <i class="fab fa-github"></i>
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-links">
+                    <div class="footer-column">
+                        <h4>Ecosystem</h4>
+                        <a href="#categories">Categories</a>
+                        <a href="#featured">Featured Projects</a>
+                        <a href="#" onclick="showSubmitModal()">Submit Project</a>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h4>Resources</h4>
+                        <a href="https://kaspa.org" target="_blank">Kaspa.org</a>
+                        <a href="https://docs.kaspa.org" target="_blank">Documentation</a>
+                        <a href="/api/projects" target="_blank">API</a>
+                    </div>
+                    
+                    <div class="footer-column">
+                        <h4>Community</h4>
+                        <a href="https://discord.gg/kaspa" target="_blank">Discord</a>
+                        <a href="https://t.me/kaspaenglish" target="_blank">Telegram</a>
+                        <a href="https://reddit.com/r/kaspa" target="_blank">Reddit</a>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <p>&copy; 2024 Kaspa Ecosystem. Open source project.</p>
+                <p>Built with ❤️ by the Kaspa community</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Modals -->
+    <div id="modals-container">
+        <!-- Wallet Modal -->
+        <div id="wallet-modal" class="modal">
+            <div class="modal-content modal-sm">
+                <div class="modal-header">
+                    <h3 class="modal-title">
+                        <i class="fas fa-wallet"></i> Connect Wallet
+                    </h3>
+                    <button class="modal-close" onclick="closeModal('wallet-modal')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="wallet-options">
+                        <button class="wallet-option" onclick="app.connectWallet('kasware')">
+                            <img src="/images/kasware-logo.png" alt="Kasware" class="wallet-logo">
+                            <span class="wallet-name">Kasware Wallet</span>
+                            <span class="wallet-status">Available</span>
+                        </button>
+                        <button class="wallet-option disabled" onclick="app.connectWallet('kastle')">
+                            <span class="wallet-icon">🏰</span>
+                            <span class="wallet-name">Kastle Wallet</span>
+                            <span class="wallet-status">Coming Soon</span>
+                        </button>
+                        <button class="wallet-option disabled" onclick="app.connectWallet('kspr')">
+                            <span class="wallet-icon">💎</span>
+                            <span class="wallet-name">KSPR Wallet</span>
+                            <span class="wallet-status">Coming Soon</span>
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Submit Modal -->
+        <div id="submit-modal" class="modal">
+            <div class="modal-content modal-lg">
+                <div class="modal-header">
+                    <h3 class="modal-title">
+                        <i class="fas fa-rocket"></i> Submit New Project
+                    </h3>
+                    <button class="modal-close" onclick="closeModal('submit-modal')">
+                        <i class="fas fa-times"></i>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <form id="submit-project-form" class="project-form" onsubmit="submitProject(event)">
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="project-title">
+                                    Project Name <span class="required">*</span>
+                                </label>
+                                <input 
+                                    type="text" 
+                                    id="project-title"
+                                    name="title" 
+                                    class="form-control" 
+                                    placeholder="e.g., Kaspa DeFi Protocol"
+                                    required 
+                                    maxlength="100"
+                                >
+                                <span class="form-hint">Choose a clear, memorable name</span>
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="project-category">
+                                    Category <span class="required">*</span>
+                                </label>
+                                <select 
+                                    id="project-category"
+                                    name="category" 
+                                    class="form-control" 
+                                    required
+                                >
+                                    <option value="">Select a category</option>
+                                    <option value="wallet">Wallet</option>
+                                    <option value="exchange">Exchange</option>
+                                    <option value="mining">Mining</option>
+                                    <option value="defi">DeFi</option>
+                                    <option value="nft">NFT</option>
+                                    <option value="tool">Tool</option>
+                                    <option value="community">Community</option>
+                                    <option value="other">Other</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label for="project-description">
+                                Description <span class="required">*</span>
+                            </label>
+                            <textarea 
+                                id="project-description"
+                                name="description" 
+                                class="form-control" 
+                                rows="4" 
+                                placeholder="Describe what your project does and what makes it unique..."
+                                required 
+                                maxlength="500"
+                            ></textarea>
+                            <span class="form-hint"><span id="desc-count">0</span>/500 characters</span>
+                        </div>
+                        
+                        <div class="form-grid">
+                            <div class="form-group">
+                                <label for="project-website">
+                                    Website URL <span class="required">*</span>
+                                </label>
+                                <input 
+                                    type="url" 
+                                    id="project-website"
+                                    name="website" 
+                                    class="form-control" 
+                                    placeholder="https://yourproject.com"
+                                    required
+                                >
+                            </div>
+                            
+                            <div class="form-group">
+                                <label for="project-logo">
+                                    Logo URL <span class="optional">(optional)</span>
+                                </label>
+                                <input 
+                                    type="url" 
+                                    id="project-logo"
+                                    name="logo_url" 
+                                    class="form-control" 
+                                    placeholder="https://yourproject.com/logo.png"
+                                >
+                                <span class="form-hint">Square image, min 200x200px</span>
+                            </div>
+                        </div>
+                        
+                        <div class="form-section">
+                            <h4>Social Links <span class="optional">(optional)</span></h4>
+                            <div class="form-grid">
+                                <div class="form-group">
+                                    <label for="project-twitter">
+                                        <i class="fab fa-twitter"></i> Twitter/X
+                                    </label>
+                                    <input 
+                                        type="url" 
+                                        id="project-twitter"
+                                        name="twitter" 
+                                        class="form-control" 
+                                        placeholder="https://twitter.com/yourproject"
+                                    >
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="project-github">
+                                        <i class="fab fa-github"></i> GitHub
+                                    </label>
+                                    <input 
+                                        type="url" 
+                                        id="project-github"
+                                        name="github" 
+                                        class="form-control" 
+                                        placeholder="https://github.com/yourproject"
+                                    >
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="project-discord">
+                                        <i class="fab fa-discord"></i> Discord
+                                    </label>
+                                    <input 
+                                        type="url" 
+                                        id="project-discord"
+                                        name="discord" 
+                                        class="form-control" 
+                                        placeholder="https://discord.gg/invite"
+                                    >
+                                </div>
+                                
+                                <div class="form-group">
+                                    <label for="project-telegram">
+                                        <i class="fab fa-telegram"></i> Telegram
+                                    </label>
+                                    <input 
+                                        type="url" 
+                                        id="project-telegram"
+                                        name="telegram" 
+                                        class="form-control" 
+                                        placeholder="https://t.me/yourproject"
+                                    >
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="form-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" name="terms" required>
+                                <span>
+                                    I confirm this is a legitimate Kaspa ecosystem project and all information provided is accurate
+                                </span>
+                            </label>
+                        </div>
+                        
+                        <div class="wallet-notice" id="wallet-notice">
+                            <i class="fas fa-info-circle"></i>
+                            <span>Please connect your wallet to submit a project</span>
+                        </div>
+                        
+                        <div class="form-actions">
+                            <button type="button" class="btn btn-secondary" onclick="closeModal('submit-modal')">
+                                Cancel
+                            </button>
+                            <button type="submit" class="btn btn-primary" id="submit-btn">
+                                <span class="btn-text">
+                                    <i class="fas fa-paper-plane"></i> Submit Project
+                                </span>
+                                <span class="btn-loading" style="display: none;">
+                                    <i class="fas fa-spinner fa-spin"></i> Submitting...
+                                </span>
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
+        <!-- Project Details Modal -->
+        <div id="project-modal" class="modal">
+            <div class="modal-content modal-xl">
+                <div class="modal-body" id="project-details">
+                    <!-- Project details will be loaded here dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
+
+    <!-- Scripts -->
+    <script src="js/supabase-client.js"></script>
+    <script src="js/kaspa-wallet-integration.js"></script>
+    <script src="js/kaspa-sponsorship-system.js"></script>
+    <script src="js/kaspa-ecosystem-app.js"></script>
+    <script src="js/submit-project.js"></script>
+    <script src="js/submit-project-update.js"></script>
+    
+    <script>
+        // Initialize app
+        let app;
+        window.addEventListener('DOMContentLoaded', async () => {
+            // Hide loading screen after a delay
+            setTimeout(() => {
+                document.getElementById('loading-screen').classList.add('fade-out');
+                setTimeout(() => {
+                    document.getElementById('loading-screen').style.display = 'none';
+                }, 500);
+            }, 1000);
+            
+            // Initialize app
+            app = new KaspaEcosystemApp();
+            window.app = app;
+            
+            // Mobile menu toggle
+            document.getElementById('navToggle').addEventListener('click', () => {
+                document.getElementById('navMenu').classList.toggle('active');
+                document.getElementById('navToggle').classList.toggle('active');
+            });
+            
+            // Character counter for description
+            const descTextarea = document.getElementById('project-description');
+            const descCount = document.getElementById('desc-count');
+            if (descTextarea && descCount) {
+                descTextarea.addEventListener('input', () => {
+                    descCount.textContent = descTextarea.value.length;
+                });
+            }
+            
+            // Smooth scroll
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+                    }
+                });
+            });
+        });
+        
+        // Helper functions
+        function showWalletModal() {
+            document.getElementById('wallet-modal').classList.add('show');
+            document.body.style.overflow = 'hidden';
+        }
+        
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
+            document.body.style.overflow = '';
+        }
+        
+        function scrollToProjects() {
+            document.getElementById('projects').scrollIntoView({ behavior: 'smooth' });
+        }
+    </script>
+</body>
+</html>
