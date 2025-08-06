@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Kaspa Ecosystem - Test Page</title>
+    <meta charset="UTF-8">
+    <style>
+        body {
+            background: #0F172A;
+            color: #49EACB;
+            font-family: sans-serif;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            height: 100vh;
+            margin: 0;
+        }
+        .test {
+            text-align: center;
+            padding: 40px;
+            background: #1E293B;
+            border-radius: 10px;
+            box-shadow: 0 0 20px rgba(73, 234, 203, 0.3);
+        }
+        h1 { margin: 0 0 20px 0; }
+        p { color: #CBD5E1; }
+        .status { margin-top: 20px; font-size: 0.9em; }
+    </style>
+</head>
+<body>
+    <div class="test">
+        <h1>⚡ Kaspa Ecosystem</h1>
+        <p>Test Page - Static HTML</p>
+        <p>If you can see this, Netlify is serving files correctly!</p>
+        <div class="status">
+            <p>Timestamp: <span id="time"></span></p>
+            <p>URL: <span id="url"></span></p>
+        </div>
+    </div>
+    <script>
+        document.getElementById('time').textContent = new Date().toISOString();
+        document.getElementById('url').textContent = window.location.href;
+    </script>
+</body>
+</html>
