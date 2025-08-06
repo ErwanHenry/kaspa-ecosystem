@@ -183,6 +183,17 @@
         .nav-link:hover {
             color: #49EACB;
         }
+        .featured-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #49EACB;
+            color: #0F172A;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
         @media (max-width: 768px) {
             .nav-menu { display: none; }
             .hero-title { font-size: 2rem; }
@@ -280,6 +291,18 @@
         const SUPABASE_URL = 'https://kxdngctxlxrbjhdtztuu.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4ZG5nY3R4bHhyYmpoZHR6dHV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzNDU3MzYsImV4cCI6MjA2OTkyMTczNn0.N_jgf3Q2R98-FqsYpz7sns9CwOnViuQBXFoA0TcmWSM';
         
+        // Category map (fallback if we can't load from DB)
+        const categoryMap = {
+            1: 'Wallets',
+            2: 'Mining',
+            3: 'DeFi',
+            4: 'NFTs',
+            5: 'Infrastructure',
+            6: 'Education',
+            7: 'Tools',
+            8: 'Other'
+        };
+        
         // Initialize app
         async function initApp() {
             const loadingScreen = document.getElementById('loading-screen');
@@ -291,11 +314,25 @@
                 const { createClient } = supabase;
                 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
                 
+                // Load categories first
+                console.log('Loading categories...');
+                const { data: categoriesData } = await supabaseClient
+                    .from('categories')
+                    .select('*');
+                
+                // Create category lookup
+                const categories = {};
+                if (categoriesData) {
+                    categoriesData.forEach(cat => {
+                        categories[cat.id] = cat;
+                    });
+                }
+                
                 console.log('Loading projects...');
-                // Load ALL projects (remove active filter since column doesn't exist)
+                // Load projects without relation
                 const { data: projects, error } = await supabaseClient
                     .from('projects')
-                    .select('*, categories(name, slug)')
+                    .select('*')
                     .order('created_at', { ascending: false });
                 
                 if (error) throw error;
@@ -304,12 +341,7 @@
                 
                 // Update stats
                 document.getElementById('total-projects').textContent = projects?.length || 0;
-                
-                // Load categories count
-                const { data: categories } = await supabaseClient
-                    .from('categories')
-                    .select('id');
-                document.getElementById('total-categories').textContent = categories?.length || 0;
+                document.getElementById('total-categories').textContent = categoriesData?.length || 0;
                 
                 // Check for featured projects (with active sponsorship)
                 const { data: sponsorships } = await supabaseClient
@@ -327,13 +359,17 @@
                     const featuredGrid = document.getElementById('featured-grid');
                     featuredSection.style.display = 'block';
                     
-                    featuredGrid.innerHTML = featuredProjects.map(project => createProjectCard(project, true)).join('');
+                    featuredGrid.innerHTML = featuredProjects.map(project => 
+                        createProjectCard(project, categories, true)
+                    ).join('');
                 }
                 
                 // Display all projects
                 const grid = document.getElementById('projects-grid');
                 if (projects && projects.length > 0) {
-                    grid.innerHTML = projects.map(project => createProjectCard(project)).join('');
+                    grid.innerHTML = projects.map(project => 
+                        createProjectCard(project, categories, featuredProjectIds.includes(project.id))
+                    ).join('');
                 } else {
                     grid.innerHTML = '<p style="text-align: center; color: #94A3B8;">No projects found.</p>';
                 }
@@ -360,18 +396,19 @@
         }
         
         // Create project card HTML
-        function createProjectCard(project, isFeatured = false) {
-            const categoryName = project.categories?.name || 'Other';
+        function createProjectCard(project, categories, isFeatured = false) {
+            const category = categories[project.category_id] || { name: 'Other' };
             const logoHtml = project.logo_url 
                 ? `<img src="${project.logo_url}" alt="${project.title}" class="project-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"><div class="project-logo-placeholder" style="display: none;">${project.title.charAt(0)}</div>`
                 : `<div class="project-logo-placeholder">${project.title.charAt(0)}</div>`;
             
             return `
-                <div class="project-card${isFeatured ? ' featured' : ''}">
+                <div class="project-card" style="position: relative;">
+                    ${isFeatured ? '<span class="featured-badge">✨ Featured</span>' : ''}
                     <div class="project-header">
                         ${logoHtml}
                         <div style="flex: 1;">
-                            <div class="project-category">${categoryName}</div>
+                            <div class="project-category">${category.name}</div>
                             <h3 style="margin: 0; font-size: 1.125rem;">${project.title}</h3>
                         </div>
                     </div>
