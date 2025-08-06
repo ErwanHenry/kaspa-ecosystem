@@ -291,18 +291,6 @@
         const SUPABASE_URL = 'https://kxdngctxlxrbjhdtztuu.supabase.co';
         const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4ZG5nY3R4bHhyYmpoZHR6dHV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzNDU3MzYsImV4cCI6MjA2OTkyMTczNn0.N_jgf3Q2R98-FqsYpz7sns9CwOnViuQBXFoA0TcmWSM';
         
-        // Category map (fallback if we can't load from DB)
-        const categoryMap = {
-            1: 'Wallets',
-            2: 'Mining',
-            3: 'DeFi',
-            4: 'NFTs',
-            5: 'Infrastructure',
-            6: 'Education',
-            7: 'Tools',
-            8: 'Other'
-        };
-        
         // Initialize app
         async function initApp() {
             const loadingScreen = document.getElementById('loading-screen');
@@ -329,7 +317,7 @@
                 }
                 
                 console.log('Loading projects...');
-                // Load projects without relation
+                // Load projects
                 const { data: projects, error } = await supabaseClient
                     .from('projects')
                     .select('*')
@@ -337,10 +325,12 @@
                 
                 if (error) throw error;
                 
-                console.log(`Loaded ${projects?.length || 0} projects`);
+                // Filter out projects without required fields
+                const validProjects = (projects || []).filter(p => p && p.title);
+                console.log(`Loaded ${validProjects.length} valid projects out of ${projects?.length || 0} total`);
                 
                 // Update stats
-                document.getElementById('total-projects').textContent = projects?.length || 0;
+                document.getElementById('total-projects').textContent = validProjects.length;
                 document.getElementById('total-categories').textContent = categoriesData?.length || 0;
                 
                 // Check for featured projects (with active sponsorship)
@@ -351,7 +341,7 @@
                     .gte('end_date', new Date().toISOString());
                 
                 const featuredProjectIds = sponsorships?.map(s => s.project_id) || [];
-                const featuredProjects = projects?.filter(p => featuredProjectIds.includes(p.id)) || [];
+                const featuredProjects = validProjects.filter(p => featuredProjectIds.includes(p.id));
                 
                 // Display featured projects if any
                 if (featuredProjects.length > 0) {
@@ -366,8 +356,8 @@
                 
                 // Display all projects
                 const grid = document.getElementById('projects-grid');
-                if (projects && projects.length > 0) {
-                    grid.innerHTML = projects.map(project => 
+                if (validProjects.length > 0) {
+                    grid.innerHTML = validProjects.map(project => 
                         createProjectCard(project, categories, featuredProjectIds.includes(project.id))
                     ).join('');
                 } else {
@@ -395,12 +385,28 @@
             }
         }
         
-        // Create project card HTML
+        // Create project card HTML with safe data handling
         function createProjectCard(project, categories, isFeatured = false) {
+            // Ensure project has required fields
+            if (!project || !project.title) {
+                console.warn('Invalid project data:', project);
+                return '';
+            }
+            
+            // Get category safely
             const category = categories[project.category_id] || { name: 'Other' };
+            
+            // Create safe title for placeholder
+            const title = project.title || 'Untitled';
+            const firstLetter = title.charAt(0).toUpperCase() || '?';
+            
+            // Create logo HTML with fallback
             const logoHtml = project.logo_url 
-                ? `<img src="${project.logo_url}" alt="${project.title}" class="project-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"><div class="project-logo-placeholder" style="display: none;">${project.title.charAt(0)}</div>`
-                : `<div class="project-logo-placeholder">${project.title.charAt(0)}</div>`;
+                ? `<img src="${project.logo_url}" alt="${title}" class="project-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"><div class="project-logo-placeholder" style="display: none;">${firstLetter}</div>`
+                : `<div class="project-logo-placeholder">${firstLetter}</div>`;
+            
+            // Safely handle description
+            const description = project.description || 'No description available';
             
             return `
                 <div class="project-card" style="position: relative;">
@@ -409,11 +415,11 @@
                         ${logoHtml}
                         <div style="flex: 1;">
                             <div class="project-category">${category.name}</div>
-                            <h3 style="margin: 0; font-size: 1.125rem;">${project.title}</h3>
+                            <h3 style="margin: 0; font-size: 1.125rem;">${title}</h3>
                         </div>
                     </div>
                     <p style="color: #94A3B8; margin-bottom: 15px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
-                        ${project.description || 'No description available'}
+                        ${description}
                     </p>
                     ${project.website ? 
                         `<a href="${project.website}" target="_blank" class="btn btn-primary" style="display: inline-flex;">
