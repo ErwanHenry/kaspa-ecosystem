@@ -105,6 +105,38 @@
             box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
             border-color: #49EACB;
         }
+        .project-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .project-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #0F172A;
+        }
+        .project-logo-placeholder {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #49EACB 0%, #2BC9AA 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #0F172A;
+        }
+        .project-category {
+            font-size: 0.75rem;
+            color: #49EACB;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
         .btn {
             display: inline-flex;
             align-items: center;
@@ -137,6 +169,25 @@
             display: none;
         }
         .hide { display: none !important; }
+        .nav-menu {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+        .nav-link {
+            color: #94A3B8;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        .nav-link:hover {
+            color: #49EACB;
+        }
+        @media (max-width: 768px) {
+            .nav-menu { display: none; }
+            .hero-title { font-size: 2rem; }
+            .projects-grid { grid-template-columns: 1fr; }
+        }
     </style>
 </head>
 <body>
@@ -156,11 +207,15 @@
         <!-- Navigation -->
         <nav class="navbar">
             <div class="nav-container">
-                <div class="nav-brand">
+                <div style="display: flex; align-items: center; gap: 40px;">
                     <a href="/" class="brand-link">
                         <span>⚡</span>
                         <span>Kaspa Ecosystem</span>
                     </a>
+                    <div class="nav-menu">
+                        <a href="#projects" class="nav-link">Projects</a>
+                        <a href="/admin-enhanced.html" class="nav-link">Admin</a>
+                    </div>
                 </div>
                 <div>
                     <button class="btn btn-primary" onclick="alert('Submit feature coming soon!')">
@@ -177,7 +232,7 @@
                     Discover the <span class="text-gradient">Kaspa Ecosystem</span>
                 </h1>
                 <p style="font-size: 1.125rem; color: #94A3B8; margin-bottom: 30px;">
-                    Explore wallets, mining tools, DeFi protocols, and innovative projects
+                    Explore wallets, mining tools, DeFi protocols, and innovative projects building on the fastest proof-of-work blockchain
                 </p>
                 <div id="stats" style="display: flex; justify-content: center; gap: 60px;">
                     <div>
@@ -192,15 +247,30 @@
             </div>
         </section>
 
-        <!-- Projects Section -->
-        <section class="section">
+        <!-- Featured Projects -->
+        <section id="featured-section" class="section" style="display: none; background: linear-gradient(180deg, transparent 0%, rgba(73, 234, 203, 0.02) 50%, transparent 100%);">
             <div class="container">
-                <h2 class="section-title">Active Projects</h2>
+                <h2 class="section-title">✨ Featured Projects</h2>
+                <div id="featured-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
+                    <!-- Featured projects will be loaded here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- All Projects Section -->
+        <section id="projects" class="section">
+            <div class="container">
+                <h2 class="section-title">All Projects</h2>
                 <div id="projects-grid" class="projects-grid">
                     <!-- Projects will be loaded here -->
                 </div>
             </div>
         </section>
+
+        <!-- Footer -->
+        <footer style="text-align: center; padding: 40px 0; border-top: 1px solid #334155; margin-top: 80px;">
+            <p style="color: #94A3B8;">&copy; 2024 Kaspa Ecosystem. Built with ❤️ by the Kaspa community</p>
+        </footer>
     </div>
 
     <!-- Scripts -->
@@ -222,21 +292,11 @@
                 const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
                 
                 console.log('Loading projects...');
-                // Load projects with timeout
-                const projectsPromise = supabaseClient
+                // Load ALL projects (remove active filter since column doesn't exist)
+                const { data: projects, error } = await supabaseClient
                     .from('projects')
-                    .select('*')
-                    .eq('active', true)
+                    .select('*, categories(name, slug)')
                     .order('created_at', { ascending: false });
-                
-                const timeoutPromise = new Promise((_, reject) => 
-                    setTimeout(() => reject(new Error('Request timeout')), 5000)
-                );
-                
-                const { data: projects, error } = await Promise.race([
-                    projectsPromise,
-                    timeoutPromise
-                ]);
                 
                 if (error) throw error;
                 
@@ -251,22 +311,29 @@
                     .select('id');
                 document.getElementById('total-categories').textContent = categories?.length || 0;
                 
-                // Display projects
+                // Check for featured projects (with active sponsorship)
+                const { data: sponsorships } = await supabaseClient
+                    .from('sponsorships')
+                    .select('project_id')
+                    .eq('is_active', true)
+                    .gte('end_date', new Date().toISOString());
+                
+                const featuredProjectIds = sponsorships?.map(s => s.project_id) || [];
+                const featuredProjects = projects?.filter(p => featuredProjectIds.includes(p.id)) || [];
+                
+                // Display featured projects if any
+                if (featuredProjects.length > 0) {
+                    const featuredSection = document.getElementById('featured-section');
+                    const featuredGrid = document.getElementById('featured-grid');
+                    featuredSection.style.display = 'block';
+                    
+                    featuredGrid.innerHTML = featuredProjects.map(project => createProjectCard(project, true)).join('');
+                }
+                
+                // Display all projects
                 const grid = document.getElementById('projects-grid');
                 if (projects && projects.length > 0) {
-                    grid.innerHTML = projects.map(project => `
-                        <div class="project-card">
-                            <h3 style="margin-bottom: 10px;">${project.title}</h3>
-                            <p style="color: #94A3B8; margin-bottom: 15px;">
-                                ${project.description || 'No description available'}
-                            </p>
-                            ${project.website ? 
-                                `<a href="${project.website}" target="_blank" class="btn btn-primary" style="display: inline-flex;">
-                                    Visit Website →
-                                </a>` : ''
-                            }
-                        </div>
-                    `).join('');
+                    grid.innerHTML = projects.map(project => createProjectCard(project)).join('');
                 } else {
                     grid.innerHTML = '<p style="text-align: center; color: #94A3B8;">No projects found.</p>';
                 }
@@ -290,6 +357,34 @@
                     </p>
                 `;
             }
+        }
+        
+        // Create project card HTML
+        function createProjectCard(project, isFeatured = false) {
+            const categoryName = project.categories?.name || 'Other';
+            const logoHtml = project.logo_url 
+                ? `<img src="${project.logo_url}" alt="${project.title}" class="project-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"><div class="project-logo-placeholder" style="display: none;">${project.title.charAt(0)}</div>`
+                : `<div class="project-logo-placeholder">${project.title.charAt(0)}</div>`;
+            
+            return `
+                <div class="project-card${isFeatured ? ' featured' : ''}">
+                    <div class="project-header">
+                        ${logoHtml}
+                        <div style="flex: 1;">
+                            <div class="project-category">${categoryName}</div>
+                            <h3 style="margin: 0; font-size: 1.125rem;">${project.title}</h3>
+                        </div>
+                    </div>
+                    <p style="color: #94A3B8; margin-bottom: 15px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                        ${project.description || 'No description available'}
+                    </p>
+                    ${project.website ? 
+                        `<a href="${project.website}" target="_blank" class="btn btn-primary" style="display: inline-flex;">
+                            Visit Website →
+                        </a>` : ''
+                    }
+                </div>
+            `;
         }
         
         // Start when DOM is ready
