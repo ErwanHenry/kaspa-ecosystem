@@ -1,0 +1,450 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Kaspa Ecosystem - Discover Projects Building on Kaspa</title>
+    <meta name="description" content="Explore the growing ecosystem of projects building on Kaspa blockchain.">
+    
+    <!-- Critical CSS inline for fast loading -->
+    <style>
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #0F172A;
+            color: #CBD5E1;
+            line-height: 1.6;
+        }
+        .loading-screen {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: #0F172A;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        .loading-content { text-align: center; }
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid #1E293B;
+            border-top-color: #49EACB;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
+        }
+        @keyframes spin { to { transform: rotate(360deg); } }
+        .loading-text { color: #49EACB; font-size: 1.2em; }
+        .container { max-width: 1280px; margin: 0 auto; padding: 0 20px; }
+        .navbar {
+            background: rgba(15, 23, 42, 0.95);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid #334155;
+            padding: 16px 0;
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            max-width: 1280px;
+            margin: 0 auto;
+            padding: 0 20px;
+        }
+        .brand-link {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 1.25rem;
+            font-weight: 700;
+            color: #F1F5F9;
+            text-decoration: none;
+        }
+        .hero {
+            padding: 60px 0;
+            text-align: center;
+        }
+        .hero-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            margin-bottom: 20px;
+        }
+        .text-gradient {
+            background: linear-gradient(135deg, #49EACB 0%, #6FFDD8 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        .section { padding: 60px 0; }
+        .section-title {
+            font-size: 2rem;
+            font-weight: 800;
+            text-align: center;
+            margin-bottom: 40px;
+        }
+        .projects-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+            gap: 20px;
+        }
+        .project-card {
+            background: #1E293B;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            padding: 20px;
+            transition: all 0.3s ease;
+        }
+        .project-card:hover {
+            transform: translateY(-4px);
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+            border-color: #49EACB;
+        }
+        .project-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 12px;
+        }
+        .project-logo {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            object-fit: cover;
+            background: #0F172A;
+        }
+        .project-logo-placeholder {
+            width: 48px;
+            height: 48px;
+            border-radius: 8px;
+            background: linear-gradient(135deg, #49EACB 0%, #2BC9AA 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.5rem;
+            color: #0F172A;
+        }
+        .project-category {
+            font-size: 0.75rem;
+            color: #49EACB;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            margin-bottom: 4px;
+        }
+        .btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 8px 16px;
+            font-weight: 600;
+            border: 2px solid transparent;
+            border-radius: 6px;
+            cursor: pointer;
+            text-decoration: none;
+            font-size: 0.875rem;
+            transition: all 0.3s ease;
+        }
+        .btn-primary {
+            background: #49EACB;
+            color: #0F172A;
+            border-color: #49EACB;
+        }
+        .btn-primary:hover {
+            background: #6FFDD8;
+            border-color: #6FFDD8;
+        }
+        .error-message {
+            background: #7F1D1D;
+            color: #FCA5A5;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px;
+            text-align: center;
+            display: none;
+        }
+        .hide { display: none !important; }
+        .nav-menu {
+            display: flex;
+            gap: 24px;
+            align-items: center;
+        }
+        .nav-link {
+            color: #94A3B8;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        .nav-link:hover {
+            color: #49EACB;
+        }
+        .featured-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #49EACB;
+            color: #0F172A;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 0.75rem;
+            font-weight: 600;
+        }
+        @media (max-width: 768px) {
+            .nav-menu { display: none; }
+            .hero-title { font-size: 2rem; }
+            .projects-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">⚡ Loading Kaspa Ecosystem...</p>
+        </div>
+    </div>
+
+    <!-- Error Message -->
+    <div id="error-message" class="error-message"></div>
+
+    <!-- Main App (hidden initially) -->
+    <div id="app" class="hide">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="nav-container">
+                <div style="display: flex; align-items: center; gap: 40px;">
+                    <a href="/" class="brand-link">
+                        <span>⚡</span>
+                        <span>Kaspa Ecosystem</span>
+                    </a>
+                    <div class="nav-menu">
+                        <a href="#projects" class="nav-link">Projects</a>
+                        <a href="/admin-enhanced.html" class="nav-link">Admin</a>
+                    </div>
+                </div>
+                <div>
+                    <button class="btn btn-primary" onclick="alert('Submit feature coming soon!')">
+                        + Submit Project
+                    </button>
+                </div>
+            </div>
+        </nav>
+
+        <!-- Hero -->
+        <section class="hero">
+            <div class="container">
+                <h1 class="hero-title">
+                    Discover the <span class="text-gradient">Kaspa Ecosystem</span>
+                </h1>
+                <p style="font-size: 1.125rem; color: #94A3B8; margin-bottom: 30px;">
+                    Explore wallets, mining tools, DeFi protocols, and innovative projects building on the fastest proof-of-work blockchain
+                </p>
+                <div id="stats" style="display: flex; justify-content: center; gap: 60px;">
+                    <div>
+                        <div style="font-size: 2rem; font-weight: 800; color: #49EACB;" id="total-projects">0</div>
+                        <div style="font-size: 0.875rem; color: #94A3B8;">Projects</div>
+                    </div>
+                    <div>
+                        <div style="font-size: 2rem; font-weight: 800; color: #49EACB;" id="total-categories">0</div>
+                        <div style="font-size: 0.875rem; color: #94A3B8;">Categories</div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Featured Projects -->
+        <section id="featured-section" class="section" style="display: none; background: linear-gradient(180deg, transparent 0%, rgba(73, 234, 203, 0.02) 50%, transparent 100%);">
+            <div class="container">
+                <h2 class="section-title">✨ Featured Projects</h2>
+                <div id="featured-grid" style="display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr)); gap: 20px;">
+                    <!-- Featured projects will be loaded here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- All Projects Section -->
+        <section id="projects" class="section">
+            <div class="container">
+                <h2 class="section-title">All Projects</h2>
+                <div id="projects-grid" class="projects-grid">
+                    <!-- Projects will be loaded here -->
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer style="text-align: center; padding: 40px 0; border-top: 1px solid #334155; margin-top: 80px;">
+            <p style="color: #94A3B8;">&copy; 2024 Kaspa Ecosystem. Built with ❤️ by the Kaspa community</p>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script>
+        // Configuration
+        const SUPABASE_URL = 'https://kxdngctxlxrbjhdtztuu.supabase.co';
+        const SUPABASE_ANON_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4ZG5nY3R4bHhyYmpoZHR6dHV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzNDU3MzYsImV4cCI6MjA2OTkyMTczNn0.N_jgf3Q2R98-FqsYpz7sns9CwOnViuQBXFoA0TcmWSM';
+        
+        // Initialize app
+        async function initApp() {
+            const loadingScreen = document.getElementById('loading-screen');
+            const errorMessage = document.getElementById('error-message');
+            const app = document.getElementById('app');
+            
+            try {
+                console.log('Initializing Supabase...');
+                const { createClient } = supabase;
+                const supabaseClient = createClient(SUPABASE_URL, SUPABASE_ANON_KEY);
+                
+                // Load categories first
+                console.log('Loading categories...');
+                const { data: categoriesData } = await supabaseClient
+                    .from('categories')
+                    .select('*');
+                
+                // Create category lookup
+                const categories = {};
+                if (categoriesData) {
+                    categoriesData.forEach(cat => {
+                        categories[cat.id] = cat;
+                    });
+                }
+                
+                console.log('Loading projects...');
+                // Load projects
+                const { data: projects, error } = await supabaseClient
+                    .from('projects')
+                    .select('*')
+                    .order('created_at', { ascending: false });
+                
+                if (error) throw error;
+                
+                // Filter out projects without required fields
+                const validProjects = (projects || []).filter(p => p && p.title);
+                console.log(`Loaded ${validProjects.length} valid projects out of ${projects?.length || 0} total`);
+                
+                // Update stats
+                document.getElementById('total-projects').textContent = validProjects.length;
+                document.getElementById('total-categories').textContent = categoriesData?.length || 0;
+                
+                // Check for featured projects (with active sponsorship)
+                const { data: sponsorships } = await supabaseClient
+                    .from('sponsorships')
+                    .select('project_id')
+                    .eq('is_active', true)
+                    .gte('end_date', new Date().toISOString());
+                
+                const featuredProjectIds = sponsorships?.map(s => s.project_id) || [];
+                const featuredProjects = validProjects.filter(p => featuredProjectIds.includes(p.id));
+                
+                // Display featured projects if any
+                if (featuredProjects.length > 0) {
+                    const featuredSection = document.getElementById('featured-section');
+                    const featuredGrid = document.getElementById('featured-grid');
+                    featuredSection.style.display = 'block';
+                    
+                    featuredGrid.innerHTML = featuredProjects.map(project => 
+                        createProjectCard(project, categories, true)
+                    ).join('');
+                }
+                
+                // Display all projects
+                const grid = document.getElementById('projects-grid');
+                if (validProjects.length > 0) {
+                    grid.innerHTML = validProjects.map(project => 
+                        createProjectCard(project, categories, featuredProjectIds.includes(project.id))
+                    ).join('');
+                } else {
+                    grid.innerHTML = '<p style="text-align: center; color: #94A3B8;">No projects found.</p>';
+                }
+                
+                // Show app, hide loading
+                console.log('App ready!');
+                loadingScreen.style.display = 'none';
+                app.classList.remove('hide');
+                
+            } catch (error) {
+                console.error('Error:', error);
+                loadingScreen.style.display = 'none';
+                errorMessage.style.display = 'block';
+                errorMessage.innerHTML = `
+                    <h3>Error Loading Application</h3>
+                    <p>${error.message}</p>
+                    <p style="margin-top: 10px;">
+                        <button onclick="location.reload()" class="btn btn-primary">
+                            Retry
+                        </button>
+                    </p>
+                `;
+            }
+        }
+        
+        // Create project card HTML with safe data handling
+        function createProjectCard(project, categories, isFeatured = false) {
+            // Ensure project has required fields
+            if (!project || !project.title) {
+                console.warn('Invalid project data:', project);
+                return '';
+            }
+            
+            // Get category safely
+            const category = categories[project.category_id] || { name: 'Other' };
+            
+            // Create safe title for placeholder
+            const title = project.title || 'Untitled';
+            const firstLetter = title.charAt(0).toUpperCase() || '?';
+            
+            // Create logo HTML with fallback
+            const logoHtml = project.logo_url 
+                ? `<img src="${project.logo_url}" alt="${title}" class="project-logo" onerror="this.style.display='none'; this.nextElementSibling.style.display='flex';"><div class="project-logo-placeholder" style="display: none;">${firstLetter}</div>`
+                : `<div class="project-logo-placeholder">${firstLetter}</div>`;
+            
+            // Safely handle description
+            const description = project.description || 'No description available';
+            
+            return `
+                <div class="project-card" style="position: relative;">
+                    ${isFeatured ? '<span class="featured-badge">✨ Featured</span>' : ''}
+                    <div class="project-header">
+                        ${logoHtml}
+                        <div style="flex: 1;">
+                            <div class="project-category">${category.name}</div>
+                            <h3 style="margin: 0; font-size: 1.125rem;">${title}</h3>
+                        </div>
+                    </div>
+                    <p style="color: #94A3B8; margin-bottom: 15px; display: -webkit-box; -webkit-line-clamp: 3; -webkit-box-orient: vertical; overflow: hidden;">
+                        ${description}
+                    </p>
+                    ${project.website ? 
+                        `<a href="${project.website}" target="_blank" class="btn btn-primary" style="display: inline-flex;">
+                            Visit Website →
+                        </a>` : ''
+                    }
+                </div>
+            `;
+        }
+        
+        // Start when DOM is ready
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initApp);
+        } else {
+            initApp();
+        }
+    </script>
+    
+    <!-- Load CSS and other JS async after initial render -->
+    <link rel="preload" href="css/kaspa-ecosystem.css" as="style" onload="this.onload=null;this.rel='stylesheet'">
+    <noscript><link rel="stylesheet" href="css/kaspa-ecosystem.css"></noscript>
+    
+    <!-- Font loading -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+</body>
+</html>
