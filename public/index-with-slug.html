@@ -336,7 +336,7 @@
             <a href="/" class="logo">⚡ Kaspa Ecosystem</a>
             <div style="display: flex; gap: 10px;">
                 <button class="btn" onclick="showSubmitModal()">+ Submit Project</button>
-                <a href="/admin-complete.html" class="btn btn-secondary">Admin</a>
+                <a href="/admin-secure.html" class="btn btn-secondary">Admin</a>
             </div>
         </div>
     </nav>
@@ -583,11 +583,11 @@
                     logo_url: formData.get('logo_url') || null,
                     category_id: parseInt(formData.get('category')),
                     submitter_email: formData.get('email') || null,
-                    submitter_wallet: null // Can be added later with wallet integration
-                    // REMOVED: slug generation - let the database handle it or make it optional
+                    submitter_wallet: null, // Can be added later with wallet integration
+                    slug: formData.get('title').toLowerCase()
+                        .replace(/[^a-z0-9]+/g, '-')
+                        .replace(/^-+|-+$/g, '')
                 };
-                
-                console.log('Submitting project:', projectData);
                 
                 const { data, error } = await supabaseClient
                     .from('projects')
