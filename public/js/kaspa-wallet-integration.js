@@ -1,194 +1,138 @@
-// Kaspa Wallet Integration - Real Implementation
+// Kaspa Wallet Integration
+// This file handles wallet connections for Kasware, Kastle, and other Kaspa wallets
 
-class KaspaWalletManager {
-    constructor() {
-        this.connectedWallet = null;
-        this.walletType = null;
-        this.walletProviders = {
-            kasware: null,
-            kastle: null,
-            kspr: null
-        };
-        
-        this.detectWallets();
-    }
+const KaspaWallet = {
+    // Supported wallets
+    wallets: {
+        kasware: {
+            name: 'Kasware Wallet',
+            installed: false,
+            connected: false,
+            address: null
+        },
+        kastle: {
+            name: 'Kastle Wallet',
+            installed: false,
+            connected: false,
+            address: null
+        },
+        kspr: {
+            name: 'KSPR Wallet',
+            installed: false,
+            connected: false,
+            address: null
+        }
+    },
 
-    detectWallets() {
-        // Detect Kasware
+    // Check if wallets are installed
+    checkWallets: function() {
         if (typeof window.kasware !== 'undefined') {
-            this.walletProviders.kasware = window.kasware;
-            console.log('Kasware wallet detected');
+            this.wallets.kasware.installed = true;
         }
-        
-        // Detect other wallets (when available)
-        // For now, we'll implement a mock for testing
-        this.setupMockWallets();
-    }
-
-    setupMockWallets() {
-        // Mock implementation for testing
-        if (!window.kasware) {
-            window.kasware = {
-                requestAccounts: async () => {
-                    // Simulate wallet connection
-                    return ['kaspa:qr5g6ch0k8nq6w5e6ryy77p3rg7dvtk4ns8xge6d36x7mcqc8sy36yzzj3yw8'];
-                },
-                signMessage: async (message) => {
-                    // Simulate message signing
-                    return 'mock_signature_' + btoa(message).substring(0, 20);
-                },
-                getBalance: async () => {
-                    return { confirmed: 1000000000, unconfirmed: 0 }; // 10 KAS
-                },
-                sendKaspa: async (toAddress, amount) => {
-                    console.log(`Mock send ${amount} to ${toAddress}`);
-                    return { txid: 'mock_tx_' + Date.now() };
-                }
-            };
+        if (typeof window.kastle !== 'undefined') {
+            this.wallets.kastle.installed = true;
         }
-    }
-
-    async connectWallet(walletType) {
-        try {
-            switch(walletType) {
-                case 'kasware':
-                    return await this.connectKasware();
-                case 'kastle':
-                    return await this.connectKastle();
-                case 'kspr':
-                    return await this.connectKspr();
-                default:
-                    throw new Error('Unknown wallet type');
-            }
-        } catch (error) {
-            console.error('Wallet connection error:', error);
-            throw error;
+        if (typeof window.kspr !== 'undefined') {
+            this.wallets.kspr.installed = true;
         }
-    }
+    },
 
-    async connectKasware() {
-        if (!window.kasware) {
-            throw new Error('Kasware wallet not found. Please install it from https://kasware.xyz');
+    // Connect to Kasware wallet
+    connectKasware: async function() {
+        if (!this.wallets.kasware.installed) {
+            throw new Error('Kasware wallet not installed');
         }
 
         try {
             const accounts = await window.kasware.requestAccounts();
-            if (accounts && accounts.length > 0) {
-                this.connectedWallet = accounts[0];
-                this.walletType = 'kasware';
-                
-                // Get additional wallet info
-                const balance = await this.getBalance();
-                
-                return {
-                    address: accounts[0],
-                    balance: balance,
-                    type: 'kasware'
-                };
+            if (accounts.length > 0) {
+                this.wallets.kasware.connected = true;
+                this.wallets.kasware.address = accounts[0];
+                return accounts[0];
             }
             throw new Error('No accounts found');
         } catch (error) {
-            if (error.message?.includes('User rejected')) {
-                throw new Error('Connection rejected by user');
+            console.error('Error connecting to Kasware:', error);
+            throw error;
+        }
+    },
+
+    // Connect to Kastle wallet (placeholder)
+    connectKastle: async function() {
+        throw new Error('Kastle wallet support coming soon');
+    },
+
+    // Connect to KSPR wallet (placeholder)
+    connectKspr: async function() {
+        throw new Error('KSPR wallet support coming soon');
+    },
+
+    // Get connected wallet info
+    getConnectedWallet: function() {
+        for (const [key, wallet] of Object.entries(this.wallets)) {
+            if (wallet.connected) {
+                return {
+                    type: key,
+                    ...wallet
+                };
             }
-            throw error;
         }
-    }
-
-    async connectKastle() {
-        // Placeholder for Kastle wallet
-        throw new Error('Kastle wallet integration coming soon');
-    }
-
-    async connectKspr() {
-        // Placeholder for KSPR wallet
-        throw new Error('KSPR wallet integration coming soon');
-    }
-
-    async getBalance() {
-        if (!this.connectedWallet) {
-            throw new Error('No wallet connected');
-        }
-
-        try {
-            const balance = await window[this.walletType].getBalance();
-            return {
-                confirmed: balance.confirmed / 100000000, // Convert from sompi to KAS
-                unconfirmed: balance.unconfirmed / 100000000
-            };
-        } catch (error) {
-            console.error('Error getting balance:', error);
-            return { confirmed: 0, unconfirmed: 0 };
-        }
-    }
-
-    async signMessage(message) {
-        if (!this.connectedWallet) {
-            throw new Error('No wallet connected');
-        }
-
-        try {
-            const signature = await window[this.walletType].signMessage(message);
-            return signature;
-        } catch (error) {
-            console.error('Error signing message:', error);
-            throw error;
-        }
-    }
-
-    async sendTransaction(toAddress, amount) {
-        if (!this.connectedWallet) {
-            throw new Error('No wallet connected');
-        }
-
-        try {
-            // Convert KAS to sompi
-            const amountSompi = Math.floor(amount * 100000000);
-            
-            const result = await window[this.walletType].sendKaspa(toAddress, amountSompi);
-            return result;
-        } catch (error) {
-            console.error('Error sending transaction:', error);
-            throw error;
-        }
-    }
-
-    disconnect() {
-        this.connectedWallet = null;
-        this.walletType = null;
-    }
-
-    isConnected() {
-        return this.connectedWallet !== null;
-    }
-
-    getAddress() {
-        return this.connectedWallet;
-    }
-
-    getShortAddress() {
-        if (!this.connectedWallet) return '';
-        return `${this.connectedWallet.substring(0, 10)}...${this.connectedWallet.substring(this.connectedWallet.length - 8)}`;
-    }
-}
-
-// Utility functions for Kaspa addresses
-const KaspaUtils = {
-    isValidAddress: (address) => {
-        // Basic Kaspa address validation
-        return address && address.startsWith('kaspa:') && address.length > 60;
+        return null;
     },
 
-    formatAmount: (sompi) => {
-        const kas = sompi / 100000000;
-        return kas.toFixed(8).replace(/\.?0+$/, '');
+    // Disconnect all wallets
+    disconnect: function() {
+        for (const wallet of Object.values(this.wallets)) {
+            wallet.connected = false;
+            wallet.address = null;
+        }
     },
 
-    parseAmount: (kas) => {
-        return Math.floor(parseFloat(kas) * 100000000);
+    // Sign message with connected wallet
+    signMessage: async function(message) {
+        const wallet = this.getConnectedWallet();
+        if (!wallet) {
+            throw new Error('No wallet connected');
+        }
+
+        switch (wallet.type) {
+            case 'kasware':
+                return await window.kasware.signMessage(message);
+            case 'kastle':
+                throw new Error('Kastle signing not implemented');
+            case 'kspr':
+                throw new Error('KSPR signing not implemented');
+            default:
+                throw new Error('Unknown wallet type');
+        }
+    },
+
+    // Get balance (if supported)
+    getBalance: async function() {
+        const wallet = this.getConnectedWallet();
+        if (!wallet) {
+            throw new Error('No wallet connected');
+        }
+
+        switch (wallet.type) {
+            case 'kasware':
+                if (window.kasware.getBalance) {
+                    return await window.kasware.getBalance();
+                }
+                break;
+        }
+        return null;
     }
 };
 
-// Export for use in main app
-window.KaspaWalletManager = KaspaWalletManager;
-window.KaspaUtils = KaspaUtils;
+// Initialize wallet checks on load
+if (typeof window !== 'undefined') {
+    window.addEventListener('load', () => {
+        KaspaWallet.checkWallets();
+    });
+}
+
+// Export for use
+if (typeof module !== 'undefined' && module.exports) {
+    module.exports = KaspaWallet;
+}
