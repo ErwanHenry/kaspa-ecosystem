@@ -1325,5 +1325,123 @@
         // Initialize on load
         init();
     </script>
+    
+    <!-- Multi-Wallet Integration Scripts -->
+    <script src="js/kaspa-wallet-integration.js"></script>
+    <script src="js/multi-wallet-ui.js"></script>
+    
+    <!-- Advanced Project Discovery System -->
+    <script src="js/project-discovery.js"></script>
+    
+    <!-- Comprehensive Rating System -->
+    <script src="js/comprehensive-rating-system.js"></script>
+    
+    <script>
+        // Override existing wallet functions to use multi-wallet system
+        window.addEventListener('walletConnected', (event) => {
+            walletConnected = true;
+            walletAddress = event.detail.address;
+            updateWalletUI();
+            showToast(`Connected to ${event.detail.name}!`, 'success');
+        });
+
+        window.addEventListener('walletDisconnected', () => {
+            walletConnected = false;
+            walletAddress = null;
+            updateWalletUI();
+            showToast('Wallet disconnected', 'info');
+        });
+
+        // Enhanced wallet connection check
+        async function checkWalletConnection() {
+            if (typeof KaspaWallet !== 'undefined') {
+                const connectedWallet = KaspaWallet.getConnectedWallet();
+                if (connectedWallet) {
+                    walletConnected = true;
+                    walletAddress = connectedWallet.address;
+                    updateWalletUI();
+                }
+            }
+        }
+
+        // Updated connect function using multi-wallet
+        async function connectKasware() {
+            if (typeof MultiWalletUI !== 'undefined') {
+                MultiWalletUI.showModal();
+            } else {
+                // Fallback to original Kasware-only connection
+                if (typeof window.kasware === 'undefined') {
+                    showToast('Kasware wallet not found. Please install it first.', 'error');
+                    window.open('https://kasware.xyz', '_blank');
+                    return;
+                }
+                
+                try {
+                    const accounts = await window.kasware.requestAccounts();
+                    if (accounts.length > 0) {
+                        walletConnected = true;
+                        walletAddress = accounts[0];
+                        updateWalletUI();
+                        closeModal('wallet-modal');
+                        showToast('Wallet connected successfully!', 'success');
+                    }
+                } catch (error) {
+                    console.error('Error connecting wallet:', error);
+                    showToast('Failed to connect wallet', 'error');
+                }
+            }
+        }
+
+        // Enhanced wallet UI update
+        function updateWalletUI() {
+            const walletStatus = document.getElementById('wallet-status');
+            const walletText = document.getElementById('wallet-text');
+            const walletNotice = document.getElementById('wallet-notice');
+            const submitBtn = document.getElementById('submit-btn');
+            
+            if (walletConnected) {
+                walletStatus.classList.add('connected');
+                
+                // Show wallet type if available
+                const connectedWallet = typeof KaspaWallet !== 'undefined' ? KaspaWallet.getConnectedWallet() : null;
+                const walletType = connectedWallet ? ` (${connectedWallet.name})` : '';
+                walletText.textContent = walletAddress.slice(0, 6) + '...' + walletAddress.slice(-4) + walletType;
+                
+                if (walletNotice) walletNotice.style.display = 'none';
+                if (submitBtn) submitBtn.disabled = false;
+            } else {
+                walletStatus.classList.remove('connected');
+                walletText.textContent = 'Connect Wallet';
+                if (walletNotice) walletNotice.style.display = 'block';
+                if (submitBtn) submitBtn.disabled = true;
+            }
+        }
+
+        // Show enhanced wallet modal
+        function showWalletModal() {
+            if (typeof MultiWalletUI !== 'undefined') {
+                MultiWalletUI.showModal();
+            } else {
+                document.getElementById('wallet-modal').classList.add('show');
+            }
+        }
+
+        // Initialize multi-wallet on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if multi-wallet is available
+            if (typeof MultiWalletUI !== 'undefined') {
+                console.log('Multi-wallet system initialized');
+                
+                // Update wallet connect button text
+                const walletText = document.getElementById('wallet-text');
+                if (walletText && !walletConnected) {
+                    walletText.textContent = 'Connect Wallet';
+                }
+            }
+            
+            // Check for existing connections
+            setTimeout(checkWalletConnection, 1000);
+        });
+    </script>
 </body>
 </html>

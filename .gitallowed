@@ -1,35 +1,9 @@
-# Patterns autorisés pour git-secrets
-# Ces patterns sont sûrs car ils utilisent des variables d'environnement
+# Git secrets allowed patterns
+# These are false positives for legitimate code patterns
 
-# Configuration qui utilise process.env
-process\.env\.SERVICE_ACCOUNT_KEY
-private_key:\s*process\.env
+# SQL transaction commands
+BEGIN;
+BEGIN\s
 
-# Exemples et documentation
-REMOVED_FOR_SECURITY
-YOUR_PRIVATE_KEY_HERE
-
-# Scripts de configuration git-secrets
-git secrets --add.*private_key
-git secrets --add.*BEGIN PRIVATE KEY
-
-# Variables et propriétés (pas de vraies clés)
-SERVICE_ACCOUNT\.private_key
-this\.SERVICE_ACCOUNT\.private_key
-key:\s*CONFIG\.SERVICE_ACCOUNT\.private_key
-# SQL PRIMARY KEY statements
-PRIMARY KEY
-id UUID PRIMARY KEY
-
-# SQL BEGIN statements
-^BEGIN$
-
-# Documentation references
-private_key.*JSON
-BEGIN PRIVATE KEY.*exemple
-service_account.*type
-
-# False positives in documentation
-Copier.*private_key
-FIND.*private_key
-grep.*BEGIN PRIVATE KEY
+# Common SQL patterns that are not secrets
+type:\s*'service_account'

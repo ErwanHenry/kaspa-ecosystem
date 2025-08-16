@@ -12,8 +12,8 @@ const initGoogleSheets = () => {
     console.log('Environment check:');
     console.log('GOOGLE_PROJECT_ID:', process.env.GOOGLE_PROJECT_ID ? 'Set' : 'Missing');
     console.log('SERVICE_ACCOUNT_EMAIL:', process.env.SERVICE_ACCOUNT_EMAIL ? 'Set' : 'Missing');
-    console.log('SERVICE_ACCOUNT_KEY:', process.env.SERVICE_ACCOUNT_KEY ? `Set (${process.env.SERVICE_ACCOUNT_KEY.length} chars)` : 'Missing');
-    console.log('GOOGLE_SHEET_ID:', process.env.GOOGLE_SHEET_ID ? `Set: ${process.env.GOOGLE_SHEET_ID}` : 'Missing');
+    console.log('SERVICE_ACCOUNT_KEY:', process.env.SERVICE_ACCOUNT_KEY ? 'Set' : 'Missing');
+    console.log('GOOGLE_SHEET_ID:', process.env.GOOGLE_SHEET_ID ? 'Set' : 'Missing');
 
     if (!process.env.GOOGLE_PROJECT_ID || !process.env.SERVICE_ACCOUNT_EMAIL || 
         !process.env.SERVICE_ACCOUNT_KEY || !process.env.GOOGLE_SHEET_ID) {
@@ -32,8 +32,8 @@ const initGoogleSheets = () => {
 
     return google.sheets({ version: 'v4', auth });
   } catch (error) {
-    console.error('Failed to initialize Google Sheets API:', error.message);
-    throw error;
+    console.error('Failed to initialize Google Sheets API');
+    throw new Error('Google Sheets initialization failed');
   }
 };
 
@@ -63,6 +63,48 @@ const parseSheetData = (rows) => {
   }
 
   return data;
+};
+
+// Input validation helpers
+const validateQueryParams = (params) => {
+    const validated = {};
+    
+    if (params.q) {
+        if (typeof params.q !== 'string' || params.q.length > 100) {
+            throw new Error('Search query must be a string with max 100 characters');
+        }
+        validated.q = params.q.trim();
+    }
+    
+    if (params.category) {
+        if (typeof params.category !== 'string' || params.category.length > 50) {
+            throw new Error('Category must be a string with max 50 characters');
+        }
+        validated.category = params.category.trim();
+    }
+    
+    if (params.tags) {
+        if (typeof params.tags !== 'string' || params.tags.length > 200) {
+            throw new Error('Tags must be a string with max 200 characters');
+        }
+        validated.tags = params.tags.trim();
+    }
+    
+    return validated;
+};
+
+const sanitizeString = (str) => {
+    if (typeof str !== 'string') return str;
+    return str.replace(/[<>"'&]/g, (match) => {
+        const htmlEntities = {
+            '<': '&lt;',
+            '>': '&gt;',
+            '"': '&quot;',
+            "'": '&#x27;',
+            '&': '&amp;'
+        };
+        return htmlEntities[match];
+    });
 };
 
 exports.handler = async (event, context) => {
@@ -118,7 +160,7 @@ exports.handler = async (event, context) => {
       // Get the first sheet name
       if (metadata.data.sheets && metadata.data.sheets.length > 0) {
         sheetName = metadata.data.sheets[0].properties.title;
-        console.log('Found sheet name:', sheetName);
+        console.log('Found sheet name');
       }
     } catch (metaError) {
       console.log('Could not get metadata, using default sheet name');
@@ -133,7 +175,7 @@ exports.handler = async (event, context) => {
             range: testRange,
           });
           sheetName = name;
-          console.log('Found working sheet name:', sheetName);
+          console.log('Found working sheet name');
           break;
         } catch (e) {
           // Continue to next name
@@ -155,16 +197,30 @@ exports.handler = async (event, context) => {
     const projects = parseSheetData(rows);
     console.log(`Found ${projects.length} projects`);
 
-    // Handle search query
-    const { q, category, tags } = event.queryStringParameters || {};
+    // Validate and handle search query
+    let validatedParams = {};
+    try {
+        validatedParams = validateQueryParams(event.queryStringParameters || {});
+    } catch (validationError) {
+        return {
+            statusCode: 400,
+            headers,
+            body: JSON.stringify({ 
+                error: 'Invalid request parameters',
+                message: validationError.message
+            })
+        };
+    }
+    
+    const { q, category, tags } = validatedParams;
     let filteredProjects = projects;
 
     if (q) {
       const searchTerm = q.toLowerCase();
       filteredProjects = filteredProjects.filter(project => 
-        project.name.toLowerCase().includes(searchTerm) ||
-        project.description.toLowerCase().includes(searchTerm) ||
-        project.tags.some(tag => tag.toLowerCase().includes(searchTerm))
+        sanitizeString(project.name).toLowerCase().includes(searchTerm) ||
+        sanitizeString(project.description).toLowerCase().includes(searchTerm) ||
+        project.tags.some(tag => sanitizeString(tag).toLowerCase().includes(searchTerm))
       );
     }
 
@@ -202,18 +258,17 @@ exports.handler = async (event, context) => {
     };
 
   } catch (error) {
-    console.error('Detailed error:', error);
-    console.error('Error stack:', error.stack);
+    console.error('API error occurred:', error.message);
     
     let errorMessage = 'Failed to fetch projects';
     let statusCode = 500;
     
     // More specific error messages
     if (error.code === 403) {
-      errorMessage = 'Access denied. Please share the Google Sheet with the service account email: ' + process.env.SERVICE_ACCOUNT_EMAIL;
+      errorMessage = 'Access denied to Google Sheets. Please check service account permissions.';
       statusCode = 403;
     } else if (error.code === 404) {
-      errorMessage = 'Google Sheet not found. Please check the Sheet ID in environment variables.';
+      errorMessage = 'Google Sheet not found. Please verify configuration.';
       statusCode = 404;
     } else if (error.message?.includes('ENOTFOUND')) {
       errorMessage = 'Cannot connect to Google Sheets API. Please check your internet connection.';
@@ -230,8 +285,8 @@ exports.handler = async (event, context) => {
       headers,
       body: JSON.stringify({ 
         error: errorMessage,
-        message: error.message,
-        sheetId: process.env.GOOGLE_SHEET_ID
+        timestamp: new Date().toISOString(),
+        requestId: Math.random().toString(36).substring(7)
       })
     };
   }

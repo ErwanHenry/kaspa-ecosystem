@@ -41,9 +41,9 @@
     } catch (error) {
         console.error('Error sending scam alert:', error);
         
-        // If email fails, try to log it anyway
+        // If email fails, try to log it anyway  
         if (error.response) {
-            console.error('SendGrid error:', error.response.body);
+            console.error('Email service error occurred');
         }
         
         return {
