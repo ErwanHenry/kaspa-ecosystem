@@ -4,10 +4,19 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kaspa Ecosystem - Discover Projects Building on Kaspa</title>
+    
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Font Awesome -->
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    
     <style>
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body { 
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; 
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; 
             background: #0F172A; 
             color: #CBD5E1; 
             line-height: 1.6;
@@ -38,6 +47,11 @@
             color: #49EACB; 
             text-decoration: none; 
         }
+        .nav-actions {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+        }
         
         /* Buttons */
         .btn { 
@@ -50,7 +64,10 @@
             font-weight: 600; 
             transition: all 0.2s;
             text-decoration: none;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
         }
         .btn:hover { 
             background: #6FFDD8;
@@ -62,6 +79,31 @@
         }
         .btn-secondary:hover {
             background: #475569;
+        }
+        .btn-danger {
+            background: #EF4444;
+            color: white;
+        }
+        .btn-danger:hover {
+            background: #DC2626;
+        }
+        .btn-sm {
+            padding: 6px 12px;
+            font-size: 13px;
+        }
+        
+        /* Wallet Status */
+        .wallet-status {
+            padding: 6px 12px;
+            background: #1E293B;
+            border: 1px solid #334155;
+            border-radius: 6px;
+            font-size: 13px;
+            color: #94A3B8;
+        }
+        .wallet-status.connected {
+            border-color: #49EACB;
+            color: #49EACB;
         }
         
         /* Hero */
@@ -103,6 +145,21 @@
             color: #94A3B8; 
         }
         
+        /* Alert Bar */
+        .alert-bar {
+            background: #7F1D1D;
+            color: #FCA5A5;
+            padding: 12px;
+            text-align: center;
+            display: none;
+            position: sticky;
+            top: 60px;
+            z-index: 99;
+        }
+        .alert-bar.show {
+            display: block;
+        }
+        
         /* Section */
         .section {
             margin: 60px 0;
@@ -136,11 +193,38 @@
             padding: 20px; 
             transition: all 0.2s; 
             cursor: pointer;
+            position: relative;
         }
         .card:hover { 
             transform: translateY(-4px); 
             border-color: #49EACB; 
             box-shadow: 0 10px 30px rgba(0,0,0,0.3);
+        }
+        .card.scam {
+            border-color: #EF4444;
+            background: rgba(127, 29, 29, 0.1);
+        }
+        .scam-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #EF4444;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
+        }
+        .verified-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #10B981;
+            color: white;
+            padding: 4px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+            font-weight: 600;
         }
         .card-header {
             display: flex;
@@ -184,13 +268,16 @@
             justify-content: space-between;
             align-items: center;
         }
-        .card a { 
-            color: #49EACB; 
-            text-decoration: none; 
-            font-weight: 500;
+        .card-stats {
+            display: flex;
+            gap: 16px;
+            font-size: 0.875rem;
+            color: #64748B;
         }
-        .card a:hover { 
-            text-decoration: underline; 
+        .card-stat {
+            display: flex;
+            align-items: center;
+            gap: 4px;
         }
         
         /* Tags */
@@ -198,7 +285,7 @@
             display: flex;
             gap: 6px;
             flex-wrap: wrap;
-            margin-top: 10px;
+            margin: 10px 0;
         }
         .tag {
             background: #0F172A;
@@ -208,19 +295,52 @@
             font-size: 0.75rem;
         }
         
-        /* Loading & Error */
-        .loading { 
-            text-align: center; 
-            padding: 60px; 
-            color: #49EACB; 
+        /* Rating */
+        .rating {
+            display: flex;
+            gap: 2px;
         }
-        .error { 
-            background: #7F1D1D; 
-            color: #FCA5A5; 
-            padding: 20px; 
-            border-radius: 8px; 
-            text-align: center; 
-            margin: 20px 0;
+        .star {
+            color: #334155;
+            font-size: 14px;
+            cursor: pointer;
+            transition: color 0.2s;
+        }
+        .star.filled {
+            color: #F59E0B;
+        }
+        .star:hover {
+            color: #F59E0B;
+        }
+        
+        /* Comments Section */
+        .comments-section {
+            margin-top: 20px;
+            padding-top: 20px;
+            border-top: 1px solid #334155;
+        }
+        .comment {
+            background: #0F172A;
+            padding: 12px;
+            border-radius: 6px;
+            margin-bottom: 12px;
+        }
+        .comment-header {
+            display: flex;
+            justify-content: space-between;
+            margin-bottom: 8px;
+            font-size: 0.875rem;
+        }
+        .comment-author {
+            color: #49EACB;
+            font-weight: 500;
+        }
+        .comment-date {
+            color: #64748B;
+        }
+        .comment-text {
+            color: #94A3B8;
+            font-size: 0.875rem;
         }
         
         /* Modal */
@@ -245,7 +365,7 @@
             border: 1px solid #334155;
             border-radius: 12px;
             width: 90%;
-            max-width: 500px;
+            max-width: 600px;
             max-height: 90vh;
             overflow: auto;
         }
@@ -304,6 +424,47 @@
             color: #EF4444;
         }
         
+        /* Wallet Options */
+        .wallet-options {
+            display: flex;
+            flex-direction: column;
+            gap: 12px;
+            margin: 20px 0;
+        }
+        .wallet-option {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            padding: 16px;
+            background: #0F172A;
+            border: 1px solid #334155;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+        .wallet-option:hover {
+            border-color: #49EACB;
+        }
+        .wallet-option.disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+        .wallet-info {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        .wallet-icon {
+            font-size: 24px;
+        }
+        .wallet-name {
+            font-weight: 600;
+        }
+        .wallet-status-text {
+            font-size: 0.875rem;
+            color: #94A3B8;
+        }
+        
         /* Toast */
         .toast {
             position: fixed;
@@ -329,10 +490,29 @@
             border-color: #EF4444;
             color: #EF4444;
         }
+        .toast.warning {
+            border-color: #F59E0B;
+            color: #F59E0B;
+        }
         
         @keyframes slideIn {
             from { transform: translateX(100%); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
+        }
+        
+        /* Loading */
+        .loading { 
+            text-align: center; 
+            padding: 60px; 
+            color: #49EACB; 
+        }
+        .error { 
+            background: #7F1D1D; 
+            color: #FCA5A5; 
+            padding: 20px; 
+            border-radius: 8px; 
+            text-align: center; 
+            margin: 20px 0;
         }
         
         /* Responsive */
@@ -341,6 +521,7 @@
             .stats { flex-direction: column; gap: 20px; } 
             .grid { grid-template-columns: 1fr; }
             .section-header { flex-direction: column; align-items: stretch; }
+            .nav-actions { gap: 8px; }
         }
     </style>
 </head>
@@ -349,12 +530,27 @@
     <nav class="nav">
         <div class="nav-content">
             <a href="/" class="logo">⚡ Kaspa Ecosystem</a>
-            <div style="display: flex; gap: 10px;">
-                <button class="btn" onclick="showSubmitModal()">+ Submit Project</button>
-                <a href="/admin-complete.html" class="btn btn-secondary">Admin</a>
+            <div class="nav-actions">
+                <button class="btn btn-sm" onclick="triggerApifyScrape()" title="Scrape new projects">
+                    <i class="fas fa-sync"></i> Scrape
+                </button>
+                <button class="btn btn-sm" onclick="showSubmitModal()">
+                    <i class="fas fa-plus"></i> Submit
+                </button>
+                <div id="wallet-status" class="wallet-status" onclick="showWalletModal()">
+                    <i class="fas fa-wallet"></i>
+                    <span id="wallet-text">Connect</span>
+                </div>
+                <a href="/admin-complete.html" class="btn btn-secondary btn-sm">Admin</a>
             </div>
         </div>
     </nav>
+
+    <!-- Alert Bar -->
+    <div id="alert-bar" class="alert-bar">
+        <i class="fas fa-exclamation-triangle"></i>
+        <span id="alert-text">Warning: Some projects may be scams. Always do your own research!</span>
+    </div>
 
     <!-- Hero -->
     <div class="hero">
@@ -371,8 +567,8 @@
                 <div class="stat-label">Categories</div>
             </div>
             <div class="stat">
-                <div class="stat-num" id="total-users">0</div>
-                <div class="stat-label">Contributors</div>
+                <div class="stat-num" id="active-users">0</div>
+                <div class="stat-label">Active Users</div>
             </div>
         </div>
     </div>
@@ -382,10 +578,20 @@
         <section class="section">
             <div class="section-header">
                 <h2 class="section-title">All Projects</h2>
-                <input type="text" id="search" placeholder="Search projects..." 
-                       style="padding: 10px; background: #1E293B; border: 1px solid #334155; 
-                              border-radius: 6px; color: #CBD5E1; width: 300px; max-width: 100%;"
-                       onkeyup="searchProjects(this.value)">
+                <div style="display: flex; gap: 12px; align-items: center;">
+                    <input type="text" id="search" placeholder="Search projects..." 
+                           style="padding: 10px; background: #1E293B; border: 1px solid #334155; 
+                                  border-radius: 6px; color: #CBD5E1; width: 300px; max-width: 100%;"
+                           onkeyup="searchProjects(this.value)">
+                    <select id="sort" onchange="sortProjects(this.value)"
+                            style="padding: 10px; background: #1E293B; border: 1px solid #334155; 
+                                   border-radius: 6px; color: #CBD5E1;">
+                        <option value="recent">Most Recent</option>
+                        <option value="rating">Highest Rated</option>
+                        <option value="views">Most Viewed</option>
+                        <option value="name">Alphabetical</option>
+                    </select>
+                </div>
             </div>
             
             <div id="loading" class="loading">
@@ -405,9 +611,12 @@
         <div class="modal-content">
             <div class="modal-header">
                 <h2>Submit New Project</h2>
-                <button class="close" onclick="closeModal()">&times;</button>
+                <button class="close" onclick="closeModal('submit-modal')">&times;</button>
             </div>
             <div class="modal-body">
+                <div id="wallet-notice" style="display: none; background: #7F1D1D; color: #FCA5A5; padding: 12px; border-radius: 6px; margin-bottom: 20px;">
+                    <i class="fas fa-info-circle"></i> Please connect your wallet to submit a project
+                </div>
                 <form id="submit-form" onsubmit="submitProject(event)">
                     <div class="form-group">
                         <label>Project Name <span class="required">*</span></label>
@@ -442,8 +651,18 @@
                     </div>
                     
                     <div class="form-group">
-                        <label>Submitter Email (optional)</label>
-                        <input type="email" name="submitter_email">
+                        <label>GitHub URL (optional)</label>
+                        <input type="url" name="github">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Discord URL (optional)</label>
+                        <input type="url" name="discord">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label>Telegram URL (optional)</label>
+                        <input type="url" name="telegram">
                     </div>
                     
                     <button type="submit" class="btn" style="width: 100%;" id="submit-btn">
@@ -454,19 +673,81 @@
         </div>
     </div>
 
+    <!-- Wallet Modal -->
+    <div id="wallet-modal" class="modal">
+        <div class="modal-content" style="max-width: 400px;">
+            <div class="modal-header">
+                <h2><i class="fas fa-wallet"></i> Connect Wallet</h2>
+                <button class="close" onclick="closeModal('wallet-modal')">&times;</button>
+            </div>
+            <div class="modal-body">
+                <div class="wallet-options">
+                    <div class="wallet-option" onclick="connectKasware()">
+                        <div class="wallet-info">
+                            <span class="wallet-icon">🟢</span>
+                            <div>
+                                <div class="wallet-name">Kasware Wallet</div>
+                                <div class="wallet-status-text" id="kasware-status">Click to connect</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wallet-option disabled">
+                        <div class="wallet-info">
+                            <span class="wallet-icon">🏰</span>
+                            <div>
+                                <div class="wallet-name">Kastle Wallet</div>
+                                <div class="wallet-status-text">Coming Soon</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="wallet-option disabled">
+                        <div class="wallet-info">
+                            <span class="wallet-icon">💎</span>
+                            <div>
+                                <div class="wallet-name">KSPR Wallet</div>
+                                <div class="wallet-status-text">Coming Soon</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <p style="text-align: center; color: #64748B; margin-top: 20px; font-size: 0.875rem;">
+                    Connecting your wallet allows you to submit and rate projects
+                </p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Project Details Modal -->
+    <div id="project-modal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 id="project-modal-title">Project Details</h2>
+                <button class="close" onclick="closeModal('project-modal')">&times;</button>
+            </div>
+            <div class="modal-body" id="project-modal-body">
+                <!-- Project details will be loaded here -->
+            </div>
+        </div>
+    </div>
+
     <!-- Toast -->
     <div id="toast" class="toast"></div>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/kaspa-wallet-integration.js"></script>
     <script>
         // Supabase configuration
         const SUPABASE_URL = 'https://kxdngctxlxrbjhdtztuu.supabase.co';
         const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4ZG5nY3R4bHhyYmpoZHR6dHV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzNDU3MzYsImV4cCI6MjA2OTkyMTczNn0.N_jgf3Q2R98-FqsYpz7sns9CwOnViuQBXFoA0TcmWSM';
         
         let allProjects = [];
+        let filteredProjects = [];
         let categories = {};
         let supabaseClient;
+        let walletConnected = false;
+        let walletAddress = null;
+        let scamProjects = [];
         
         // Initialize
         async function init() {
@@ -479,62 +760,15 @@
                 const { createClient } = supabase;
                 supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
                 
+                // Check wallet connection
+                checkWalletConnection();
+                
                 console.log('Loading data...');
-                // Load categories and projects
-                const [categoriesRes, projectsRes] = await Promise.all([
-                    supabaseClient.from('categories').select('*').order('name'),
-                    supabaseClient.from('projects').select('*').order('created_at', { ascending: false })
-                ]);
+                // Load all data
+                await loadAllData();
                 
-                console.log('Categories:', categoriesRes);
-                console.log('Projects:', projectsRes);
-                
-                if (categoriesRes.error) {
-                    console.warn('Categories table not found, using default categories');
-                    // Use default categories if table doesn't exist
-                    categories = {
-                        'Wallets': { id: 1, name: 'Wallets' },
-                        'Mining': { id: 2, name: 'Mining' },
-                        'DeFi': { id: 3, name: 'DeFi' },
-                        'NFTs': { id: 4, name: 'NFTs' },
-                        'Infrastructure': { id: 5, name: 'Infrastructure' },
-                        'Education': { id: 6, name: 'Education' },
-                        'Tools': { id: 7, name: 'Tools' },
-                        'Core': { id: 8, name: 'Core' },
-                        'Wallet': { id: 9, name: 'Wallet' },
-                        'Other': { id: 10, name: 'Other' }
-                    };
-                } else {
-                    // Process categories from database
-                    categoriesRes.data?.forEach(c => {
-                        categories[c.id] = c;
-                    });
-                }
-                
-                if (projectsRes.error) throw projectsRes.error;
-                
-                // Populate category select
-                const select = document.getElementById('category-select');
-                const categoryOptions = Object.values(categories)
-                    .filter((cat, index, self) => 
-                        index === self.findIndex((c) => c.name === cat.name)
-                    )
-                    .sort((a, b) => a.name.localeCompare(b.name));
-                    
-                select.innerHTML = '<option value="">Select a category</option>' +
-                    categoryOptions.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
-                
-                // Process projects
-                allProjects = (projectsRes.data || []).filter(p => p && p.name);
-                
-                // Update stats
-                document.getElementById('total-projects').textContent = allProjects.length;
-                document.getElementById('total-categories').textContent = categoryOptions.length;
-                const uniqueUsers = new Set(allProjects.map(p => p.submitter_wallet || p.submitter_email).filter(Boolean));
-                document.getElementById('total-users').textContent = uniqueUsers.size;
-                
-                // Render projects
-                renderProjects(allProjects);
+                // Check for scam alerts
+                checkScamAlerts();
                 
                 loading.style.display = 'none';
                 projectsDiv.style.display = 'grid';
@@ -548,6 +782,106 @@
                     <p>${err.message}</p>
                     <button class="btn" onclick="location.reload()" style="margin-top: 10px;">Retry</button>
                 `;
+            }
+        }
+        
+        // Load all data
+        async function loadAllData() {
+            // Load categories and projects
+            const [categoriesRes, projectsRes, ratingsRes, commentsRes] = await Promise.all([
+                supabaseClient.from('categories').select('*').order('name'),
+                supabaseClient.from('projects').select('*').order('created_at', { ascending: false }),
+                supabaseClient.from('ratings').select('*'),
+                supabaseClient.from('comments').select('*')
+            ]);
+            
+            console.log('Data loaded:', { categories: categoriesRes, projects: projectsRes });
+            
+            // Handle categories
+            if (categoriesRes.error) {
+                console.warn('Categories table not found, using defaults');
+                categories = {
+                    'Wallets': { id: 1, name: 'Wallets' },
+                    'Mining': { id: 2, name: 'Mining' },
+                    'DeFi': { id: 3, name: 'DeFi' },
+                    'NFTs': { id: 4, name: 'NFTs' },
+                    'Infrastructure': { id: 5, name: 'Infrastructure' },
+                    'Education': { id: 6, name: 'Education' },
+                    'Tools': { id: 7, name: 'Tools' },
+                    'Core': { id: 8, name: 'Core' },
+                    'Wallet': { id: 9, name: 'Wallet' },
+                    'Other': { id: 10, name: 'Other' }
+                };
+            } else {
+                categoriesRes.data?.forEach(c => {
+                    categories[c.id] = c;
+                });
+            }
+            
+            // Populate category select
+            const select = document.getElementById('category-select');
+            const categoryOptions = Object.values(categories)
+                .filter((cat, index, self) => 
+                    index === self.findIndex((c) => c.name === cat.name)
+                )
+                .sort((a, b) => a.name.localeCompare(b.name));
+                
+            select.innerHTML = '<option value="">Select a category</option>' +
+                categoryOptions.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
+            
+            // Process projects with ratings and comments
+            allProjects = (projectsRes.data || []).filter(p => p && p.name);
+            
+            // Add ratings and comments count to projects
+            if (!ratingsRes.error && ratingsRes.data) {
+                allProjects.forEach(project => {
+                    const projectRatings = ratingsRes.data.filter(r => r.project_id === project.id);
+                    if (projectRatings.length > 0) {
+                        const avgRating = projectRatings.reduce((sum, r) => sum + r.rating, 0) / projectRatings.length;
+                        project.rating_avg = avgRating;
+                        project.rating_count = projectRatings.length;
+                    }
+                });
+            }
+            
+            if (!commentsRes.error && commentsRes.data) {
+                allProjects.forEach(project => {
+                    project.comment_count = commentsRes.data.filter(c => c.project_id === project.id).length;
+                });
+            }
+            
+            filteredProjects = [...allProjects];
+            
+            // Update stats
+            updateStats();
+            
+            // Render projects
+            renderProjects(filteredProjects);
+        }
+        
+        // Update statistics
+        function updateStats() {
+            document.getElementById('total-projects').textContent = allProjects.length;
+            document.getElementById('total-categories').textContent = Object.keys(categories).length;
+            
+            // Count unique users from wallet addresses and ratings
+            const uniqueUsers = new Set();
+            allProjects.forEach(p => {
+                if (p.submitter_wallet) uniqueUsers.add(p.submitter_wallet);
+            });
+            document.getElementById('active-users').textContent = uniqueUsers.size;
+        }
+        
+        // Check for scam alerts
+        function checkScamAlerts() {
+            // Check if any projects are marked as scams (rating_avg < 2 with > 5 ratings)
+            scamProjects = allProjects.filter(p => p.rating_avg < 2 && p.rating_count > 5);
+            
+            if (scamProjects.length > 0) {
+                const alertBar = document.getElementById('alert-bar');
+                const alertText = document.getElementById('alert-text');
+                alertText.textContent = `Warning: ${scamProjects.length} project(s) have been flagged by the community. Always do your own research!`;
+                alertBar.classList.add('show');
             }
         }
         
@@ -575,8 +909,25 @@
                     ? `<div class="tags">${p.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}</div>`
                     : '';
                 
+                const isScam = p.rating_avg < 2 && p.rating_count > 5;
+                const isVerified = p.verified;
+                
+                const ratingHtml = `
+                    <div class="rating" data-project-id="${p.id}">
+                        ${[1,2,3,4,5].map(i => 
+                            `<i class="fas fa-star star ${i <= Math.round(p.rating_avg || 0) ? 'filled' : ''}" 
+                                data-rating="${i}" onclick="rateProject(event, '${p.id}', ${i})"></i>`
+                        ).join('')}
+                        <span style="margin-left: 8px; font-size: 0.875rem; color: #64748B;">
+                            (${p.rating_count || 0})
+                        </span>
+                    </div>
+                `;
+                
                 return `
-                    <div class="card" onclick="window.open('${p.url}', '_blank')">
+                    <div class="card ${isScam ? 'scam' : ''}" onclick="showProjectDetails('${p.id}')">
+                        ${isScam ? '<span class="scam-badge">⚠️ Warning</span>' : ''}
+                        ${isVerified ? '<span class="verified-badge">✓ Verified</span>' : ''}
                         <div class="card-header">
                             ${logoHtml}
                             <div style="flex: 1;">
@@ -586,9 +937,19 @@
                         </div>
                         <p>${p.description || 'No description available'}</p>
                         ${tagsHtml}
+                        ${ratingHtml}
                         <div class="card-footer">
-                            <a href="${p.url}" target="_blank" onclick="event.stopPropagation()">Visit →</a>
-                            <small style="color: #64748B;">${new Date(p.created_at).toLocaleDateString()}</small>
+                            <div class="card-stats">
+                                <span class="card-stat">
+                                    <i class="fas fa-eye"></i> ${p.views || 0}
+                                </span>
+                                <span class="card-stat">
+                                    <i class="fas fa-comment"></i> ${p.comment_count || 0}
+                                </span>
+                            </div>
+                            <a href="${p.url}" target="_blank" onclick="event.stopPropagation()" class="btn btn-sm">
+                                Visit →
+                            </a>
                         </div>
                     </div>
                 `;
@@ -597,33 +958,275 @@
         
         // Search projects
         function searchProjects(query) {
-            const filtered = allProjects.filter(p => 
+            filteredProjects = allProjects.filter(p => 
                 p.name.toLowerCase().includes(query.toLowerCase()) ||
                 (p.description || '').toLowerCase().includes(query.toLowerCase()) ||
                 (p.category || '').toLowerCase().includes(query.toLowerCase()) ||
                 (p.tags && p.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase())))
             );
-            renderProjects(filtered);
+            renderProjects(filteredProjects);
+        }
+        
+        // Sort projects
+        function sortProjects(sortBy) {
+            let sorted = [...filteredProjects];
+            
+            switch(sortBy) {
+                case 'rating':
+                    sorted.sort((a, b) => (b.rating_avg || 0) - (a.rating_avg || 0));
+                    break;
+                case 'views':
+                    sorted.sort((a, b) => (b.views || 0) - (a.views || 0));
+                    break;
+                case 'name':
+                    sorted.sort((a, b) => a.name.localeCompare(b.name));
+                    break;
+                default: // recent
+                    sorted.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
+            }
+            
+            renderProjects(sorted);
+        }
+        
+        // Show project details
+        async function showProjectDetails(projectId) {
+            const project = allProjects.find(p => p.id === projectId);
+            if (!project) return;
+            
+            // Increment views
+            await supabaseClient
+                .from('projects')
+                .update({ views: (project.views || 0) + 1 })
+                .eq('id', projectId);
+            
+            // Load comments
+            const { data: comments } = await supabaseClient
+                .from('comments')
+                .select('*')
+                .eq('project_id', projectId)
+                .order('created_at', { ascending: false });
+            
+            const modalTitle = document.getElementById('project-modal-title');
+            const modalBody = document.getElementById('project-modal-body');
+            
+            modalTitle.textContent = project.name;
+            
+            const socialLinks = [];
+            if (project.twitter) socialLinks.push(`<a href="https://twitter.com/${project.twitter}" target="_blank"><i class="fab fa-twitter"></i></a>`);
+            if (project.github) socialLinks.push(`<a href="${project.github}" target="_blank"><i class="fab fa-github"></i></a>`);
+            if (project.discord) socialLinks.push(`<a href="${project.discord}" target="_blank"><i class="fab fa-discord"></i></a>`);
+            if (project.telegram) socialLinks.push(`<a href="${project.telegram}" target="_blank"><i class="fab fa-telegram"></i></a>`);
+            
+            modalBody.innerHTML = `
+                <div style="margin-bottom: 20px;">
+                    <p style="color: #94A3B8; margin-bottom: 16px;">${project.description}</p>
+                    <div style="display: flex; gap: 16px; margin-bottom: 16px;">
+                        <a href="${project.url}" target="_blank" class="btn btn-primary">
+                            Visit Website →
+                        </a>
+                        ${socialLinks.length > 0 ? `
+                            <div style="display: flex; gap: 12px; align-items: center;">
+                                ${socialLinks.join('')}
+                            </div>
+                        ` : ''}
+                    </div>
+                </div>
+                
+                <div class="comments-section">
+                    <h3 style="margin-bottom: 16px;">Comments (${comments?.length || 0})</h3>
+                    ${walletConnected ? `
+                        <form onsubmit="addComment(event, '${projectId}')" style="margin-bottom: 20px;">
+                            <textarea 
+                                name="comment" 
+                                placeholder="Add a comment..." 
+                                required
+                                style="width: 100%; padding: 10px; background: #0F172A; border: 1px solid #334155; 
+                                       border-radius: 6px; color: #CBD5E1; margin-bottom: 10px;"
+                            ></textarea>
+                            <button type="submit" class="btn btn-sm">
+                                <i class="fas fa-comment"></i> Post Comment
+                            </button>
+                        </form>
+                    ` : '<p style="color: #64748B; font-size: 0.875rem;">Connect wallet to comment</p>'}
+                    
+                    <div id="comments-list">
+                        ${comments && comments.length > 0 ? comments.map(comment => `
+                            <div class="comment">
+                                <div class="comment-header">
+                                    <span class="comment-author">${comment.user_wallet.slice(0, 8)}...${comment.user_wallet.slice(-6)}</span>
+                                    <span class="comment-date">${new Date(comment.created_at).toLocaleDateString()}</span>
+                                </div>
+                                <div class="comment-text">${comment.comment}</div>
+                            </div>
+                        `).join('') : '<p style="color: #64748B;">No comments yet</p>'}
+                    </div>
+                </div>
+            `;
+            
+            document.getElementById('project-modal').classList.add('show');
+        }
+        
+        // Rate project
+        async function rateProject(event, projectId, rating) {
+            event.stopPropagation();
+            
+            if (!walletConnected) {
+                showToast('Please connect your wallet to rate projects', 'warning');
+                showWalletModal();
+                return;
+            }
+            
+            try {
+                // Check if user already rated
+                const { data: existing } = await supabaseClient
+                    .from('ratings')
+                    .select('*')
+                    .eq('project_id', projectId)
+                    .eq('user_wallet', walletAddress)
+                    .single();
+                
+                if (existing) {
+                    // Update existing rating
+                    await supabaseClient
+                        .from('ratings')
+                        .update({ rating, updated_at: new Date().toISOString() })
+                        .eq('id', existing.id);
+                } else {
+                    // Create new rating
+                    await supabaseClient
+                        .from('ratings')
+                        .insert({
+                            project_id: projectId,
+                            user_wallet: walletAddress,
+                            rating
+                        });
+                }
+                
+                showToast('Rating submitted!', 'success');
+                await loadAllData(); // Reload to update ratings
+                
+            } catch (error) {
+                console.error('Error rating project:', error);
+                showToast('Failed to submit rating', 'error');
+            }
+        }
+        
+        // Add comment
+        async function addComment(event, projectId) {
+            event.preventDefault();
+            
+            const formData = new FormData(event.target);
+            const comment = formData.get('comment');
+            
+            try {
+                await supabaseClient
+                    .from('comments')
+                    .insert({
+                        project_id: projectId,
+                        user_wallet: walletAddress,
+                        comment
+                    });
+                
+                showToast('Comment posted!', 'success');
+                event.target.reset();
+                showProjectDetails(projectId); // Reload comments
+                
+            } catch (error) {
+                console.error('Error posting comment:', error);
+                showToast('Failed to post comment', 'error');
+            }
+        }
+        
+        // Wallet functions
+        async function checkWalletConnection() {
+            if (typeof window.kasware !== 'undefined') {
+                try {
+                    const accounts = await window.kasware.getAccounts();
+                    if (accounts.length > 0) {
+                        walletConnected = true;
+                        walletAddress = accounts[0];
+                        updateWalletUI();
+                    }
+                } catch (error) {
+                    console.error('Error checking wallet:', error);
+                }
+            }
+        }
+        
+        async function connectKasware() {
+            if (typeof window.kasware === 'undefined') {
+                showToast('Kasware wallet not found. Please install it first.', 'error');
+                window.open('https://kasware.xyz', '_blank');
+                return;
+            }
+            
+            try {
+                const accounts = await window.kasware.requestAccounts();
+                if (accounts.length > 0) {
+                    walletConnected = true;
+                    walletAddress = accounts[0];
+                    updateWalletUI();
+                    closeModal('wallet-modal');
+                    showToast('Wallet connected successfully!', 'success');
+                }
+            } catch (error) {
+                console.error('Error connecting wallet:', error);
+                showToast('Failed to connect wallet', 'error');
+            }
+        }
+        
+        function updateWalletUI() {
+            const walletStatus = document.getElementById('wallet-status');
+            const walletText = document.getElementById('wallet-text');
+            const walletNotice = document.getElementById('wallet-notice');
+            const submitBtn = document.getElementById('submit-btn');
+            
+            if (walletConnected) {
+                walletStatus.classList.add('connected');
+                walletText.textContent = walletAddress.slice(0, 6) + '...' + walletAddress.slice(-4);
+                if (walletNotice) walletNotice.style.display = 'none';
+                if (submitBtn) submitBtn.disabled = false;
+            } else {
+                walletStatus.classList.remove('connected');
+                walletText.textContent = 'Connect';
+                if (walletNotice) walletNotice.style.display = 'block';
+                if (submitBtn) submitBtn.disabled = true;
+            }
+        }
+        
+        // Show wallet modal
+        function showWalletModal() {
+            document.getElementById('wallet-modal').classList.add('show');
         }
         
         // Show submit modal
         function showSubmitModal() {
+            if (!walletConnected) {
+                showToast('Please connect your wallet first', 'warning');
+                showWalletModal();
+                return;
+            }
+            updateWalletUI();
             document.getElementById('submit-modal').classList.add('show');
         }
         
         // Close modal
-        function closeModal() {
-            document.getElementById('submit-modal').classList.remove('show');
-            document.getElementById('submit-form').reset();
+        function closeModal(modalId) {
+            document.getElementById(modalId).classList.remove('show');
         }
         
         // Submit project
         async function submitProject(event) {
             event.preventDefault();
             
+            if (!walletConnected) {
+                showToast('Please connect your wallet', 'warning');
+                return;
+            }
+            
             const btn = document.getElementById('submit-btn');
             btn.disabled = true;
-            btn.textContent = 'Submitting...';
+            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
             
             try {
                 const formData = new FormData(event.target);
@@ -634,7 +1237,10 @@
                     category: formData.get('category'),
                     logo_url: formData.get('logo_url') || null,
                     twitter: formData.get('twitter') || null,
-                    submitter_email: formData.get('submitter_email') || null,
+                    github: formData.get('github') || null,
+                    discord: formData.get('discord') || null,
+                    telegram: formData.get('telegram') || null,
+                    submitter_wallet: walletAddress,
                     tags: [],
                     rating_avg: 0,
                     rating_count: 0,
@@ -661,17 +1267,40 @@
                 if (error) throw error;
                 
                 showToast('Project submitted successfully!', 'success');
-                closeModal();
+                closeModal('submit-modal');
+                event.target.reset();
                 
                 // Reload projects
-                setTimeout(() => location.reload(), 1500);
+                await loadAllData();
                 
             } catch (error) {
                 console.error('Error:', error);
                 showToast(error.message || 'Failed to submit project', 'error');
             } finally {
                 btn.disabled = false;
-                btn.textContent = 'Submit Project';
+                btn.innerHTML = 'Submit Project';
+            }
+        }
+        
+        // Trigger Apify scrape
+        async function triggerApifyScrape() {
+            try {
+                showToast('Starting scrape...', 'info');
+                
+                const response = await fetch('/.netlify/functions/trigger-apify', {
+                    method: 'POST'
+                });
+                
+                const data = await response.json();
+                
+                if (response.ok) {
+                    showToast('Scraping started! New projects will appear soon.', 'success');
+                } else {
+                    throw new Error(data.error || 'Failed to start scrape');
+                }
+            } catch (error) {
+                console.error('Error triggering scrape:', error);
+                showToast('Failed to start scrape: ' + error.message, 'error');
             }
         }
         
@@ -688,14 +1317,131 @@
         
         // Close modal on outside click
         window.onclick = function(event) {
-            const modal = document.getElementById('submit-modal');
-            if (event.target == modal) {
-                closeModal();
+            if (event.target.classList.contains('modal')) {
+                event.target.classList.remove('show');
             }
         }
         
         // Initialize on load
         init();
+    </script>
+    
+    <!-- Multi-Wallet Integration Scripts -->
+    <script src="js/kaspa-wallet-integration.js"></script>
+    <script src="js/multi-wallet-ui.js"></script>
+    
+    <!-- Advanced Project Discovery System -->
+    <script src="js/project-discovery.js"></script>
+    
+    <!-- Comprehensive Rating System -->
+    <script src="js/comprehensive-rating-system.js"></script>
+    
+    <script>
+        // Override existing wallet functions to use multi-wallet system
+        window.addEventListener('walletConnected', (event) => {
+            walletConnected = true;
+            walletAddress = event.detail.address;
+            updateWalletUI();
+            showToast(`Connected to ${event.detail.name}!`, 'success');
+        });
+
+        window.addEventListener('walletDisconnected', () => {
+            walletConnected = false;
+            walletAddress = null;
+            updateWalletUI();
+            showToast('Wallet disconnected', 'info');
+        });
+
+        // Enhanced wallet connection check
+        async function checkWalletConnection() {
+            if (typeof KaspaWallet !== 'undefined') {
+                const connectedWallet = KaspaWallet.getConnectedWallet();
+                if (connectedWallet) {
+                    walletConnected = true;
+                    walletAddress = connectedWallet.address;
+                    updateWalletUI();
+                }
+            }
+        }
+
+        // Updated connect function using multi-wallet
+        async function connectKasware() {
+            if (typeof MultiWalletUI !== 'undefined') {
+                MultiWalletUI.showModal();
+            } else {
+                // Fallback to original Kasware-only connection
+                if (typeof window.kasware === 'undefined') {
+                    showToast('Kasware wallet not found. Please install it first.', 'error');
+                    window.open('https://kasware.xyz', '_blank');
+                    return;
+                }
+                
+                try {
+                    const accounts = await window.kasware.requestAccounts();
+                    if (accounts.length > 0) {
+                        walletConnected = true;
+                        walletAddress = accounts[0];
+                        updateWalletUI();
+                        closeModal('wallet-modal');
+                        showToast('Wallet connected successfully!', 'success');
+                    }
+                } catch (error) {
+                    console.error('Error connecting wallet:', error);
+                    showToast('Failed to connect wallet', 'error');
+                }
+            }
+        }
+
+        // Enhanced wallet UI update
+        function updateWalletUI() {
+            const walletStatus = document.getElementById('wallet-status');
+            const walletText = document.getElementById('wallet-text');
+            const walletNotice = document.getElementById('wallet-notice');
+            const submitBtn = document.getElementById('submit-btn');
+            
+            if (walletConnected) {
+                walletStatus.classList.add('connected');
+                
+                // Show wallet type if available
+                const connectedWallet = typeof KaspaWallet !== 'undefined' ? KaspaWallet.getConnectedWallet() : null;
+                const walletType = connectedWallet ? ` (${connectedWallet.name})` : '';
+                walletText.textContent = walletAddress.slice(0, 6) + '...' + walletAddress.slice(-4) + walletType;
+                
+                if (walletNotice) walletNotice.style.display = 'none';
+                if (submitBtn) submitBtn.disabled = false;
+            } else {
+                walletStatus.classList.remove('connected');
+                walletText.textContent = 'Connect Wallet';
+                if (walletNotice) walletNotice.style.display = 'block';
+                if (submitBtn) submitBtn.disabled = true;
+            }
+        }
+
+        // Show enhanced wallet modal
+        function showWalletModal() {
+            if (typeof MultiWalletUI !== 'undefined') {
+                MultiWalletUI.showModal();
+            } else {
+                document.getElementById('wallet-modal').classList.add('show');
+            }
+        }
+
+        // Initialize multi-wallet on page load
+        document.addEventListener('DOMContentLoaded', () => {
+            // Check if multi-wallet is available
+            if (typeof MultiWalletUI !== 'undefined') {
+                console.log('Multi-wallet system initialized');
+                
+                // Update wallet connect button text
+                const walletText = document.getElementById('wallet-text');
+                if (walletText && !walletConnected) {
+                    walletText.textContent = 'Connect Wallet';
+                }
+            }
+            
+            // Check for existing connections
+            setTimeout(checkWalletConnection, 1000);
+        });
     </script>
 </body>
 </html>

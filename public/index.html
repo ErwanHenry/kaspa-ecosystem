@@ -4,6 +4,10 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Kaspa Ecosystem - Discover Projects Building on Kaspa</title>
+    <meta name="description" content="Explore the growing ecosystem of projects building on Kaspa blockchain. Wallets, mining tools, DeFi, NFTs and more.">
+    
+    <!-- Favicon -->
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg">
     
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
@@ -13,1251 +17,449 @@
     <!-- Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
     
+    <!-- Styles -->
+    <link rel="stylesheet" href="css/kaspa-ecosystem.css">
+    
     <style>
+        /* Base styles while CSS loads */
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        body { 
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif; 
-            background: #0F172A; 
-            color: #CBD5E1; 
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+            background: #0F172A;
+            color: #CBD5E1;
             line-height: 1.6;
         }
-        .container { max-width: 1200px; margin: 0 auto; padding: 20px; }
-        
-        /* Navigation */
-        .nav { 
-            background: rgba(30, 41, 59, 0.95); 
-            backdrop-filter: blur(10px);
-            padding: 16px 0; 
-            position: sticky; 
-            top: 0; 
-            z-index: 100; 
-            box-shadow: 0 2px 10px rgba(0,0,0,0.3); 
-        }
-        .nav-content { 
-            display: flex; 
-            justify-content: space-between; 
-            align-items: center; 
-            max-width: 1200px; 
-            margin: 0 auto; 
-            padding: 0 20px; 
-        }
-        .logo { 
-            font-size: 1.5rem; 
-            font-weight: bold; 
-            color: #49EACB; 
-            text-decoration: none; 
-        }
-        .nav-actions {
-            display: flex;
-            gap: 10px;
-            align-items: center;
-        }
-        
-        /* Buttons */
-        .btn { 
-            padding: 8px 16px; 
-            background: #49EACB; 
-            color: #0F172A; 
-            border: none; 
-            border-radius: 6px; 
-            cursor: pointer; 
-            font-weight: 600; 
-            transition: all 0.2s;
-            text-decoration: none;
-            display: inline-flex;
-            align-items: center;
-            gap: 8px;
-            font-size: 14px;
-        }
-        .btn:hover { 
-            background: #6FFDD8;
-            transform: translateY(-1px);
-        }
-        .btn-secondary {
-            background: #334155;
-            color: #CBD5E1;
-        }
-        .btn-secondary:hover {
-            background: #475569;
-        }
-        .btn-danger {
-            background: #EF4444;
-            color: white;
-        }
-        .btn-danger:hover {
-            background: #DC2626;
-        }
-        .btn-sm {
-            padding: 6px 12px;
-            font-size: 13px;
-        }
-        
-        /* Wallet Status */
-        .wallet-status {
-            padding: 6px 12px;
-            background: #1E293B;
-            border: 1px solid #334155;
-            border-radius: 6px;
-            font-size: 13px;
-            color: #94A3B8;
-        }
-        .wallet-status.connected {
-            border-color: #49EACB;
-            color: #49EACB;
-        }
-        
-        /* Hero */
-        .hero { 
-            text-align: center; 
-            padding: 60px 20px; 
-            background: linear-gradient(180deg, transparent, rgba(73, 234, 203, 0.02));
-        }
-        .hero h1 { 
-            font-size: 2.5rem; 
-            margin-bottom: 16px; 
-        }
-        .gradient { 
-            background: linear-gradient(135deg, #49EACB, #6FFDD8); 
-            -webkit-background-clip: text; 
-            -webkit-text-fill-color: transparent; 
-        }
-        .hero p {
-            color: #94A3B8;
-            font-size: 1.125rem;
-            margin-bottom: 30px;
-        }
-        
-        /* Stats */
-        .stats { 
-            display: flex; 
-            justify-content: center; 
-            gap: 60px; 
-            margin: 40px 0; 
-        }
-        .stat { text-align: center; }
-        .stat-num { 
-            font-size: 2rem; 
-            font-weight: bold; 
-            color: #49EACB; 
-        }
-        .stat-label { 
-            font-size: 0.9rem; 
-            color: #94A3B8; 
-        }
-        
-        /* Alert Bar */
-        .alert-bar {
-            background: #7F1D1D;
-            color: #FCA5A5;
-            padding: 12px;
-            text-align: center;
-            display: none;
-            position: sticky;
-            top: 60px;
-            z-index: 99;
-        }
-        .alert-bar.show {
-            display: block;
-        }
-        
-        /* Section */
-        .section {
-            margin: 60px 0;
-        }
-        .section-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
-            flex-wrap: wrap;
-            gap: 20px;
-        }
-        .section-title {
-            font-size: 2rem;
-            font-weight: 700;
-        }
-        
-        /* Grid */
-        .grid { 
-            display: grid; 
-            grid-template-columns: repeat(auto-fill, minmax(320px, 1fr)); 
-            gap: 20px; 
-            margin-bottom: 40px;
-        }
-        
-        /* Card */
-        .card { 
-            background: #1E293B; 
-            border: 1px solid #334155; 
-            border-radius: 8px; 
-            padding: 20px; 
-            transition: all 0.2s; 
-            cursor: pointer;
-            position: relative;
-        }
-        .card:hover { 
-            transform: translateY(-4px); 
-            border-color: #49EACB; 
-            box-shadow: 0 10px 30px rgba(0,0,0,0.3);
-        }
-        .card.scam {
-            border-color: #EF4444;
-            background: rgba(127, 29, 29, 0.1);
-        }
-        .scam-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #EF4444;
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        .verified-badge {
-            position: absolute;
-            top: 10px;
-            right: 10px;
-            background: #10B981;
-            color: white;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 12px;
-            font-weight: 600;
-        }
-        .card-header {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-            margin-bottom: 12px;
-        }
-        .card-icon {
-            width: 48px;
-            height: 48px;
-            background: linear-gradient(135deg, #49EACB, #2BC9AA);
-            border-radius: 8px;
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            font-weight: bold;
-            font-size: 1.5rem;
-            color: #0F172A;
-        }
-        .card h3 { 
-            margin-bottom: 4px; 
-            font-size: 1.125rem;
-        }
-        .card-category {
-            font-size: 0.75rem;
-            color: #49EACB;
-            text-transform: uppercase;
-            letter-spacing: 0.05em;
-        }
-        .card p { 
-            color: #94A3B8; 
-            font-size: 0.9rem; 
-            margin-bottom: 16px; 
-            display: -webkit-box;
-            -webkit-line-clamp: 3;
-            -webkit-box-orient: vertical;
-            overflow: hidden;
-        }
-        .card-footer {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-        }
-        .card-stats {
-            display: flex;
-            gap: 16px;
-            font-size: 0.875rem;
-            color: #64748B;
-        }
-        .card-stat {
-            display: flex;
-            align-items: center;
-            gap: 4px;
-        }
-        
-        /* Tags */
-        .tags {
-            display: flex;
-            gap: 6px;
-            flex-wrap: wrap;
-            margin: 10px 0;
-        }
-        .tag {
-            background: #0F172A;
-            color: #64748B;
-            padding: 4px 8px;
-            border-radius: 4px;
-            font-size: 0.75rem;
-        }
-        
-        /* Rating */
-        .rating {
-            display: flex;
-            gap: 2px;
-        }
-        .star {
-            color: #334155;
-            font-size: 14px;
-            cursor: pointer;
-            transition: color 0.2s;
-        }
-        .star.filled {
-            color: #F59E0B;
-        }
-        .star:hover {
-            color: #F59E0B;
-        }
-        
-        /* Comments Section */
-        .comments-section {
-            margin-top: 20px;
-            padding-top: 20px;
-            border-top: 1px solid #334155;
-        }
-        .comment {
-            background: #0F172A;
-            padding: 12px;
-            border-radius: 6px;
-            margin-bottom: 12px;
-        }
-        .comment-header {
-            display: flex;
-            justify-content: space-between;
-            margin-bottom: 8px;
-            font-size: 0.875rem;
-        }
-        .comment-author {
-            color: #49EACB;
-            font-weight: 500;
-        }
-        .comment-date {
-            color: #64748B;
-        }
-        .comment-text {
-            color: #94A3B8;
-            font-size: 0.875rem;
-        }
-        
-        /* Modal */
-        .modal {
-            display: none;
+        .loading-screen {
             position: fixed;
             top: 0;
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0,0,0,0.8);
-            z-index: 1000;
-            overflow: auto;
-        }
-        .modal.show {
+            background: #0F172A;
             display: flex;
             align-items: center;
             justify-content: center;
+            z-index: 9999;
         }
-        .modal-content {
-            background: #1E293B;
-            border: 1px solid #334155;
-            border-radius: 12px;
-            width: 90%;
-            max-width: 600px;
-            max-height: 90vh;
-            overflow: auto;
+        .loading-content {
+            text-align: center;
         }
-        .modal-header {
-            padding: 20px;
-            border-bottom: 1px solid #334155;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
+        .loading-spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid #1E293B;
+            border-top-color: #49EACB;
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 20px;
         }
-        .modal-body {
-            padding: 20px;
+        @keyframes spin {
+            to { transform: rotate(360deg); }
         }
-        .close {
-            font-size: 28px;
-            color: #94A3B8;
-            cursor: pointer;
-            background: none;
-            border: none;
-        }
-        .close:hover {
-            color: #CBD5E1;
-        }
-        
-        /* Form */
-        .form-group {
-            margin-bottom: 20px;
-        }
-        .form-group label {
-            display: block;
-            margin-bottom: 8px;
-            font-weight: 600;
-        }
-        .form-group input,
-        .form-group select,
-        .form-group textarea {
-            width: 100%;
-            padding: 10px;
-            background: #0F172A;
-            border: 1px solid #334155;
-            border-radius: 6px;
-            color: #CBD5E1;
-            font-size: 16px;
-        }
-        .form-group input:focus,
-        .form-group select:focus,
-        .form-group textarea:focus {
-            outline: none;
-            border-color: #49EACB;
-        }
-        .form-group textarea {
-            resize: vertical;
-            min-height: 100px;
-        }
-        .required {
-            color: #EF4444;
-        }
-        
-        /* Wallet Options */
-        .wallet-options {
-            display: flex;
-            flex-direction: column;
-            gap: 12px;
-            margin: 20px 0;
-        }
-        .wallet-option {
-            display: flex;
-            align-items: center;
-            justify-content: space-between;
-            padding: 16px;
-            background: #0F172A;
-            border: 1px solid #334155;
-            border-radius: 8px;
-            cursor: pointer;
-            transition: all 0.2s;
-        }
-        .wallet-option:hover {
-            border-color: #49EACB;
-        }
-        .wallet-option.disabled {
-            opacity: 0.5;
-            cursor: not-allowed;
-        }
-        .wallet-info {
-            display: flex;
-            align-items: center;
-            gap: 12px;
-        }
-        .wallet-icon {
-            font-size: 24px;
-        }
-        .wallet-name {
-            font-weight: 600;
-        }
-        .wallet-status-text {
-            font-size: 0.875rem;
-            color: #94A3B8;
-        }
-        
-        /* Toast */
-        .toast {
-            position: fixed;
-            bottom: 20px;
-            right: 20px;
-            background: #1E293B;
-            border: 1px solid #334155;
-            border-radius: 8px;
-            padding: 16px 20px;
-            display: none;
-            z-index: 2000;
-            min-width: 300px;
-        }
-        .toast.show {
-            display: block;
-            animation: slideIn 0.3s ease;
-        }
-        .toast.success {
-            border-color: #10B981;
-            color: #10B981;
-        }
-        .toast.error {
-            border-color: #EF4444;
-            color: #EF4444;
-        }
-        .toast.warning {
-            border-color: #F59E0B;
-            color: #F59E0B;
-        }
-        
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-        
-        /* Loading */
-        .loading { 
-            text-align: center; 
-            padding: 60px; 
-            color: #49EACB; 
-        }
-        .error { 
-            background: #7F1D1D; 
-            color: #FCA5A5; 
-            padding: 20px; 
-            border-radius: 8px; 
-            text-align: center; 
-            margin: 20px 0;
-        }
-        
-        /* Responsive */
-        @media (max-width: 768px) { 
-            .hero h1 { font-size: 2rem; } 
-            .stats { flex-direction: column; gap: 20px; } 
-            .grid { grid-template-columns: 1fr; }
-            .section-header { flex-direction: column; align-items: stretch; }
-            .nav-actions { gap: 8px; }
+        .loading-text {
+            color: #49EACB;
+            font-size: 1.2em;
         }
     </style>
 </head>
 <body>
+    <!-- Loading Screen -->
+    <div id="loading-screen" class="loading-screen">
+        <div class="loading-content">
+            <div class="loading-spinner"></div>
+            <p class="loading-text">⚡ Loading Kaspa Ecosystem...</p>
+        </div>
+    </div>
+
     <!-- Navigation -->
-    <nav class="nav">
-        <div class="nav-content">
-            <a href="/" class="logo">⚡ Kaspa Ecosystem</a>
+    <nav class="navbar">
+        <div class="nav-container">
+            <div class="nav-brand">
+                <a href="/" class="brand-link">
+                    <span class="brand-icon">⚡</span>
+                    <span class="brand-text">Kaspa Ecosystem</span>
+                </a>
+            </div>
+            
+            <div class="nav-menu" id="navMenu">
+                <a href="#featured" class="nav-link">Featured</a>
+                <a href="#projects" class="nav-link">Projects</a>
+                <a href="#categories" class="nav-link">Categories</a>
+                <a href="/admin-enhanced.html" class="nav-link">Admin</a>
+            </div>
+            
             <div class="nav-actions">
-                <button class="btn btn-sm" onclick="triggerApifyScrape()" title="Scrape new projects">
-                    <i class="fas fa-sync"></i> Scrape
+                <button class="btn btn-primary btn-sm" onclick="showSubmitModal()">
+                    <i class="fas fa-plus"></i> Submit Project
                 </button>
-                <button class="btn btn-sm" onclick="showSubmitModal()">
-                    <i class="fas fa-plus"></i> Submit
-                </button>
-                <div id="wallet-status" class="wallet-status" onclick="showWalletModal()">
+                <button class="btn btn-secondary btn-sm" id="walletBtn" onclick="showWalletModal()">
                     <i class="fas fa-wallet"></i>
-                    <span id="wallet-text">Connect</span>
-                </div>
-                <a href="/admin-complete.html" class="btn btn-secondary btn-sm">Admin</a>
+                    <span id="wallet-status">Connect</span>
+                </button>
+                <button class="nav-toggle" id="navToggle" onclick="toggleMobileMenu()">
+                    <span></span>
+                    <span></span>
+                    <span></span>
+                </button>
             </div>
         </div>
     </nav>
 
-    <!-- Alert Bar -->
-    <div id="alert-bar" class="alert-bar">
-        <i class="fas fa-exclamation-triangle"></i>
-        <span id="alert-text">Warning: Some projects may be scams. Always do your own research!</span>
-    </div>
-
-    <!-- Hero -->
-    <div class="hero">
-        <h1>Discover the <span class="gradient">Kaspa Ecosystem</span></h1>
-        <p>Explore wallets, mining tools, DeFi protocols, and innovative projects building on the fastest proof-of-work blockchain</p>
-        
-        <div class="stats" id="stats">
-            <div class="stat">
-                <div class="stat-num" id="total-projects">0</div>
-                <div class="stat-label">Projects</div>
-            </div>
-            <div class="stat">
-                <div class="stat-num" id="total-categories">0</div>
-                <div class="stat-label">Categories</div>
-            </div>
-            <div class="stat">
-                <div class="stat-num" id="active-users">0</div>
-                <div class="stat-label">Active Users</div>
+    <!-- Hero Section -->
+    <section class="hero">
+        <div class="hero-background">
+            <div class="grid-pattern"></div>
+        </div>
+        <div class="container">
+            <div class="hero-content">
+                <h1 class="hero-title">
+                    Discover the <span class="text-gradient">Kaspa Ecosystem</span>
+                </h1>
+                <p class="hero-subtitle">
+                    Explore wallets, mining tools, DeFi protocols, and innovative projects building on the fastest proof-of-work blockchain
+                </p>
+                <div class="hero-stats">
+                    <div class="stat-item">
+                        <span class="stat-number" id="total-projects">0</span>
+                        <span class="stat-label">Projects</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="total-categories">0</span>
+                        <span class="stat-label">Categories</span>
+                    </div>
+                    <div class="stat-item">
+                        <span class="stat-number" id="active-users">0</span>
+                        <span class="stat-label">Active Users</span>
+                    </div>
+                </div>
             </div>
         </div>
-    </div>
+    </section>
+
+    <!-- Featured Projects Carousel -->
+    <section id="featured" class="featured-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-star"></i> Featured Projects
+                </h2>
+                <p class="section-subtitle">Community-sponsored projects showcasing the best of Kaspa</p>
+            </div>
+            
+            <div class="carousel-wrapper">
+                <div class="carousel-container" id="featuredCarousel">
+                    <div class="carousel-track" id="carouselTrack">
+                        <!-- Featured projects will be loaded here -->
+                    </div>
+                </div>
+                <button class="carousel-control prev" onclick="moveCarousel(-1)" aria-label="Previous">
+                    <i class="fas fa-chevron-left"></i>
+                </button>
+                <button class="carousel-control next" onclick="moveCarousel(1)" aria-label="Next">
+                    <i class="fas fa-chevron-right"></i>
+                </button>
+            </div>
+            
+            <div id="no-featured" class="empty-state" style="display: none;">
+                <i class="fas fa-trophy empty-icon"></i>
+                <h3>No Featured Projects Yet</h3>
+                <p>Be the first to sponsor a project and showcase it here!</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Categories Section -->
+    <section id="categories" class="categories-section">
+        <div class="container">
+            <div class="section-header">
+                <h2 class="section-title">
+                    <i class="fas fa-th-large"></i> Browse by Category
+                </h2>
+            </div>
+            <div class="categories-grid" id="categoriesGrid">
+                <!-- Categories will be loaded here -->
+            </div>
+        </div>
+    </section>
 
     <!-- Projects Section -->
-    <div class="container">
-        <section class="section">
+    <section id="projects" class="projects-section">
+        <div class="container">
             <div class="section-header">
-                <h2 class="section-title">All Projects</h2>
-                <div style="display: flex; gap: 12px; align-items: center;">
-                    <input type="text" id="search" placeholder="Search projects..." 
-                           style="padding: 10px; background: #1E293B; border: 1px solid #334155; 
-                                  border-radius: 6px; color: #CBD5E1; width: 300px; max-width: 100%;"
-                           onkeyup="searchProjects(this.value)">
-                    <select id="sort" onchange="sortProjects(this.value)"
-                            style="padding: 10px; background: #1E293B; border: 1px solid #334155; 
-                                   border-radius: 6px; color: #CBD5E1;">
+                <h2 class="section-title">
+                    <i class="fas fa-cube"></i> All Projects
+                </h2>
+                <div class="section-controls">
+                    <div class="search-box">
+                        <i class="fas fa-search"></i>
+                        <input type="text" id="searchInput" placeholder="Search projects..." onkeyup="searchProjects(this.value)">
+                    </div>
+                    <select class="sort-select" id="sortSelect" onchange="sortProjects(this.value)">
                         <option value="recent">Most Recent</option>
                         <option value="rating">Highest Rated</option>
-                        <option value="views">Most Viewed</option>
                         <option value="name">Alphabetical</option>
                     </select>
                 </div>
             </div>
             
-            <div id="loading" class="loading">
-                <div style="font-size: 2rem; margin-bottom: 10px;">⏳</div>
-                Loading projects...
+            <div class="projects-grid" id="projectsGrid">
+                <!-- Projects will be loaded here -->
             </div>
-            <div id="error" style="display:none" class="error"></div>
-            <div id="projects" class="grid" style="display:none"></div>
-            <div id="no-results" style="display:none; text-align: center; padding: 60px; color: #94A3B8;">
-                No projects found
-            </div>
-        </section>
-    </div>
+        </div>
+    </section>
 
-    <!-- Submit Modal -->
-    <div id="submit-modal" class="modal">
-        <div class="modal-content">
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <p>&copy; 2024 Kaspa Ecosystem. Open source project.</p>
+                <p>Built with ❤️ by the Kaspa community</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Wallet Modal -->
+    <div id="wallet-modal" class="modal">
+        <div class="modal-content modal-sm">
             <div class="modal-header">
-                <h2>Submit New Project</h2>
-                <button class="close" onclick="closeModal('submit-modal')">&times;</button>
+                <h3><i class="fas fa-wallet"></i> Connect Wallet</h3>
+                <button class="modal-close" onclick="closeModal('wallet-modal')">&times;</button>
             </div>
             <div class="modal-body">
-                <div id="wallet-notice" style="display: none; background: #7F1D1D; color: #FCA5A5; padding: 12px; border-radius: 6px; margin-bottom: 20px;">
-                    <i class="fas fa-info-circle"></i> Please connect your wallet to submit a project
-                </div>
-                <form id="submit-form" onsubmit="submitProject(event)">
-                    <div class="form-group">
-                        <label>Project Name <span class="required">*</span></label>
-                        <input type="text" name="name" required maxlength="100">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Category <span class="required">*</span></label>
-                        <select name="category" required id="category-select">
-                            <option value="">Select a category</option>
-                        </select>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Description <span class="required">*</span></label>
-                        <textarea name="description" required maxlength="500"></textarea>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Website URL <span class="required">*</span></label>
-                        <input type="url" name="url" required>
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Logo URL (optional)</label>
-                        <input type="url" name="logo_url">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Twitter Handle (optional)</label>
-                        <input type="text" name="twitter" placeholder="username without @">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>GitHub URL (optional)</label>
-                        <input type="url" name="github">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Discord URL (optional)</label>
-                        <input type="url" name="discord">
-                    </div>
-                    
-                    <div class="form-group">
-                        <label>Telegram URL (optional)</label>
-                        <input type="url" name="telegram">
-                    </div>
-                    
-                    <button type="submit" class="btn" style="width: 100%;" id="submit-btn">
-                        Submit Project
+                <div class="wallet-options">
+                    <button class="wallet-option" onclick="connectWallet('kasware')">
+                        <span class="wallet-icon">🟢</span>
+                        <span>Kasware Wallet</span>
+                        <span class="wallet-status">Available</span>
                     </button>
-                </form>
+                    <button class="wallet-option disabled">
+                        <span class="wallet-icon">🏰</span>
+                        <span>Kastle Wallet</span>
+                        <span class="wallet-status">Coming Soon</span>
+                    </button>
+                    <button class="wallet-option disabled">
+                        <span class="wallet-icon">💎</span>
+                        <span>KSPR Wallet</span>
+                        <span class="wallet-status">Coming Soon</span>
+                    </button>
+                </div>
             </div>
         </div>
     </div>
 
-    <!-- Wallet Modal -->
-    <div id="wallet-modal" class="modal">
-        <div class="modal-content" style="max-width: 400px;">
+    <!-- Submit Project Modal -->
+    <div id="submit-modal" class="modal">
+        <div class="modal-content modal-lg">
             <div class="modal-header">
-                <h2><i class="fas fa-wallet"></i> Connect Wallet</h2>
-                <button class="close" onclick="closeModal('wallet-modal')">&times;</button>
+                <h3><i class="fas fa-rocket"></i> Submit New Project</h3>
+                <button class="modal-close" onclick="closeModal('submit-modal')">&times;</button>
             </div>
             <div class="modal-body">
-                <div class="wallet-options">
-                    <div class="wallet-option" onclick="connectKasware()">
-                        <div class="wallet-info">
-                            <span class="wallet-icon">🟢</span>
-                            <div>
-                                <div class="wallet-name">Kasware Wallet</div>
-                                <div class="wallet-status-text" id="kasware-status">Click to connect</div>
-                            </div>
+                <form id="submit-form" onsubmit="submitProject(event)">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Project Name <span class="required">*</span></label>
+                            <input type="text" name="title" required maxlength="100" placeholder="My Awesome Project">
+                        </div>
+                        <div class="form-group">
+                            <label>Category <span class="required">*</span></label>
+                            <select name="category" required>
+                                <option value="">Select a category</option>
+                                <option value="wallets">Wallet</option>
+                                <option value="mining">Mining</option>
+                                <option value="defi">DeFi</option>
+                                <option value="nfts">NFT</option>
+                                <option value="tools">Tool</option>
+                                <option value="infrastructure">Infrastructure</option>
+                                <option value="education">Education</option>
+                                <option value="other">Other</option>
+                            </select>
                         </div>
                     </div>
-                    <div class="wallet-option disabled">
-                        <div class="wallet-info">
-                            <span class="wallet-icon">🏰</span>
-                            <div>
-                                <div class="wallet-name">Kastle Wallet</div>
-                                <div class="wallet-status-text">Coming Soon</div>
-                            </div>
+                    
+                    <div class="form-group">
+                        <label>Description <span class="required">*</span></label>
+                        <textarea name="description" rows="4" required maxlength="500" placeholder="Describe your project..."></textarea>
+                        <small class="form-hint">Max 500 characters</small>
+                    </div>
+                    
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label>Website URL <span class="required">*</span></label>
+                            <input type="url" name="website" required placeholder="https://myproject.com">
+                        </div>
+                        <div class="form-group">
+                            <label>Logo URL</label>
+                            <input type="url" name="logo_url" placeholder="https://myproject.com/logo.png">
                         </div>
                     </div>
-                    <div class="wallet-option disabled">
-                        <div class="wallet-info">
-                            <span class="wallet-icon">💎</span>
-                            <div>
-                                <div class="wallet-name">KSPR Wallet</div>
-                                <div class="wallet-status-text">Coming Soon</div>
-                            </div>
+                    
+                    <div class="form-group">
+                        <label>Social Links</label>
+                        <div class="social-grid">
+                            <input type="url" name="twitter" placeholder="Twitter/X URL">
+                            <input type="url" name="github" placeholder="GitHub URL">
+                            <input type="url" name="discord" placeholder="Discord URL">
+                            <input type="url" name="telegram" placeholder="Telegram URL">
                         </div>
                     </div>
-                </div>
-                <p style="text-align: center; color: #64748B; margin-top: 20px; font-size: 0.875rem;">
-                    Connecting your wallet allows you to submit and rate projects
-                </p>
+                    
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" name="terms" required>
+                            I confirm this is a legitimate Kaspa ecosystem project
+                        </label>
+                    </div>
+                    
+                    <div id="wallet-notice" class="wallet-notice">
+                        <i class="fas fa-info-circle"></i>
+                        Please connect your wallet to submit a project
+                    </div>
+                    
+                    <div class="form-actions">
+                        <button type="button" class="btn btn-secondary" onclick="closeModal('submit-modal')">Cancel</button>
+                        <button type="submit" class="btn btn-primary" id="submit-btn">
+                            <i class="fas fa-paper-plane"></i> Submit Project
+                        </button>
+                    </div>
+                </form>
             </div>
         </div>
     </div>
 
     <!-- Project Details Modal -->
     <div id="project-modal" class="modal">
-        <div class="modal-content">
-            <div class="modal-header">
-                <h2 id="project-modal-title">Project Details</h2>
-                <button class="close" onclick="closeModal('project-modal')">&times;</button>
-            </div>
-            <div class="modal-body" id="project-modal-body">
+        <div class="modal-content modal-xl">
+            <div id="project-details">
                 <!-- Project details will be loaded here -->
             </div>
         </div>
     </div>
 
-    <!-- Toast -->
-    <div id="toast" class="toast"></div>
+    <!-- Toast Container -->
+    <div id="toast-container" class="toast-container"></div>
 
     <!-- Scripts -->
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+    <script src="js/supabase-client.js"></script>
     <script src="js/kaspa-wallet-integration.js"></script>
+    <script src="js/kaspa-sponsorship-system.js"></script>
+    <script src="js/kaspa-ecosystem-app.js"></script>
+    <script src="js/submit-project.js"></script>
+    
     <script>
-        // Supabase configuration
-        const SUPABASE_URL = 'https://kxdngctxlxrbjhdtztuu.supabase.co';
-        const SUPABASE_KEY = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6Imt4ZG5nY3R4bHhyYmpoZHR6dHV1Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3NTQzNDU3MzYsImV4cCI6MjA2OTkyMTczNn0.N_jgf3Q2R98-FqsYpz7sns9CwOnViuQBXFoA0TcmWSM';
+        // Global app instance
+        let app;
         
-        let allProjects = [];
-        let filteredProjects = [];
-        let categories = {};
-        let supabaseClient;
-        let walletConnected = false;
-        let walletAddress = null;
-        let scamProjects = [];
-        
-        // Initialize
-        async function init() {
-            const loading = document.getElementById('loading');
-            const error = document.getElementById('error');
-            const projectsDiv = document.getElementById('projects');
-            
+        // Initialize when DOM is ready
+        document.addEventListener('DOMContentLoaded', async () => {
             try {
-                console.log('Initializing Supabase...');
-                const { createClient } = supabase;
-                supabaseClient = createClient(SUPABASE_URL, SUPABASE_KEY);
+                // Initialize the app
+                app = new KaspaEcosystemApp();
+                window.app = app; // Make it global
                 
-                // Check wallet connection
-                checkWalletConnection();
-                
-                console.log('Loading data...');
-                // Load all data
-                await loadAllData();
-                
-                // Check for scam alerts
-                checkScamAlerts();
-                
-                loading.style.display = 'none';
-                projectsDiv.style.display = 'grid';
-                
-            } catch (err) {
-                console.error('Error:', err);
-                loading.style.display = 'none';
-                error.style.display = 'block';
-                error.innerHTML = `
-                    <h3>Error Loading Projects</h3>
-                    <p>${err.message}</p>
-                    <button class="btn" onclick="location.reload()" style="margin-top: 10px;">Retry</button>
-                `;
-            }
-        }
-        
-        // Load all data
-        async function loadAllData() {
-            // Load categories and projects
-            const [categoriesRes, projectsRes, ratingsRes, commentsRes] = await Promise.all([
-                supabaseClient.from('categories').select('*').order('name'),
-                supabaseClient.from('projects').select('*').order('created_at', { ascending: false }),
-                supabaseClient.from('ratings').select('*'),
-                supabaseClient.from('comments').select('*')
-            ]);
-            
-            console.log('Data loaded:', { categories: categoriesRes, projects: projectsRes });
-            
-            // Handle categories
-            if (categoriesRes.error) {
-                console.warn('Categories table not found, using defaults');
-                categories = {
-                    'Wallets': { id: 1, name: 'Wallets' },
-                    'Mining': { id: 2, name: 'Mining' },
-                    'DeFi': { id: 3, name: 'DeFi' },
-                    'NFTs': { id: 4, name: 'NFTs' },
-                    'Infrastructure': { id: 5, name: 'Infrastructure' },
-                    'Education': { id: 6, name: 'Education' },
-                    'Tools': { id: 7, name: 'Tools' },
-                    'Core': { id: 8, name: 'Core' },
-                    'Wallet': { id: 9, name: 'Wallet' },
-                    'Other': { id: 10, name: 'Other' }
-                };
-            } else {
-                categoriesRes.data?.forEach(c => {
-                    categories[c.id] = c;
-                });
-            }
-            
-            // Populate category select
-            const select = document.getElementById('category-select');
-            const categoryOptions = Object.values(categories)
-                .filter((cat, index, self) => 
-                    index === self.findIndex((c) => c.name === cat.name)
-                )
-                .sort((a, b) => a.name.localeCompare(b.name));
-                
-            select.innerHTML = '<option value="">Select a category</option>' +
-                categoryOptions.map(c => `<option value="${c.name}">${c.name}</option>`).join('');
-            
-            // Process projects with ratings and comments
-            allProjects = (projectsRes.data || []).filter(p => p && p.name);
-            
-            // Add ratings and comments count to projects
-            if (!ratingsRes.error && ratingsRes.data) {
-                allProjects.forEach(project => {
-                    const projectRatings = ratingsRes.data.filter(r => r.project_id === project.id);
-                    if (projectRatings.length > 0) {
-                        const avgRating = projectRatings.reduce((sum, r) => sum + r.rating, 0) / projectRatings.length;
-                        project.rating_avg = avgRating;
-                        project.rating_count = projectRatings.length;
+                // Hide loading screen
+                setTimeout(() => {
+                    const loadingScreen = document.getElementById('loading-screen');
+                    if (loadingScreen) {
+                        loadingScreen.style.opacity = '0';
+                        setTimeout(() => {
+                            loadingScreen.style.display = 'none';
+                        }, 300);
                     }
-                });
-            }
-            
-            if (!commentsRes.error && commentsRes.data) {
-                allProjects.forEach(project => {
-                    project.comment_count = commentsRes.data.filter(c => c.project_id === project.id).length;
-                });
-            }
-            
-            filteredProjects = [...allProjects];
-            
-            // Update stats
-            updateStats();
-            
-            // Render projects
-            renderProjects(filteredProjects);
-        }
-        
-        // Update statistics
-        function updateStats() {
-            document.getElementById('total-projects').textContent = allProjects.length;
-            document.getElementById('total-categories').textContent = Object.keys(categories).length;
-            
-            // Count unique users from wallet addresses and ratings
-            const uniqueUsers = new Set();
-            allProjects.forEach(p => {
-                if (p.submitter_wallet) uniqueUsers.add(p.submitter_wallet);
-            });
-            document.getElementById('active-users').textContent = uniqueUsers.size;
-        }
-        
-        // Check for scam alerts
-        function checkScamAlerts() {
-            // Check if any projects are marked as scams (rating_avg < 2 with > 5 ratings)
-            scamProjects = allProjects.filter(p => p.rating_avg < 2 && p.rating_count > 5);
-            
-            if (scamProjects.length > 0) {
-                const alertBar = document.getElementById('alert-bar');
-                const alertText = document.getElementById('alert-text');
-                alertText.textContent = `Warning: ${scamProjects.length} project(s) have been flagged by the community. Always do your own research!`;
-                alertBar.classList.add('show');
-            }
-        }
-        
-        // Render projects
-        function renderProjects(projects) {
-            const projectsDiv = document.getElementById('projects');
-            const noResults = document.getElementById('no-results');
-            
-            if (projects.length === 0) {
-                projectsDiv.style.display = 'none';
-                noResults.style.display = 'block';
-                return;
-            }
-            
-            projectsDiv.style.display = 'grid';
-            noResults.style.display = 'none';
-            
-            projectsDiv.innerHTML = projects.map(p => {
-                const firstLetter = (p.name || '?').charAt(0).toUpperCase();
-                const logoHtml = p.logo_url 
-                    ? `<img src="${p.logo_url}" alt="${p.name}" style="width: 48px; height: 48px; border-radius: 8px; object-fit: cover;">`
-                    : `<div class="card-icon">${firstLetter}</div>`;
-                
-                const tagsHtml = p.tags && Array.isArray(p.tags) && p.tags.length > 0
-                    ? `<div class="tags">${p.tags.map(tag => `<span class="tag">${tag}</span>`).join('')}</div>`
-                    : '';
-                
-                const isScam = p.rating_avg < 2 && p.rating_count > 5;
-                const isVerified = p.verified;
-                
-                const ratingHtml = `
-                    <div class="rating" data-project-id="${p.id}">
-                        ${[1,2,3,4,5].map(i => 
-                            `<i class="fas fa-star star ${i <= Math.round(p.rating_avg || 0) ? 'filled' : ''}" 
-                                data-rating="${i}" onclick="rateProject(event, '${p.id}', ${i})"></i>`
-                        ).join('')}
-                        <span style="margin-left: 8px; font-size: 0.875rem; color: #64748B;">
-                            (${p.rating_count || 0})
-                        </span>
-                    </div>
-                `;
-                
-                return `
-                    <div class="card ${isScam ? 'scam' : ''}" onclick="showProjectDetails('${p.id}')">
-                        ${isScam ? '<span class="scam-badge">⚠️ Warning</span>' : ''}
-                        ${isVerified ? '<span class="verified-badge">✓ Verified</span>' : ''}
-                        <div class="card-header">
-                            ${logoHtml}
-                            <div style="flex: 1;">
-                                <h3>${p.name}</h3>
-                                <div class="card-category">${p.category || 'Other'}</div>
-                            </div>
-                        </div>
-                        <p>${p.description || 'No description available'}</p>
-                        ${tagsHtml}
-                        ${ratingHtml}
-                        <div class="card-footer">
-                            <div class="card-stats">
-                                <span class="card-stat">
-                                    <i class="fas fa-eye"></i> ${p.views || 0}
-                                </span>
-                                <span class="card-stat">
-                                    <i class="fas fa-comment"></i> ${p.comment_count || 0}
-                                </span>
-                            </div>
-                            <a href="${p.url}" target="_blank" onclick="event.stopPropagation()" class="btn btn-sm">
-                                Visit →
-                            </a>
-                        </div>
-                    </div>
-                `;
-            }).join('');
-        }
-        
-        // Search projects
-        function searchProjects(query) {
-            filteredProjects = allProjects.filter(p => 
-                p.name.toLowerCase().includes(query.toLowerCase()) ||
-                (p.description || '').toLowerCase().includes(query.toLowerCase()) ||
-                (p.category || '').toLowerCase().includes(query.toLowerCase()) ||
-                (p.tags && p.tags.some(tag => tag.toLowerCase().includes(query.toLowerCase())))
-            );
-            renderProjects(filteredProjects);
-        }
-        
-        // Sort projects
-        function sortProjects(sortBy) {
-            let sorted = [...filteredProjects];
-            
-            switch(sortBy) {
-                case 'rating':
-                    sorted.sort((a, b) => (b.rating_avg || 0) - (a.rating_avg || 0));
-                    break;
-                case 'views':
-                    sorted.sort((a, b) => (b.views || 0) - (a.views || 0));
-                    break;
-                case 'name':
-                    sorted.sort((a, b) => a.name.localeCompare(b.name));
-                    break;
-                default: // recent
-                    sorted.sort((a, b) => new Date(b.created_at) - new Date(a.created_at));
-            }
-            
-            renderProjects(sorted);
-        }
-        
-        // Show project details
-        async function showProjectDetails(projectId) {
-            const project = allProjects.find(p => p.id === projectId);
-            if (!project) return;
-            
-            // Increment views
-            await supabaseClient
-                .from('projects')
-                .update({ views: (project.views || 0) + 1 })
-                .eq('id', projectId);
-            
-            // Load comments
-            const { data: comments } = await supabaseClient
-                .from('comments')
-                .select('*')
-                .eq('project_id', projectId)
-                .order('created_at', { ascending: false });
-            
-            const modalTitle = document.getElementById('project-modal-title');
-            const modalBody = document.getElementById('project-modal-body');
-            
-            modalTitle.textContent = project.name;
-            
-            const socialLinks = [];
-            if (project.twitter) socialLinks.push(`<a href="https://twitter.com/${project.twitter}" target="_blank"><i class="fab fa-twitter"></i></a>`);
-            if (project.github) socialLinks.push(`<a href="${project.github}" target="_blank"><i class="fab fa-github"></i></a>`);
-            if (project.discord) socialLinks.push(`<a href="${project.discord}" target="_blank"><i class="fab fa-discord"></i></a>`);
-            if (project.telegram) socialLinks.push(`<a href="${project.telegram}" target="_blank"><i class="fab fa-telegram"></i></a>`);
-            
-            modalBody.innerHTML = `
-                <div style="margin-bottom: 20px;">
-                    <p style="color: #94A3B8; margin-bottom: 16px;">${project.description}</p>
-                    <div style="display: flex; gap: 16px; margin-bottom: 16px;">
-                        <a href="${project.url}" target="_blank" class="btn btn-primary">
-                            Visit Website →
-                        </a>
-                        ${socialLinks.length > 0 ? `
-                            <div style="display: flex; gap: 12px; align-items: center;">
-                                ${socialLinks.join('')}
-                            </div>
-                        ` : ''}
-                    </div>
-                </div>
-                
-                <div class="comments-section">
-                    <h3 style="margin-bottom: 16px;">Comments (${comments?.length || 0})</h3>
-                    ${walletConnected ? `
-                        <form onsubmit="addComment(event, '${projectId}')" style="margin-bottom: 20px;">
-                            <textarea 
-                                name="comment" 
-                                placeholder="Add a comment..." 
-                                required
-                                style="width: 100%; padding: 10px; background: #0F172A; border: 1px solid #334155; 
-                                       border-radius: 6px; color: #CBD5E1; margin-bottom: 10px;"
-                            ></textarea>
-                            <button type="submit" class="btn btn-sm">
-                                <i class="fas fa-comment"></i> Post Comment
-                            </button>
-                        </form>
-                    ` : '<p style="color: #64748B; font-size: 0.875rem;">Connect wallet to comment</p>'}
-                    
-                    <div id="comments-list">
-                        ${comments && comments.length > 0 ? comments.map(comment => `
-                            <div class="comment">
-                                <div class="comment-header">
-                                    <span class="comment-author">${comment.user_wallet.slice(0, 8)}...${comment.user_wallet.slice(-6)}</span>
-                                    <span class="comment-date">${new Date(comment.created_at).toLocaleDateString()}</span>
-                                </div>
-                                <div class="comment-text">${comment.comment}</div>
-                            </div>
-                        `).join('') : '<p style="color: #64748B;">No comments yet</p>'}
-                    </div>
-                </div>
-            `;
-            
-            document.getElementById('project-modal').classList.add('show');
-        }
-        
-        // Rate project
-        async function rateProject(event, projectId, rating) {
-            event.stopPropagation();
-            
-            if (!walletConnected) {
-                showToast('Please connect your wallet to rate projects', 'warning');
-                showWalletModal();
-                return;
-            }
-            
-            try {
-                // Check if user already rated
-                const { data: existing } = await supabaseClient
-                    .from('ratings')
-                    .select('*')
-                    .eq('project_id', projectId)
-                    .eq('user_wallet', walletAddress)
-                    .single();
-                
-                if (existing) {
-                    // Update existing rating
-                    await supabaseClient
-                        .from('ratings')
-                        .update({ rating, updated_at: new Date().toISOString() })
-                        .eq('id', existing.id);
-                } else {
-                    // Create new rating
-                    await supabaseClient
-                        .from('ratings')
-                        .insert({
-                            project_id: projectId,
-                            user_wallet: walletAddress,
-                            rating
-                        });
-                }
-                
-                showToast('Rating submitted!', 'success');
-                await loadAllData(); // Reload to update ratings
+                }, 500);
                 
             } catch (error) {
-                console.error('Error rating project:', error);
-                showToast('Failed to submit rating', 'error');
+                console.error('Error initializing app:', error);
+                showToast('Error loading application', 'error');
             }
+        });
+        
+        // Helper Functions
+        function toggleMobileMenu() {
+            const navMenu = document.getElementById('navMenu');
+            const navToggle = document.getElementById('navToggle');
+            navMenu.classList.toggle('active');
+            navToggle.classList.toggle('active');
         }
         
-        // Add comment
-        async function addComment(event, projectId) {
-            event.preventDefault();
-            
-            const formData = new FormData(event.target);
-            const comment = formData.get('comment');
-            
-            try {
-                await supabaseClient
-                    .from('comments')
-                    .insert({
-                        project_id: projectId,
-                        user_wallet: walletAddress,
-                        comment
-                    });
-                
-                showToast('Comment posted!', 'success');
-                event.target.reset();
-                showProjectDetails(projectId); // Reload comments
-                
-            } catch (error) {
-                console.error('Error posting comment:', error);
-                showToast('Failed to post comment', 'error');
-            }
-        }
-        
-        // Wallet functions
-        async function checkWalletConnection() {
-            if (typeof window.kasware !== 'undefined') {
-                try {
-                    const accounts = await window.kasware.getAccounts();
-                    if (accounts.length > 0) {
-                        walletConnected = true;
-                        walletAddress = accounts[0];
-                        updateWalletUI();
-                    }
-                } catch (error) {
-                    console.error('Error checking wallet:', error);
-                }
-            }
-        }
-        
-        async function connectKasware() {
-            if (typeof window.kasware === 'undefined') {
-                showToast('Kasware wallet not found. Please install it first.', 'error');
-                window.open('https://kasware.xyz', '_blank');
-                return;
-            }
-            
-            try {
-                const accounts = await window.kasware.requestAccounts();
-                if (accounts.length > 0) {
-                    walletConnected = true;
-                    walletAddress = accounts[0];
-                    updateWalletUI();
-                    closeModal('wallet-modal');
-                    showToast('Wallet connected successfully!', 'success');
-                }
-            } catch (error) {
-                console.error('Error connecting wallet:', error);
-                showToast('Failed to connect wallet', 'error');
-            }
-        }
-        
-        function updateWalletUI() {
-            const walletStatus = document.getElementById('wallet-status');
-            const walletText = document.getElementById('wallet-text');
-            const walletNotice = document.getElementById('wallet-notice');
-            const submitBtn = document.getElementById('submit-btn');
-            
-            if (walletConnected) {
-                walletStatus.classList.add('connected');
-                walletText.textContent = walletAddress.slice(0, 6) + '...' + walletAddress.slice(-4);
-                if (walletNotice) walletNotice.style.display = 'none';
-                if (submitBtn) submitBtn.disabled = false;
-            } else {
-                walletStatus.classList.remove('connected');
-                walletText.textContent = 'Connect';
-                if (walletNotice) walletNotice.style.display = 'block';
-                if (submitBtn) submitBtn.disabled = true;
-            }
-        }
-        
-        // Show wallet modal
         function showWalletModal() {
             document.getElementById('wallet-modal').classList.add('show');
         }
         
-        // Show submit modal
         function showSubmitModal() {
-            if (!walletConnected) {
-                showToast('Please connect your wallet first', 'warning');
-                showWalletModal();
-                return;
+            const modal = document.getElementById('submit-modal');
+            const walletNotice = document.getElementById('wallet-notice');
+            const submitBtn = document.getElementById('submit-btn');
+            
+            if (app && app.walletManager && app.walletManager.isConnected()) {
+                walletNotice.style.display = 'none';
+                submitBtn.disabled = false;
+            } else {
+                walletNotice.style.display = 'block';
+                submitBtn.disabled = true;
             }
-            updateWalletUI();
-            document.getElementById('submit-modal').classList.add('show');
+            
+            modal.classList.add('show');
         }
         
-        // Close modal
         function closeModal(modalId) {
             document.getElementById(modalId).classList.remove('show');
         }
         
-        // Submit project
+        function connectWallet(type) {
+            if (app && app.connectWallet) {
+                app.connectWallet(type);
+                closeModal('wallet-modal');
+            }
+        }
+        
         async function submitProject(event) {
             event.preventDefault();
             
-            if (!walletConnected) {
-                showToast('Please connect your wallet', 'warning');
+            if (!app || !app.walletManager || !app.walletManager.isConnected()) {
+                showToast('Please connect your wallet first', 'warning');
                 return;
             }
             
-            const btn = document.getElementById('submit-btn');
-            btn.disabled = true;
-            btn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
+            const form = event.target;
+            const submitBtn = form.querySelector('#submit-btn');
+            submitBtn.disabled = true;
+            submitBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Submitting...';
             
             try {
-                const formData = new FormData(event.target);
+                const formData = new FormData(form);
                 const projectData = {
-                    name: formData.get('name'),
+                    title: formData.get('title'),
                     description: formData.get('description'),
-                    url: formData.get('url'),
-                    category: formData.get('category'),
+                    website: formData.get('website'),
                     logo_url: formData.get('logo_url') || null,
                     twitter: formData.get('twitter') || null,
                     github: formData.get('github') || null,
                     discord: formData.get('discord') || null,
                     telegram: formData.get('telegram') || null,
-                    submitter_wallet: walletAddress,
-                    tags: [],
-                    rating_avg: 0,
-                    rating_count: 0,
-                    verified: false,
-                    views: 0,
-                    average_rating: 0,
-                    comment_count: 0
+                    category_slug: formData.get('category'),
+                    submitter_wallet: app.walletManager.getAddress()
                 };
                 
-                // Map category to category_id if it exists
-                const categoryObj = Object.values(categories).find(c => c.name === projectData.category);
-                if (categoryObj) {
-                    projectData.category_id = categoryObj.id;
-                }
+                // Get category ID
+                const { data: category } = await supabaseClient
+                    .from('categories')
+                    .select('id')
+                    .eq('slug', projectData.category_slug)
+                    .single();
                 
-                console.log('Submitting project:', projectData);
+                if (!category) throw new Error('Invalid category');
                 
+                projectData.category_id = category.id;
+                delete projectData.category_slug;
+                
+                // Generate slug
+                projectData.slug = projectData.title.toLowerCase()
+                    .replace(/[^a-z0-9]+/g, '-')
+                    .replace(/^-+|-+$/g, '');
+                
+                // Submit to Supabase
                 const { data, error } = await supabaseClient
                     .from('projects')
                     .insert([projectData])
@@ -1267,180 +469,73 @@
                 if (error) throw error;
                 
                 showToast('Project submitted successfully!', 'success');
+                form.reset();
                 closeModal('submit-modal');
-                event.target.reset();
                 
                 // Reload projects
-                await loadAllData();
+                if (app.loadProjects) {
+                    app.loadProjects();
+                }
                 
             } catch (error) {
-                console.error('Error:', error);
+                console.error('Error submitting project:', error);
                 showToast(error.message || 'Failed to submit project', 'error');
             } finally {
-                btn.disabled = false;
-                btn.innerHTML = 'Submit Project';
+                submitBtn.disabled = false;
+                submitBtn.innerHTML = '<i class="fas fa-paper-plane"></i> Submit Project';
             }
         }
         
-        // Trigger Apify scrape
-        async function triggerApifyScrape() {
-            try {
-                showToast('Starting scrape...', 'info');
-                
-                const response = await fetch('/.netlify/functions/trigger-apify', {
-                    method: 'POST'
-                });
-                
-                const data = await response.json();
-                
-                if (response.ok) {
-                    showToast('Scraping started! New projects will appear soon.', 'success');
-                } else {
-                    throw new Error(data.error || 'Failed to start scrape');
-                }
-            } catch (error) {
-                console.error('Error triggering scrape:', error);
-                showToast('Failed to start scrape: ' + error.message, 'error');
+        function searchProjects(query) {
+            if (app && app.searchProjects) {
+                app.searchProjects(query);
             }
         }
         
-        // Show toast
-        function showToast(message, type = 'success') {
-            const toast = document.getElementById('toast');
-            toast.textContent = message;
-            toast.className = `toast show ${type}`;
+        function sortProjects(sortBy) {
+            if (app && app.sortProjects) {
+                app.sortProjects(sortBy);
+            }
+        }
+        
+        function moveCarousel(direction) {
+            if (app && app.moveCarousel) {
+                app.moveCarousel(direction);
+            }
+        }
+        
+        function showToast(message, type = 'info') {
+            const container = document.getElementById('toast-container');
+            const toast = document.createElement('div');
+            toast.className = `toast toast-${type} show`;
+            toast.innerHTML = `
+                <i class="fas fa-${type === 'success' ? 'check-circle' : type === 'error' ? 'exclamation-circle' : 'info-circle'}"></i>
+                <span>${message}</span>
+            `;
+            container.appendChild(toast);
             
             setTimeout(() => {
                 toast.classList.remove('show');
+                setTimeout(() => toast.remove(), 300);
             }, 3000);
         }
         
-        // Close modal on outside click
-        window.onclick = function(event) {
-            if (event.target.classList.contains('modal')) {
-                event.target.classList.remove('show');
+        // Close modals on outside click
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                e.target.classList.remove('show');
             }
-        }
+        });
         
-        // Initialize on load
-        init();
-    </script>
-    
-    <!-- Multi-Wallet Integration Scripts -->
-    <script src="js/kaspa-wallet-integration.js"></script>
-    <script src="js/multi-wallet-ui.js"></script>
-    
-    <!-- Advanced Project Discovery System -->
-    <script src="js/project-discovery.js"></script>
-    
-    <!-- Comprehensive Rating System -->
-    <script src="js/comprehensive-rating-system.js"></script>
-    
-    <script>
-        // Override existing wallet functions to use multi-wallet system
-        window.addEventListener('walletConnected', (event) => {
-            walletConnected = true;
-            walletAddress = event.detail.address;
-            updateWalletUI();
-            showToast(`Connected to ${event.detail.name}!`, 'success');
-        });
-
-        window.addEventListener('walletDisconnected', () => {
-            walletConnected = false;
-            walletAddress = null;
-            updateWalletUI();
-            showToast('Wallet disconnected', 'info');
-        });
-
-        // Enhanced wallet connection check
-        async function checkWalletConnection() {
-            if (typeof KaspaWallet !== 'undefined') {
-                const connectedWallet = KaspaWallet.getConnectedWallet();
-                if (connectedWallet) {
-                    walletConnected = true;
-                    walletAddress = connectedWallet.address;
-                    updateWalletUI();
+        // Smooth scroll for anchor links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
-            }
-        }
-
-        // Updated connect function using multi-wallet
-        async function connectKasware() {
-            if (typeof MultiWalletUI !== 'undefined') {
-                MultiWalletUI.showModal();
-            } else {
-                // Fallback to original Kasware-only connection
-                if (typeof window.kasware === 'undefined') {
-                    showToast('Kasware wallet not found. Please install it first.', 'error');
-                    window.open('https://kasware.xyz', '_blank');
-                    return;
-                }
-                
-                try {
-                    const accounts = await window.kasware.requestAccounts();
-                    if (accounts.length > 0) {
-                        walletConnected = true;
-                        walletAddress = accounts[0];
-                        updateWalletUI();
-                        closeModal('wallet-modal');
-                        showToast('Wallet connected successfully!', 'success');
-                    }
-                } catch (error) {
-                    console.error('Error connecting wallet:', error);
-                    showToast('Failed to connect wallet', 'error');
-                }
-            }
-        }
-
-        // Enhanced wallet UI update
-        function updateWalletUI() {
-            const walletStatus = document.getElementById('wallet-status');
-            const walletText = document.getElementById('wallet-text');
-            const walletNotice = document.getElementById('wallet-notice');
-            const submitBtn = document.getElementById('submit-btn');
-            
-            if (walletConnected) {
-                walletStatus.classList.add('connected');
-                
-                // Show wallet type if available
-                const connectedWallet = typeof KaspaWallet !== 'undefined' ? KaspaWallet.getConnectedWallet() : null;
-                const walletType = connectedWallet ? ` (${connectedWallet.name})` : '';
-                walletText.textContent = walletAddress.slice(0, 6) + '...' + walletAddress.slice(-4) + walletType;
-                
-                if (walletNotice) walletNotice.style.display = 'none';
-                if (submitBtn) submitBtn.disabled = false;
-            } else {
-                walletStatus.classList.remove('connected');
-                walletText.textContent = 'Connect Wallet';
-                if (walletNotice) walletNotice.style.display = 'block';
-                if (submitBtn) submitBtn.disabled = true;
-            }
-        }
-
-        // Show enhanced wallet modal
-        function showWalletModal() {
-            if (typeof MultiWalletUI !== 'undefined') {
-                MultiWalletUI.showModal();
-            } else {
-                document.getElementById('wallet-modal').classList.add('show');
-            }
-        }
-
-        // Initialize multi-wallet on page load
-        document.addEventListener('DOMContentLoaded', () => {
-            // Check if multi-wallet is available
-            if (typeof MultiWalletUI !== 'undefined') {
-                console.log('Multi-wallet system initialized');
-                
-                // Update wallet connect button text
-                const walletText = document.getElementById('wallet-text');
-                if (walletText && !walletConnected) {
-                    walletText.textContent = 'Connect Wallet';
-                }
-            }
-            
-            // Check for existing connections
-            setTimeout(checkWalletConnection, 1000);
+            });
         });
     </script>
 </body>
