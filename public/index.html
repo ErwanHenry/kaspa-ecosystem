@@ -21,6 +21,23 @@
     <link rel="stylesheet" href="css/kaspa-ecosystem.css">
     
     <style>
+        /* Enhanced Features Styles */
+        .footer-content { display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 2rem; }
+        .footer-section h4 { color: #49EACB; margin-bottom: 1rem; }
+        .newsletter-form { display: flex; gap: 0.5rem; margin-bottom: 0.5rem; }
+        .newsletter-form input { flex: 1; padding: 0.5rem; border: 1px solid #334155; background: #1E293B; color: #CBD5E1; border-radius: 4px; }
+        .newsletter-desc { font-size: 0.9rem; opacity: 0.8; }
+        .rss-links { display: flex; flex-direction: column; gap: 0.5rem; }
+        .rss-link { color: #49EACB; text-decoration: none; padding: 0.25rem 0; }
+        .rss-link:hover { color: #22D3EE; }
+        .footer-features { display: flex; gap: 0.5rem; margin-top: 1rem; flex-wrap: wrap; }
+        .feature-badge { background: rgba(73, 234, 203, 0.1); color: #49EACB; padding: 0.25rem 0.5rem; border-radius: 12px; font-size: 0.8rem; }
+        .btn-icon { background: transparent; border: 1px solid #334155; color: #CBD5E1; padding: 0.5rem; border-radius: 6px; }
+        .btn-icon:hover { background: rgba(73, 234, 203, 0.1); color: #49EACB; }
+        @media (max-width: 768px) { .footer-content { grid-template-columns: 1fr; } }
+    </style>
+    
+    <style>
         /* Base styles while CSS loads */
         * { margin: 0; padding: 0; box-sizing: border-box; }
         body {
@@ -89,6 +106,9 @@
             </div>
             
             <div class="nav-actions">
+                <button class="btn btn-icon" id="theme-toggle" onclick="toggleTheme()" title="Toggle Theme">
+                    <i class="fas fa-moon" id="theme-icon"></i>
+                </button>
                 <button class="btn btn-primary btn-sm" onclick="showSubmitModal()">
                     <i class="fas fa-plus"></i> Submit Project
                 </button>
@@ -212,8 +232,39 @@
     <footer class="footer">
         <div class="container">
             <div class="footer-content">
-                <p>&copy; 2024 Kaspa Ecosystem. Open source project.</p>
-                <p>Built with ❤️ by the Kaspa community</p>
+                <div class="footer-section">
+                    <h4>📧 Stay Updated</h4>
+                    <form id="newsletter-form" class="newsletter-form">
+                        <input type="email" id="newsletter-email" placeholder="Enter your email" required>
+                        <button type="submit" class="btn btn-primary btn-sm">Subscribe</button>
+                    </form>
+                    <p class="newsletter-desc">Get weekly updates on new Kaspa ecosystem projects</p>
+                </div>
+                
+                <div class="footer-section">
+                    <h4>📡 RSS Feeds</h4>
+                    <div class="rss-links">
+                        <a href="/api/rss-feeds?format=rss" class="rss-link">
+                            <i class="fas fa-rss"></i> RSS 2.0
+                        </a>
+                        <a href="/api/rss-feeds?format=atom" class="rss-link">
+                            <i class="fas fa-rss"></i> Atom
+                        </a>
+                        <a href="/api/rss-feeds?format=json" class="rss-link">
+                            <i class="fas fa-code"></i> JSON Feed
+                        </a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <p>&copy; 2024 Kaspa Ecosystem. Open source project.</p>
+                    <p>Built with ❤️ by the Kaspa community</p>
+                    <div class="footer-features">
+                        <span class="feature-badge">🔗 Multi-Wallet</span>
+                        <span class="feature-badge">🤖 AI Discovery</span>
+                        <span class="feature-badge">⭐ 6D Ratings</span>
+                    </div>
+                </div>
             </div>
         </div>
     </footer>
@@ -343,6 +394,14 @@
     <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
     <script src="js/supabase-client.js"></script>
     <script src="js/kaspa-wallet-integration.js"></script>
+    <script src="js/multi-wallet-ui.js"></script>
+    <script src="js/theme-manager.js"></script>
+    <script src="js/social-sharing.js"></script>
+    <script src="js/advanced-filters.js"></script>
+    <script src="js/project-comparison.js"></script>
+    <script src="js/project-discovery.js"></script>
+    <script src="js/comprehensive-rating-system.js"></script>
+    <script src="js/rss-feed-manager.js"></script>
     <script src="js/kaspa-sponsorship-system.js"></script>
     <script src="js/kaspa-ecosystem-app.js"></script>
     <script src="js/submit-project.js"></script>
