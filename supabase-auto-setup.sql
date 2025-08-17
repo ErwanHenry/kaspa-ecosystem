@@ -18,13 +18,16 @@ CREATE TABLE IF NOT EXISTS categories (
     name VARCHAR(100) NOT NULL UNIQUE,
     slug VARCHAR(100) NOT NULL UNIQUE,
     description TEXT,
-    icon VARCHAR(50),
-    color VARCHAR(7) DEFAULT '#49EACB',
-    project_count INTEGER DEFAULT 0,
-    active BOOLEAN DEFAULT true,
     created_at TIMESTAMPTZ DEFAULT NOW(),
     updated_at TIMESTAMPTZ DEFAULT NOW()
 );
+
+-- Add missing columns to existing categories table
+ALTER TABLE categories 
+ADD COLUMN IF NOT EXISTS icon VARCHAR(50),
+ADD COLUMN IF NOT EXISTS color VARCHAR(7) DEFAULT '#49EACB',
+ADD COLUMN IF NOT EXISTS project_count INTEGER DEFAULT 0,
+ADD COLUMN IF NOT EXISTS active BOOLEAN DEFAULT true;
 
 -- Insert enhanced categories
 INSERT INTO categories (name, slug, description, icon, color, active) VALUES
